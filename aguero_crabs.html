@@ -1,0 +1,2406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aguero Crabs — 10 Years</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #00c853;
+    --green-dim: #00a844;
+    --dark: #0a0a0a;
+    --darker: #050505;
+    --card: #111111;
+    --card2: #161616;
+    --border: #1e1e1e;
+    --text: #e8e8e8;
+    --muted: #666;
+    --faint: #333;
+    --accent: #f5c518;
+    --red: #ff4444;
+    --blue: #4488ff;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--darker);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    background: var(--darker);
+    overflow: hidden;
+    padding: 40px 20px;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 50% at 50% 0%, rgba(0,200,83,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 30% at 20% 80%, rgba(0,200,83,0.04) 0%, transparent 50%),
+      radial-gradient(ellipse 60% 40% at 80% 60%, rgba(68,136,255,0.03) 0%, transparent 50%);
+  }
+
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.3;
+  }
+
+  .hero-content { position: relative; z-index: 2; }
+
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    color: var(--green);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.3s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(80px, 18vw, 220px);
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.5s forwards;
+  }
+
+  .hero-title span { color: var(--green); }
+
+  .hero-subtitle {
+    font-family: 'DM Serif Display', serif;
+    font-style: italic;
+    font-size: clamp(16px, 3vw, 28px);
+    color: var(--muted);
+    margin-top: 20px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.7s forwards;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 40px;
+    margin-top: 60px;
+    flex-wrap: wrap;
+    justify-content: center;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.9s forwards;
+  }
+
+  .hero-stat {
+    text-align: center;
+  }
+
+  .hero-stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    color: var(--green);
+    line-height: 1;
+  }
+
+  .hero-stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+    animation: fadeIn 1s ease 1.5s forwards;
+  }
+
+  .scroll-hint span {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    color: var(--faint);
+    text-transform: uppercase;
+  }
+
+  .scroll-arrow {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--green), transparent);
+    animation: pulse 2s ease infinite;
+  }
+
+  /* ─── SECTION LAYOUT ─── */
+  section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 100px 24px;
+  }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.35em;
+    color: var(--green);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(42px, 7vw, 80px);
+    line-height: 0.95;
+    color: var(--text);
+    margin-bottom: 60px;
+  }
+
+  /* ─── DIVIDER ─── */
+  .divider {
+    max-width: 1100px;
+    margin: 0 auto;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--border), transparent);
+  }
+
+  /* ─── LEADERBOARD ─── */
+  .leaderboard { display: flex; flex-direction: column; gap: 10px; }
+
+  .lb-row {
+    display: grid;
+    grid-template-columns: 32px 1fr auto auto;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 20px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .lb-row:hover { border-color: var(--green); }
+
+  .lb-row::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background: var(--green);
+    opacity: 0.07;
+  }
+
+  .lb-rank {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    color: var(--faint);
+    text-align: center;
+  }
+
+  .lb-row:nth-child(1) .lb-rank { color: var(--accent); }
+  .lb-row:nth-child(2) .lb-rank { color: #aaa; }
+  .lb-row:nth-child(3) .lb-rank { color: #cd7f32; }
+
+  .lb-name {
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  .lb-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .lb-bar-wrap {
+    width: 160px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+  }
+
+  .lb-bar {
+    height: 100%;
+    background: var(--green);
+    border-radius: 2px;
+    transition: width 1s ease;
+  }
+
+  .lb-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--green);
+    text-align: right;
+    min-width: 60px;
+  }
+
+  /* ─── ACTIVITY CHART ─── */
+  .year-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    height: 180px;
+    padding: 0 0 32px 0;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 20px;
+  }
+
+  .year-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    height: 100%;
+    justify-content: flex-end;
+  }
+
+  .year-bar {
+    width: 100%;
+    background: var(--green);
+    border-radius: 3px 3px 0 0;
+    opacity: 0.75;
+    transition: opacity 0.2s, transform 0.2s;
+    cursor: default;
+    position: relative;
+  }
+
+  .year-bar:hover { opacity: 1; transform: scaleY(1.03); transform-origin: bottom; }
+
+  .year-bar.peak { background: var(--accent); opacity: 0.9; }
+
+  .year-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+  }
+
+  .year-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    text-align: center;
+  }
+
+  /* ─── TIMELINE ─── */
+  .timeline { position: relative; }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--green), var(--border));
+  }
+
+  .tl-year {
+    padding: 0 0 80px 48px;
+    position: relative;
+  }
+
+  .tl-year::before {
+    content: '';
+    position: absolute;
+    left: -5px;
+    top: 8px;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 12px rgba(0,200,83,0.5);
+  }
+
+  .tl-year-heading {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 60px;
+    color: var(--text);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .tl-year-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.2em;
+    margin-bottom: 28px;
+  }
+
+  .tl-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  @media (max-width: 640px) {
+    .tl-cards { grid-template-columns: 1fr; }
+    .lb-bar-wrap { width: 80px; }
+  }
+
+  .tl-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 18px 20px;
+    transition: border-color 0.2s;
+  }
+
+  .tl-card:hover { border-color: var(--faint); }
+
+  .tl-card.highlight {
+    border-color: rgba(0,200,83,0.3);
+    background: rgba(0,200,83,0.03);
+  }
+
+  .tl-card.sad {
+    border-color: rgba(255,68,68,0.2);
+    background: rgba(255,68,68,0.02);
+  }
+
+  .tl-card-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 2px;
+  }
+
+  .tag-stat { color: var(--blue); background: rgba(68,136,255,0.1); }
+  .tag-moment { color: var(--green); background: rgba(0,200,83,0.1); }
+  .tag-funny { color: var(--accent); background: rgba(245,197,24,0.1); }
+  .tag-sad { color: var(--red); background: rgba(255,68,68,0.1); }
+
+  .tl-card-text {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  .tl-card-text strong { color: var(--green); }
+  .tl-card-text em { color: var(--muted); font-style: normal; font-size: 12px; }
+
+  .quote {
+    font-family: 'DM Serif Display', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: #aaa;
+    border-left: 2px solid var(--green);
+    padding-left: 12px;
+    margin-top: 10px;
+    line-height: 1.5;
+  }
+
+  .quote-attr {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 6px;
+    padding-left: 14px;
+  }
+
+  /* ─── PROFILES ─── */
+  .profiles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+  }
+
+  .profile-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 24px;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .profile-card:hover {
+    border-color: var(--green);
+    transform: translateY(-2px);
+  }
+
+  .profile-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  .profile-name {
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  .profile-rank {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    color: var(--faint);
+    line-height: 1;
+  }
+
+  .profile-msgs {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--green);
+    margin-top: 2px;
+  }
+
+  .profile-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin: 16px 0;
+  }
+
+  .profile-stat {
+    background: var(--card2);
+    border-radius: 3px;
+    padding: 8px 10px;
+  }
+
+  .profile-stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .profile-stat-val {
+    font-size: 13px;
+    color: var(--text);
+    margin-top: 2px;
+    font-weight: 500;
+  }
+
+  .profile-verdict {
+    font-size: 13px;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+    margin-top: 14px;
+    line-height: 1.6;
+  }
+
+  .profile-verdict strong { color: var(--text); }
+
+  /* ─── RECORDS ─── */
+  .records-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+
+  .record-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 24px;
+  }
+
+  .record-icon {
+    font-size: 28px;
+    margin-bottom: 12px;
+  }
+
+  .record-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: var(--green);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .record-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    color: var(--text);
+    line-height: 1.1;
+    margin-bottom: 6px;
+  }
+
+  .record-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* ─── FADE-OUTS ─── */
+  .fadeout-section {
+    background: linear-gradient(135deg, rgba(255,68,68,0.03) 0%, transparent 60%);
+    border: 1px solid rgba(255,68,68,0.1);
+    border-radius: 4px;
+    padding: 40px;
+    margin-top: 32px;
+  }
+
+  .fadeout-title {
+    font-family: 'DM Serif Display', serif;
+    font-style: italic;
+    font-size: 22px;
+    color: #888;
+    margin-bottom: 28px;
+  }
+
+  .fadeout-list { display: flex; flex-direction: column; gap: 16px; }
+
+  .fadeout-item {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 20px;
+    align-items: start;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .fadeout-item:last-child { border-bottom: none; }
+
+  .fadeout-name { font-weight: 600; font-size: 15px; }
+  .fadeout-last {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--red);
+    margin-top: 3px;
+  }
+
+  .fadeout-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  /* ─── GREATEST HITS ─── */
+  .hits-list { display: flex; flex-direction: column; gap: 0; }
+
+  .hit-item {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    gap: 20px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border);
+    align-items: start;
+  }
+
+  .hit-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    color: var(--faint);
+    line-height: 1;
+    padding-top: 2px;
+  }
+
+  .hit-phrase {
+    font-family: 'DM Serif Display', serif;
+    font-style: italic;
+    font-size: 18px;
+    color: var(--text);
+    line-height: 1.3;
+  }
+
+  .hit-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--green);
+    margin-top: 4px;
+    letter-spacing: 0.1em;
+  }
+
+  .hit-note {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* ─── FOOTER ─── */
+  .footer {
+    border-top: 1px solid var(--border);
+    padding: 60px 24px;
+    text-align: center;
+    background: var(--darker);
+  }
+
+  .footer-crab {
+    font-size: 60px;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .footer-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .footer-sub {
+    font-family: 'DM Serif Display', serif;
+    font-style: italic;
+    font-size: 18px;
+    color: var(--muted);
+    margin-bottom: 32px;
+  }
+
+  .footer-meta {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--faint);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+
+  /* ─── SCROLL REVEAL ─── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+
+  /* ─── WORDCLOUD-STYLE LIST ─── */
+  .word-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .word-pill {
+    font-family: 'DM Mono', monospace;
+    padding: 6px 14px;
+    border-radius: 100px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-size: 13px;
+    transition: border-color 0.2s;
+  }
+
+  .word-pill:hover { border-color: var(--green); }
+  .word-pill.big { font-size: 16px; border-color: var(--green); color: var(--green); }
+  .word-pill.medium { font-size: 14px; border-color: var(--faint); color: #bbb; }
+  .word-pill.small { font-size: 12px; color: var(--muted); }
+
+  /* Activity heatmap hint */
+  .heatmap-note {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    text-align: center;
+    margin-top: 12px;
+    letter-spacing: 0.15em;
+  }
+
+  /* Night owl bar */
+  .owl-list { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+  .owl-row { display: flex; align-items: center; gap: 12px; }
+  .owl-name { font-size: 13px; width: 140px; flex-shrink: 0; }
+  .owl-bar-wrap { flex: 1; height: 6px; background: var(--border); border-radius: 3px; }
+  .owl-bar { height: 100%; background: #5533ff; border-radius: 3px; }
+  .owl-count { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); width: 40px; text-align: right; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">🦀 9 April 2016 — 2026 🦀</div>
+    <div class="hero-title">AGUERO<br><span>CRABS</span></div>
+    <div class="hero-subtitle">A decade of nonsense, rugby takes, and<br>failing to organise pints</div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num">127,892</div>
+        <div class="hero-stat-label">Messages</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">10</div>
+        <div class="hero-stat-label">Years</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">15</div>
+        <div class="hero-stat-label">Lads</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">3,308</div>
+        <div class="hero-stat-label">Active Days</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">6,997</div>
+        <div class="hero-stat-label">Media Sent</div>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</div>
+
+<!-- BAR CHART RACE -->
+<section>
+  <div class="reveal">
+    <div class="section-label">Message Race</div>
+    <div class="section-title">The Running<br>Totals</div>
+    <p style="color:var(--muted); font-size:14px; margin-bottom:40px; max-width:520px;">Every month from April 2016 to now. Hit play and watch the decade unfold — or drag the slider to any point in time.</p>
+  </div>
+
+  <div class="reveal reveal-delay-1">
+    <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px; flex-wrap:wrap;">
+      <button id="racePlayBtn" onclick="raceTogglePlay()" style="font-family:'DM Mono',monospace; font-size:11px; letter-spacing:0.15em; text-transform:uppercase; padding:8px 20px; background:var(--green); color:#000; border:none; border-radius:2px; cursor:pointer; font-weight:500;">Play</button>
+      <input type="range" id="raceSlider" min="0" max="120" value="0" step="1" oninput="raceOnSlide(+this.value)" style="flex:1; min-width:120px; accent-color:var(--green);">
+      <span id="raceMLabel" style="font-family:'Bebas Neue',sans-serif; font-size:28px; color:var(--text); min-width:110px; text-align:right; line-height:1;">Apr 2016</span>
+      <div style="display:flex; align-items:center; gap:6px;">
+        <span style="font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.2em; color:var(--muted); text-transform:uppercase;">Speed</span>
+        <select id="raceSpeed" onchange="raceSpeedChange()" style="font-family:'DM Mono',monospace; font-size:11px; padding:4px 8px; background:var(--card); border:1px solid var(--border); color:var(--text); border-radius:2px;">
+          <option value="700">Slow</option>
+          <option value="400" selected>Normal</option>
+          <option value="180">Fast</option>
+          <option value="70">Ludicrous</option>
+        </select>
+      </div>
+    </div>
+    <div id="raceContainer" style="position:relative; margin-bottom:24px;"></div>
+    <div id="raceLegend" style="display:flex; flex-wrap:wrap; gap:10px; padding-top:20px; border-top:1px solid var(--border);"></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- LEADERBOARD -->
+<section>
+  <div class="reveal">
+    <div class="section-label">The Rankings</div>
+    <div class="section-title">Who Wouldn't<br>Shut Up</div>
+  </div>
+  <div class="leaderboard reveal reveal-delay-1">
+
+    <div class="lb-row">
+      <div class="lb-rank">1</div>
+      <div>
+        <div class="lb-name">Chris Lee</div>
+        <div class="lb-tag">Also: 2,124 media files. 340 messages sent after midnight. Absolutely unhinged.</div>
+      </div>
+      <div class="lb-bar-wrap"><div class="lb-bar" style="width:100%"></div></div>
+      <div class="lb-count">32,422</div>
+    </div>
+
+    <div class="lb-row">
+      <div class="lb-rank">2</div>
+      <div>
+        <div class="lb-name">Matty Morrow</div>
+        <div class="lb-tag">Sole rival to Lee's hegemony. Has written the word "Leinster" 912 times.</div>
+      </div>
+      <div class="lb-bar-wrap"><div class="lb-bar" style="width:88.6%"></div></div>
+      <div class="lb-count">28,725</div>
+    </div>
+
+    <div class="lb-row">
+      <div class="lb-rank">3</div>
+      <div>
+        <div class="lb-name">Luke Madden</div>
+        <div class="lb-tag">Top half of the group. Peaked in 2017, like the rest of us.</div>
+      </div>
+      <div class="lb-bar-wrap"><div class="lb-bar" style="width:30.6%"></div></div>
+      <div class="lb-count">9,926</div>
+    </div>
+
+    <div class="lb-row">
+      <div class="lb-rank">4</div>
+      <div>
+        <div class="lb-name">Chris Scollard</div>
+        <div class="lb-tag">"Haha" appears 255 times. Once changed the group icon without warning.</div>
+      </div>
+      <div class="lb-bar-wrap"><div class="lb-bar" style="width:30.2%"></div></div>
+      <div class="lb-count">9,794</div>
+    </div>
+
+    <div class="lb-row">
+      <div class="lb-rank">5</div>
+      <div>
+        <div class="lb-name">Adam McDermot</div>
+        <div class="lb-tag">Uses the word "though" more than anyone else. It's his thing.</div>
+      </div>
+      <div class="lb-bar-wrap"><div class="lb-bar" style="width:29.3%"></div></div>
+      <div class="lb-count">9,497</div>
+    </div>
+
+    <div class="lb-row">
+      <div class="lb-rank">6</div>
+      <div>
+        <div class="lb-name">Eoin Gray</div>
+        <div class="lb-tag">Writes the longest individual messages. Quality over quantity.</div>
+      </div>
+      <div class="lb-bar-wrap"><div class="lb-bar" style="width:29%"></div></div>
+      <div class="lb-count">9,413</div>
+    </div>
+
+    <div class="lb-row">
+      <div class="lb-rank">7</div>
+      <div>
+        <div class="lb-name">Jamie Martin Grace</div>
+        <div class="lb-tag">First message: "About time someone took the initiative." Correct then, quieter now.</div>
+      </div>
+      <div class="lb-bar-wrap"><div class="lb-bar" style="width:27.7%"></div></div>
+      <div class="lb-count">8,989</div>
+    </div>
+
+    <div class="lb-row">
+      <div class="lb-rank">8</div>
+      <div>
+        <div class="lb-name">Rob McMahon</div>
+        <div class="lb-tag">Found himself in "Aguero Crabs" after Goldie shared his number. Still here.</div>
+      </div>
+      <div class="lb-bar-wrap"><div class="lb-bar" style="width:27.5%"></div></div>
+      <div class="lb-count">8,936</div>
+    </div>
+
+    <div class="lb-row">
+      <div class="lb-rank">9</div>
+      <div>
+        <div class="lb-name">Gurj Sandhu</div>
+        <div class="lb-tag">Top word: "tickets". Man just wants to know if anyone has tickets.</div>
+      </div>
+      <div class="lb-bar-wrap"><div class="lb-bar" style="width:12.3%"></div></div>
+      <div class="lb-count">4,011</div>
+    </div>
+
+    <div class="lb-row">
+      <div class="lb-rank">10</div>
+      <div>
+        <div class="lb-name">Owen Collins</div>
+        <div class="lb-tag">The most positive man in the group. "Great" is his most-used word.</div>
+      </div>
+      <div class="lb-bar-wrap"><div class="lb-bar" style="width:8.9%"></div></div>
+      <div class="lb-count">2,889</div>
+    </div>
+
+    <div class="lb-row">
+      <div class="lb-rank">11</div>
+      <div>
+        <div class="lb-name">Lorcan Clarke</div>
+        <div class="lb-tag">Silent for most of 2020, came back strong. Writes the longest messages of anyone.</div>
+      </div>
+      <div class="lb-bar-wrap"><div class="lb-bar" style="width:4.7%"></div></div>
+      <div class="lb-count">1,532</div>
+    </div>
+
+    <div class="lb-row">
+      <div class="lb-rank">12</div>
+      <div>
+        <div class="lb-name">Colman Humphrey</div>
+        <div class="lb-tag">Three names in this chat: Colman Humphrey, Colman AMERICA, Colman France. One lad.</div>
+      </div>
+      <div class="lb-bar-wrap"><div class="lb-bar" style="width:2.7%"></div></div>
+      <div class="lb-count">881</div>
+    </div>
+
+    <div class="lb-row">
+      <div class="lb-rank">13</div>
+      <div>
+        <div class="lb-name">Mark O'Caglahan</div>
+        <div class="lb-tag">Last message: September 2022. Simply stopped.</div>
+      </div>
+      <div class="lb-bar-wrap"><div class="lb-bar" style="width:1.3%"></div></div>
+      <div class="lb-count">443</div>
+    </div>
+
+    <div class="lb-row">
+      <div class="lb-rank">14</div>
+      <div>
+        <div class="lb-name">Gary Foxton</div>
+        <div class="lb-tag">Called himself "Fat Tony" in a fantasy league. Last heard from August 2019.</div>
+      </div>
+      <div class="lb-bar-wrap"><div class="lb-bar" style="width:0.8%"></div></div>
+      <div class="lb-count">281</div>
+    </div>
+
+    <div class="lb-row">
+      <div class="lb-rank">15</div>
+      <div>
+        <div class="lb-name">Tim White-Flynn</div>
+        <div class="lb-tag">Disappeared for 672 consecutive days. Came back once in 2021. Then left again.</div>
+      </div>
+      <div class="lb-bar-wrap"><div class="lb-bar" style="width:0.4%"></div></div>
+      <div class="lb-count">157</div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ACTIVITY CHART -->
+<section>
+  <div class="reveal">
+    <div class="section-label">Group Activity</div>
+    <div class="section-title">The Rise, The Peak,<br>The Decline (The Return)</div>
+  </div>
+
+  <div class="reveal reveal-delay-1">
+    <div class="year-chart">
+      <div class="year-col">
+        <div class="year-count">10.2k</div>
+        <div class="year-bar" style="height:36%"></div>
+        <div class="year-label">2016</div>
+      </div>
+      <div class="year-col">
+        <div class="year-count">28k</div>
+        <div class="year-bar peak" style="height:100%"></div>
+        <div class="year-label">2017</div>
+      </div>
+      <div class="year-col">
+        <div class="year-count">17.6k</div>
+        <div class="year-bar" style="height:63%"></div>
+        <div class="year-label">2018</div>
+      </div>
+      <div class="year-col">
+        <div class="year-count">11.3k</div>
+        <div class="year-bar" style="height:40%"></div>
+        <div class="year-label">2019</div>
+      </div>
+      <div class="year-col">
+        <div class="year-count">12.1k</div>
+        <div class="year-bar" style="height:43%"></div>
+        <div class="year-label">2020</div>
+      </div>
+      <div class="year-col">
+        <div class="year-count">13.2k</div>
+        <div class="year-bar" style="height:47%"></div>
+        <div class="year-label">2021</div>
+      </div>
+      <div class="year-col">
+        <div class="year-count">7.6k</div>
+        <div class="year-bar" style="height:27%"></div>
+        <div class="year-label">2022</div>
+      </div>
+      <div class="year-col">
+        <div class="year-count">7.4k</div>
+        <div class="year-bar" style="height:26%"></div>
+        <div class="year-label">2023</div>
+      </div>
+      <div class="year-col">
+        <div class="year-count">8.5k</div>
+        <div class="year-bar" style="height:30%"></div>
+        <div class="year-label">2024</div>
+      </div>
+      <div class="year-col">
+        <div class="year-count">9.4k</div>
+        <div class="year-bar" style="height:33%"></div>
+        <div class="year-label">2025</div>
+      </div>
+      <div class="year-col">
+        <div class="year-count">2.6k*</div>
+        <div class="year-bar" style="height:9%; opacity:0.4;"></div>
+        <div class="year-label">2026</div>
+      </div>
+    </div>
+    <div class="heatmap-note">* 2026 partial year through April &nbsp;·&nbsp; Peak: 2017 — the golden era</div>
+  </div>
+
+  <div class="tl-cards reveal reveal-delay-2" style="margin-top:24px">
+    <div class="tl-card highlight">
+      <span class="tl-card-tag tag-stat">Peak Year</span>
+      <div class="tl-card-text">
+        <strong>2017</strong> was the golden age — 28,000 messages, nearly triple the 2016 founding. February alone saw 4,140 messages in a single month. The group had found its voice and absolutely would not stop using it.
+      </div>
+    </div>
+    <div class="tl-card sad">
+      <span class="tl-card-tag tag-sad">The Long Slide</span>
+      <div class="tl-card-text">
+        From the 2017 peak, activity roughly halved by 2022. <strong>Life happened.</strong> People moved abroad, got jobs, had kids. The chat didn't die — it just aged into something quieter and (marginally) more considered.
+      </div>
+    </div>
+    <div class="tl-card highlight">
+      <span class="tl-card-tag tag-moment">Lockdown Spike</span>
+      <div class="tl-card-text">
+        2020 bucked the trend slightly. Turns out when nobody can go anywhere, the WhatsApp group becomes a lifeline. <strong>October 31, 2020</strong> — 619 messages watching rugby at midnight — is the single busiest day in the chat's history.
+      </div>
+    </div>
+    <div class="tl-card">
+      <span class="tl-card-tag tag-stat">The Comeback</span>
+      <div class="tl-card-text">
+        2024 and 2025 show a modest revival. Up from the 2022–23 trough. Perhaps friendship is, in fact, a renewable resource. Or there was just more rugby on.
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- TIMELINE -->
+<section>
+  <div class="reveal">
+    <div class="section-label">Year by Year</div>
+    <div class="section-title">The Decade<br>In Review</div>
+  </div>
+
+  <div class="timeline reveal reveal-delay-1">
+
+    <!-- 2016 -->
+    <div class="tl-year">
+      <div class="tl-year-heading">2016</div>
+      <div class="tl-year-count">10,211 messages · Founded 9 April</div>
+      <div class="tl-cards">
+        <div class="tl-card highlight">
+          <span class="tl-card-tag tag-moment">The Birth</span>
+          <div class="tl-card-text">
+            Jamie Martin Grace created a group called <strong>"USA Alpha Males"</strong> and immediately added everyone. Chris Scollard changed the icon within minutes. The first actual item of business, per Chris Lee: <em>is anyone getting a few cold beers later?</em>
+          </div>
+        </div>
+        <div class="tl-card">
+          <span class="tl-card-tag tag-funny">Opening Moves</span>
+          <div class="tl-card-text">
+            Jamie declined the first pint invitation on account of, in his words, <strong>"being a pussy"</strong>. The chat was already working exactly as intended.
+            <div class="quote">"Just one or two pints. Of gin."</div>
+            <div class="quote-attr">— Chris Lee, Day One</div>
+          </div>
+        </div>
+        <div class="tl-card">
+          <span class="tl-card-tag tag-stat">By the Numbers</span>
+          <div class="tl-card-text">
+            <strong>Chris Lee</strong> — 2,361 messages in just 8 months of the group existing. Already the clear leader. <strong>Gary Foxton</strong> — 173 messages, his most active period in the chat. Make the most of it, Gary.
+          </div>
+        </div>
+        <div class="tl-card">
+          <span class="tl-card-tag tag-funny">From the Archive</span>
+          <div class="tl-card-text">
+            <div class="quote">"I found a girl for you. Get on Tinder and let me know what you think 😊"</div>
+            <div class="quote-attr">— Chris Lee, playing matchmaker</div>
+            <div class="quote" style="margin-top:12px">"I have chosen to go with Fat Tony"</div>
+            <div class="quote-attr">— Gary Foxton, on his fantasy team name. Never explained.</div>
+          </div>
+        </div>
+        <div class="tl-card highlight">
+          <span class="tl-card-tag tag-moment">Banna Beach</span>
+          <div class="tl-card-text">
+            The group's first big social event. <strong>Banna Beach, Kerry</strong> — September 2016 — a lads' weekend away. Rob McMahon only found out he wasn't being sent to Saudi Arabia in time to join. Costumes were discussed. Eoin Gray was chasing €52.50 from people. The group had found its first tradition.
+          </div>
+        </div>
+        <div class="tl-card">
+          <span class="tl-card-tag tag-funny">Night Out Dispatch, 2:30am</span>
+          <div class="tl-card-text">
+            May 28, 2016. The chat goes active again at 2:30am.
+            <div class="quote">"Flannerys"</div>
+            <div class="quote-attr">— Chris Lee, 02:30am, location confirmed</div>
+            <div class="quote" style="margin-top:10px">"Fuck off!"</div>
+            <div class="quote-attr">— Eoin Gray, 02:47am, apparently surprised by this information</div>
+            The full context remains classified. The Flannery's era had begun.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2017 -->
+    <div class="tl-year">
+      <div class="tl-year-heading">2017</div>
+      <div class="tl-year-count">27,989 messages · The Golden Year</div>
+      <div class="tl-cards">
+        <div class="tl-card highlight">
+          <span class="tl-card-tag tag-stat">Peak Everything</span>
+          <div class="tl-card-text">
+            The group's single biggest year by a mile. February alone saw over <strong>4,140 messages</strong>. January 20 (364 messages) was one of the top 10 busiest days ever. The lads were in their prime.
+          </div>
+        </div>
+        <div class="tl-card sad">
+          <span class="tl-card-tag tag-sad">The Beginning of the End (for some)</span>
+          <div class="tl-card-text">
+            <strong>Gary Foxton</strong> sends just 31 messages all year — down from 173 in 2016. He's still technically present, but he's already fading. <strong>Tim White-Flynn</strong> joins mid-year, fires off 113 messages, then starts his long drift toward silence.
+          </div>
+        </div>
+        <div class="tl-card">
+          <span class="tl-card-tag tag-funny">On the Lions Tour</span>
+          <div class="tl-card-text">
+            The British & Irish Lions vs NZ tour generated some of the group's most intense activity. June 8 and 13 both cracked 350+ messages. The group had opinions. Many of them.
+            <div class="quote">"Lions need to use that flat ball more often."</div>
+            <div class="quote-attr">— Matty Morrow, definitive analyst</div>
+          </div>
+        </div>
+        <div class="tl-card">
+          <span class="tl-card-tag tag-funny">From the Archive</span>
+          <div class="tl-card-text">
+            <div class="quote">"Gurj is currently eating his way through Dublin dessert menus, one cheesecake at a time."</div>
+            <div class="quote-attr">— Chris Lee, providing a service</div>
+          </div>
+        </div>
+        <div class="tl-card highlight">
+          <span class="tl-card-tag tag-moment">Secret Hitler Era</span>
+          <div class="tl-card-text">
+            October 2017. Mark O'Caglahan floated Dungeons & Dragons. The group countered with <strong>Secret Hitler</strong>. Luke Madden declared it "so goooood". Lorcan Clarke: "the king of all games". Chris Scollard: "Does it tick all the Reich boxes?" Chris Lee subsequently ordered it from the US via AddressPal.
+          </div>
+        </div>
+        <div class="tl-card">
+          <span class="tl-card-tag tag-funny">Gurj's First Date Dispatch</span>
+          <div class="tl-card-text">
+            October 20, 2017. At <strong>2:08am</strong>, Gurj provided an unsolicited update to the group chat.
+            <div class="quote">"It wasn't really a first date but I definitely appreciate this haha. We ended up going to canal bank cafe for those of you wondering 😂"</div>
+            <div class="quote-attr">— Gurj Sandhu, 2:08am, keeping the lads informed</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2018 -->
+    <div class="tl-year">
+      <div class="tl-year-heading">2018</div>
+      <div class="tl-year-count">17,568 messages · Post-Peak, Still Loud</div>
+      <div class="tl-cards">
+        <div class="tl-card">
+          <span class="tl-card-tag tag-stat">The Drop</span>
+          <div class="tl-card-text">
+            Down 37% from 2017 — still nearly 18,000 messages, still a very active group. Everyone still participating, even if less frantically. This is the normal that the group settled into.
+          </div>
+        </div>
+        <div class="tl-card sad">
+          <span class="tl-card-tag tag-sad">Colman Goes Dark</span>
+          <div class="tl-card-text">
+            <strong>Colman Humphrey</strong> sends 91 messages in 2018, his last on November 17. He then disappears for <strong>314 consecutive days</strong> — almost a full year. We now know this as the America period (he was saved as "Colman AMERICA" upon return).
+          </div>
+        </div>
+        <div class="tl-card">
+          <span class="tl-card-tag tag-funny">Peak Scollard</span>
+          <div class="tl-card-text">
+            <div class="quote">"Cause Chris has no shame"</div>
+            <div class="quote-attr">— Chris Scollard, correctly</div>
+            <div class="quote" style="margin-top:12px">"What if he accidentally books a bunch of chairs masquerading as a table?"</div>
+            <div class="quote-attr">— Chris Scollard, raising a legitimate concern</div>
+          </div>
+        </div>
+        <div class="tl-card">
+          <span class="tl-card-tag tag-funny">Herron Watch</span>
+          <div class="tl-card-text">
+            <div class="quote">"Herron can fuck off back to England anyway, no way he'll be offered an extension. Genuinely the worst professional player in Ireland."</div>
+            <div class="quote-attr">— Matty Morrow, not mincing words</div>
+          </div>
+        </div>
+        <div class="tl-card highlight">
+          <span class="tl-card-tag tag-moment">Rugby 08 Night</span>
+          <div class="tl-card-text">
+            July 28, 2018. The eternal question — pub or home? — resolved itself beautifully.
+            <div class="quote">"Rugby 08 in mine starting soon"</div>
+            <div class="quote-attr">— Chris Lee, 6:33pm, establishing the venue</div>
+            Matty confirmed he was "a few scoops in". Rob needed to shower first. Chris Lee floated that it "may sort of become pre drinks." The evening escalated from there.
+          </div>
+        </div>
+        <div class="tl-card">
+          <span class="tl-card-tag tag-funny">Lads vs Judo</span>
+          <div class="tl-card-text">
+            March 2018. Luke Madden, apparently speaking from experience, issued a firm warning to the group.
+            <div class="quote">"I would advise absolutely nobody to start judo as an adult. Horrible injury is basically guaranteed."</div>
+            <div class="quote-attr">— Luke Madden, the voice of experience</div>
+            Nobody had asked about judo. Nobody was considering judo. Classic Aguero Crabs.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2019 -->
+    <div class="tl-year">
+      <div class="tl-year-heading">2019</div>
+      <div class="tl-year-count">11,339 messages · The Rugby World Cup Year</div>
+      <div class="tl-cards">
+        <div class="tl-card highlight">
+          <span class="tl-card-tag tag-moment">Japan RWC</span>
+          <div class="tl-card-text">
+            The Rugby World Cup in Japan drove significant activity. Ireland's exit generated considerable post-mortem analysis in the group. <strong>Chris Lee</strong> had many thoughts. They were shared at length.
+            <div class="quote">"Time to put a bet on France winning the world cup"</div>
+            <div class="quote-attr">— Adam McDermot, in October 2019</div>
+          </div>
+        </div>
+        <div class="tl-card sad">
+          <span class="tl-card-tag tag-sad">Gary's Last Stand</span>
+          <div class="tl-card-text">
+            <strong>Gary Foxton</strong> sends his final 20 messages. His last ever message in the Aguero Crabs is on <strong>18 August 2019</strong>. We don't know what it was about. We do know he called himself Fat Tony once, and that's enough.
+          </div>
+        </div>
+        <div class="tl-card">
+          <span class="tl-card-tag tag-funny">Tim's Last Hurrah</span>
+          <div class="tl-card-text">
+            <strong>Tim White-Flynn</strong> sends just 9 messages all year — then goes fully silent on December 9, 2019. He will not return for <strong>672 days</strong>. That's nearly two years. Nobody noticed immediately.
+          </div>
+        </div>
+        <div class="tl-card">
+          <span class="tl-card-tag tag-stat">Luke's Cliff Edge</span>
+          <div class="tl-card-text">
+            <strong>Luke Madden</strong> drops from 3,489 messages in 2017 to just <strong>476 in 2019</strong>. The biggest fall from grace in the group. To be fair, he was still 9th overall. He came back a bit in later years.
+          </div>
+        </div>
+        <div class="tl-card highlight">
+          <span class="tl-card-tag tag-moment">March Night Out, 2019</span>
+          <div class="tl-card-text">
+            March 2, 2019. Chris Lee floated pints. Gary Foxton confirmed he'd be "floating about town from 8" with Scully and Ross. Luke had a dinner until 8:30. Rob needed to check his plans. The group converged. It remains one of the last documented nights out with the full complement before the numbers started thinning.
+          </div>
+        </div>
+        <div class="tl-card">
+          <span class="tl-card-tag tag-funny">The April Fools Victim</span>
+          <div class="tl-card-text">
+            April 1, 2019. Chris Lee was caught by an April Fools joke about Devon Toner playing for Lansdowne. He admitted it publicly.
+            <div class="quote">"Ah man, April fucking fools. I got destroyed."</div>
+            <div class="quote-attr">— Chris Lee, 2:47pm, April 1, 2019. The humiliation is in the timestamps.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2020 -->
+    <div class="tl-year">
+      <div class="tl-year-heading">2020</div>
+      <div class="tl-year-count">12,129 messages · The Pandemic Year</div>
+      <div class="tl-cards">
+        <div class="tl-card highlight">
+          <span class="tl-card-tag tag-moment">Halloween Madness</span>
+          <div class="tl-card-text">
+            <strong>31 October 2020</strong> — the single busiest day in the group's entire history: <strong>619 messages</strong>. The world was in lockdown. Everyone was watching the Bledisloe Cup at midnight. The chat went properly feral.
+            <div class="quote">"How long is left. I could get out of bed."</div>
+            <div class="quote-attr">— Chris Lee, 1am, Halloween night</div>
+          </div>
+        </div>
+        <div class="tl-card">
+          <span class="tl-card-tag tag-funny">US Election Night</span>
+          <div class="tl-card-text">
+            November 4, 2020 — 418 messages as the US election count dragged on. The group was fully invested.
+            <div class="quote">"How the fuck is their counting so slow — it's taken them 5 hours to count 14k ballots."</div>
+            <div class="quote-attr">— Eoin Gray, with the hot take</div>
+          </div>
+        </div>
+        <div class="tl-card highlight">
+          <span class="tl-card-tag tag-funny">Owen's Salad</span>
+          <div class="tl-card-text">
+            In 2020, Owen Collins shared something deeply personal with the group.
+            <div class="quote">"Fuck. I just ate a salad. A salad like. Ugh."</div>
+            <div class="quote-attr">— Owen Collins, 2020. We've all been there.</div>
+          </div>
+        </div>
+        <div class="tl-card">
+          <span class="tl-card-tag tag-funny">Peak Lee</span>
+          <div class="tl-card-text">
+            <div class="quote">"Scully man, why are you awake. It's 7:30am, go back to bed."</div>
+            <div class="quote-attr">— Chris Lee, sent at 7:30am</div>
+            <div class="quote" style="margin-top:10px">"I am 100% confident we would have won the World Cup comfortably with Big Dev."</div>
+            <div class="quote-attr">— Chris Lee, with the confident take</div>
+          </div>
+        </div>
+        <div class="tl-card highlight">
+          <span class="tl-card-tag tag-moment">Election Night, 4am</span>
+          <div class="tl-card-text">
+            November 4, 2020. The US election count dragged through the night. The group was fully awake at 4am. Rob McMahon woke up to a much tighter scoreline than expected (224–213 electoral votes). Eoin Gray was tracking Georgia. Colman Humphrey was posting Nate Silver links. Chris Lee was offering tips on the Pennsylvania postal vote situation. <strong>418 messages</strong> on election day alone.
+          </div>
+        </div>
+        <div class="tl-card">
+          <span class="tl-card-tag tag-funny">The Bad Take Archive</span>
+          <div class="tl-card-text">
+            October 31, 2020 — the Halloween rugby session. Adam McDermot, watching England vs Australia:
+            <div class="quote">"England will win it now"</div>
+            <div class="quote-attr">— Adam McDermot, 9:45pm. England did not win it.</div>
+            Jamie Martin Grace, same session: "I don't want to see Stockdale in a green jersey again." Stockdale would go on to earn further caps.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2021 -->
+    <div class="tl-year">
+      <div class="tl-year-heading">2021</div>
+      <div class="tl-year-count">13,183 messages · The Recovery</div>
+      <div class="tl-cards">
+        <div class="tl-card highlight">
+          <span class="tl-card-tag tag-moment">Six Nations Frenzy</span>
+          <div class="tl-card-text">
+            March 2021 was the group's joint-third busiest month ever — <strong>2,735 messages</strong>. March 20 saw 425 messages. February 7 hit 412. The Six Nations was back, the world was opening up, and the lads had opinions.
+          </div>
+        </div>
+        <div class="tl-card sad">
+          <span class="tl-card-tag tag-sad">Tim's Brief Return</span>
+          <div class="tl-card-text">
+            After 672 days of total silence, <strong>Tim White-Flynn</strong> sends exactly <strong>one message</strong> on 11 October 2021. Then goes silent again forever. A ghost story in three acts.
+          </div>
+        </div>
+        <div class="tl-card">
+          <span class="tl-card-tag tag-funny">Lorcan on Naggins</span>
+          <div class="tl-card-text">
+            <div class="quote">"We brought naggins in, didn't we."</div>
+            <div class="quote-attr">— Lorcan Clarke, confirming important historical facts</div>
+          </div>
+        </div>
+        <div class="tl-card">
+          <span class="tl-card-tag tag-funny">Gurj Judges People</span>
+          <div class="tl-card-text">
+            <div class="quote">"But I enjoy it cause it lets me judge people."</div>
+            <div class="quote-attr">— Gurj, on something. Context unclear. Vibe: impeccable.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2022 -->
+    <div class="tl-year">
+      <div class="tl-year-heading">2022</div>
+      <div class="tl-year-count">7,612 messages · The Quiet Era Begins</div>
+      <div class="tl-cards">
+        <div class="tl-card sad">
+          <span class="tl-card-tag tag-sad">Mark Goes Silent</span>
+          <div class="tl-card-text">
+            <strong>Mark O'Caglahan</strong> sends just 5 messages in 2022. His last ever message in the Aguero Crabs lands on <strong>3 September 2022</strong>. He had been drifting since 2016's 178 messages. His absence was quiet but total.
+          </div>
+        </div>
+        <div class="tl-card">
+          <span class="tl-card-tag tag-stat">Eoin's Revival</span>
+          <div class="tl-card-text">
+            Interesting counter-trend: <strong>Eoin Gray</strong> hits <strong>1,116 messages</strong> in 2022 — his second-best year ever, up from just 445 in 2019. Life ebbs and flows. Sometimes you're more online. Eoin was more online.
+          </div>
+        </div>
+        <div class="tl-card">
+          <span class="tl-card-tag tag-funny">Scollard's Best Line</span>
+          <div class="tl-card-text">
+            <div class="quote">"It's so much less stressful when Vahaamahina or Houas aren't on the pitch to just randomly punch someone in the head."</div>
+            <div class="quote-attr">— Chris Scollard, French rugby correspondent</div>
+          </div>
+        </div>
+        <div class="tl-card">
+          <span class="tl-card-tag tag-funny">Graucho Sexton</span>
+          <div class="tl-card-text">
+            <div class="quote">"Graucho Sexton en route"</div>
+            <div class="quote-attr">— Chris Scollard. This nickname has no explanation. It doesn't need one.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2023 -->
+    <div class="tl-year">
+      <div class="tl-year-heading">2023</div>
+      <div class="tl-year-count">7,411 messages · The Quietest Year</div>
+      <div class="tl-cards">
+        <div class="tl-card sad">
+          <span class="tl-card-tag tag-sad">The 12-Day Silence</span>
+          <div class="tl-card-text">
+            September 6–17, 2023: the group went <strong>12 days without a single message</strong>. The longest silence in the group's history. Everyone presumably had a lot going on. The group survived it.
+          </div>
+        </div>
+        <div class="tl-card highlight">
+          <span class="tl-card-tag tag-moment">Rugby World Cup France</span>
+          <div class="tl-card-text">
+            Ireland's World Cup campaign in France drove a late surge. The group was not short of analysis, takes, or post-mortems.
+            <div class="quote">"Gordon Darcy: 'It'd be so French to lose to New Zealand in the first game, then win six games and win the cup. Only the French could do that.'"</div>
+            <div class="quote-attr">— Chris Lee, quoting Second Captains</div>
+          </div>
+        </div>
+        <div class="tl-card">
+          <span class="tl-card-tag tag-funny">The Haka Question</span>
+          <div class="tl-card-text">
+            <div class="quote">"Lads how long has the main haka guy been able to carry a wooden sword?"</div>
+            <div class="quote-attr">— Chris Lee, asking the real questions</div>
+          </div>
+        </div>
+        <div class="tl-card">
+          <span class="tl-card-tag tag-funny">Owen Clocks Out</span>
+          <div class="tl-card-text">
+            <strong>Owen Collins</strong> sends just 72 messages in 2023 — his worst year, down from a peak of 469 in 2020. He still shows up when needed, just with exceptional energy efficiency.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2024 -->
+    <div class="tl-year">
+      <div class="tl-year-heading">2024</div>
+      <div class="tl-year-count">8,453 messages · The Uptick</div>
+      <div class="tl-cards">
+        <div class="tl-card highlight">
+          <span class="tl-card-tag tag-moment">Green Shoots</span>
+          <div class="tl-card-text">
+            After two quiet years, activity nudges back up. <strong>Matty Morrow</strong> has his best year in a while at 2,546 messages. <strong>Chris Lee</strong> remains relentlessly, stubbornly present at 2,226.
+          </div>
+        </div>
+        <div class="tl-card">
+          <span class="tl-card-tag tag-funny">Lorcan Resurfaces</span>
+          <div class="tl-card-text">
+            <strong>Lorcan Clarke</strong> has his busiest year since 2017 — 219 messages. He's coming back. He has opinions about Leinster's Champions Cup form, which he is happy to share.
+            <div class="quote">"The underdog has won this fixture in 4/4 games."</div>
+            <div class="quote-attr">— Lorcan, with receipts</div>
+          </div>
+        </div>
+        <div class="tl-card">
+          <span class="tl-card-tag tag-funny">Matty on Aido</span>
+          <div class="tl-card-text">
+            <div class="quote">"When I lived with Aido, he once broke his wrist and didn't go to hospital for over 24 hours."</div>
+            <div class="quote-attr">— Matty Morrow, contextualising a rugby injury discussion with a devastating aside</div>
+          </div>
+        </div>
+        <div class="tl-card">
+          <span class="tl-card-tag tag-stat">Paris Olympics</span>
+          <div class="tl-card-text">
+            The Paris Olympics drove some side conversation. Matty was tracking medal hopes. Parkrun also gets a mention — the group is ageing into wellness, apparently.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2025 -->
+    <div class="tl-year">
+      <div class="tl-year-heading">2025</div>
+      <div class="tl-year-count">9,364 messages · Best Year Since 2021</div>
+      <div class="tl-cards">
+        <div class="tl-card highlight">
+          <span class="tl-card-tag tag-moment">The Revival</span>
+          <div class="tl-card-text">
+            The group's strongest year since 2021. <strong>Matty Morrow</strong> hits 3,030 messages — his best in years. <strong>Lorcan Clarke</strong> posts 250, up year on year. <strong>March 8</strong> hits 406 messages, the 5th busiest day ever. What happened? Rugby.
+          </div>
+        </div>
+        <div class="tl-card sad">
+          <span class="tl-card-tag tag-sad">Jamie Goes Quiet</span>
+          <div class="tl-card-text">
+            <strong>Jamie Martin Grace</strong> — the man who created the group, who delivered its first line — posts just <strong>243 messages</strong> in 2025. His worst year ever. The founder fades. His last message of the year is in late March.
+          </div>
+        </div>
+        <div class="tl-card">
+          <span class="tl-card-tag tag-funny">Scollard in Absentia</span>
+          <div class="tl-card-text">
+            <strong>Chris Scollard</strong> — who changed the original group icon in 2016 and once sent 3,243 messages in a year — posts just <strong>299</strong> in 2025. He disappeared for 38 days solid in late summer. No explanation given.
+          </div>
+        </div>
+        <div class="tl-card">
+          <span class="tl-card-tag tag-funny">From the Archive</span>
+          <div class="tl-card-text">
+            <div class="quote">"(Sorry that joke is an AWFUL stretch)"</div>
+            <div class="quote-attr">— Chris Lee, self-aware for once</div>
+            <div class="quote" style="margin-top:10px">"One week Smithwicks, the next Rascals"</div>
+            <div class="quote-attr">— Adam McDermot, on... something. The chaos, probably.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- RECORDS -->
+<section>
+  <div class="reveal">
+    <div class="section-label">Hall of Records</div>
+    <div class="section-title">Achievements,<br>Feats & Crimes</div>
+  </div>
+
+  <div class="records-grid reveal reveal-delay-1">
+
+    <div class="record-card">
+      <div class="record-icon">🔥</div>
+      <div class="record-title">Busiest Day Ever</div>
+      <div class="record-value">619 Messages</div>
+      <div class="record-desc">31 October 2020. Halloween. The Bledisloe Cup. Lockdown. All at once. The group absolutely lost the plot.</div>
+    </div>
+
+    <div class="record-card">
+      <div class="record-icon">🏆</div>
+      <div class="record-title">Most Prolific</div>
+      <div class="record-value">Chris Lee</div>
+      <div class="record-desc">32,422 messages. 25% of everything ever said in this group. Also sent 2,124 media files. He simply will not stop.</div>
+    </div>
+
+    <div class="record-card">
+      <div class="record-icon">👻</div>
+      <div class="record-title">Longest Ghost</div>
+      <div class="record-value">672 Days</div>
+      <div class="record-desc">Tim White-Flynn. December 2019 to October 2021. Nearly two years of silence. Came back once. Sent one message. Left again.</div>
+    </div>
+
+    <div class="record-card">
+      <div class="record-icon">😴</div>
+      <div class="record-title">Group Silence</div>
+      <div class="record-value">12 Days</div>
+      <div class="record-desc">September 6–17, 2023. The longest the group ever went without a single message. Life happens. The chat survived.</div>
+    </div>
+
+    <div class="record-card">
+      <div class="record-icon">🌙</div>
+      <div class="record-title">Biggest Night Owl</div>
+      <div class="record-value">340 Messages</div>
+      <div class="record-desc">Chris Lee, sent between midnight and 4am. He is awake. He is typing. He has opinions about a game that ended three hours ago.</div>
+    </div>
+
+    <div class="record-card">
+      <div class="record-icon">📸</div>
+      <div class="record-title">Most Media Sent</div>
+      <div class="record-value">2,124 files</div>
+      <div class="record-desc">Chris Lee again. Nearly a third of all media in the group. Clips, articles, memes. An archive. A curse. A gift.</div>
+    </div>
+
+    <div class="record-card">
+      <div class="record-icon">🔁</div>
+      <div class="record-title">Most Said Word</div>
+      <div class="record-value">"Yeah"</div>
+      <div class="record-desc">Sent exactly 249 times as a standalone message. Followed by "haha" (202×), "lol" (179×), and 😂😂😂 (125×).</div>
+    </div>
+
+    <div class="record-card">
+      <div class="record-icon">🗒️</div>
+      <div class="record-title">Longest Messages</div>
+      <div class="record-value">Lorcan Clarke</div>
+      <div class="record-desc">Avg 70.7 characters per message — the highest in the group. When Lorcan shows up, he brings his full thoughts.</div>
+    </div>
+
+    <div class="record-card">
+      <div class="record-icon">🔥</div>
+      <div class="record-title">Peak Month</div>
+      <div class="record-value">Feb 2017</div>
+      <div class="record-desc">4,140 messages in one month. January 2017 was second with 3,284. The golden era in concentrated form.</div>
+    </div>
+
+    <div class="record-card">
+      <div class="record-icon">📅</div>
+      <div class="record-title">Consecutive Streak</div>
+      <div class="record-value">330 Days</div>
+      <div class="record-desc">The longest run of consecutive days with at least one message in the group. That's nearly a year of unbroken chat.</div>
+    </div>
+
+    <div class="record-card">
+      <div class="record-icon">🌍</div>
+      <div class="record-title">Most Names</div>
+      <div class="record-value">Colman (×3)</div>
+      <div class="record-desc">Colman Humphrey, Colman AMERICA, Colman France. One lad, three contact names, one very long gap in 2018–19.</div>
+    </div>
+
+    <div class="record-card">
+      <div class="record-icon">🎫</div>
+      <div class="record-title">Most Tickets Wanted</div>
+      <div class="record-value">Gurj Sandhu</div>
+      <div class="record-desc">"Tickets" is Gurj's most distinctive word. He has been seeking tickets, offering tickets, or discussing tickets for a decade.</div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- GREATEST HITS -->
+<section>
+  <div class="reveal">
+    <div class="section-label">The Lexicon</div>
+    <div class="section-title">Words the Group<br>Cannot Stop Using</div>
+  </div>
+
+  <div class="reveal reveal-delay-1">
+    <p style="color:var(--muted); margin-bottom:32px; font-size:14px;">127,892 messages. These are the things you kept coming back to.</p>
+
+    <div class="hits-list">
+      <div class="hit-item">
+        <div class="hit-num">1</div>
+        <div>
+          <div class="hit-phrase">"Yeah"</div>
+          <div class="hit-count">249× as a standalone message</div>
+          <div class="hit-note">The group's primary mode of agreement. Efficient. Devastating.</div>
+        </div>
+      </div>
+      <div class="hit-item">
+        <div class="hit-num">2</div>
+        <div>
+          <div class="hit-phrase">"Haha"</div>
+          <div class="hit-count">202× exact message · Thousands more embedded</div>
+          <div class="hit-note">The primary laugh. "Hahaha" (114×) and "Hahah" (51×) are separate entries. The group cannot agree on how many ha's.</div>
+        </div>
+      </div>
+      <div class="hit-item">
+        <div class="hit-num">3</div>
+        <div>
+          <div class="hit-phrase">"Leinster"</div>
+          <div class="hit-count">967× by Chris Lee · 912× by Matty Morrow</div>
+          <div class="hit-note">The word that appears more than any other substantive noun in the entire chat. This group loves, hates, dissects, and cannot let go of Leinster Rugby.</div>
+        </div>
+      </div>
+      <div class="hit-item">
+        <div class="hit-num">4</div>
+        <div>
+          <div class="hit-phrase">"Jesus"</div>
+          <div class="hit-count">52× as a standalone · Many hundreds more in context</div>
+          <div class="hit-note">The go-to expression of mild disbelief. Right below "fuck" (57×) and "fuck sake" (36×) in the all-time charts.</div>
+        </div>
+      </div>
+      <div class="hit-item">
+        <div class="hit-num">5</div>
+        <div>
+          <div class="hit-phrase">"Agreed"</div>
+          <div class="hit-count">66× as a standalone</div>
+          <div class="hit-note">The group's formal mode. "Agreed" instead of "yeah". Usually deployed when the take is good and someone doesn't want to just "yeah" it.</div>
+        </div>
+      </div>
+      <div class="hit-item">
+        <div class="hit-num">6</div>
+        <div>
+          <div class="hit-phrase">"Great try"</div>
+          <div class="hit-count">35× as a standalone</div>
+          <div class="hit-note">Peak live-match commentary energy. The game is on. Someone scores. The group briefly becomes a commentary box.</div>
+        </div>
+      </div>
+      <div class="hit-item">
+        <div class="hit-num">7</div>
+        <div>
+          <div class="hit-phrase">"Oh yes"</div>
+          <div class="hit-count">40× as a standalone</div>
+          <div class="hit-note">The group's pure expression of joy. Understated, but it covers a lot of ground.</div>
+        </div>
+      </div>
+      <div class="hit-item">
+        <div class="hit-num">8</div>
+        <div>
+          <div class="hit-phrase">"FFS"</div>
+          <div class="hit-count">35× exact · Many more in full</div>
+          <div class="hit-note">Deployed when something predictably bad has happened. A referee decision. An injury. A missed kick. A late reply to a plan.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Word cloud -->
+  <div class="reveal reveal-delay-2" style="margin-top:48px">
+    <div class="section-label">Topic DNA</div>
+    <p style="color:var(--muted); font-size:14px; margin-bottom:16px;">The words that define the Aguero Crabs, sized by frequency</p>
+    <div class="word-cloud">
+      <span class="word-pill big">leinster</span>
+      <span class="word-pill big">game</span>
+      <span class="word-pill big">yeah</span>
+      <span class="word-pill medium">rugby</span>
+      <span class="word-pill medium">team</span>
+      <span class="word-pill medium">play</span>
+      <span class="word-pill medium">great</span>
+      <span class="word-pill medium">ulster</span>
+      <span class="word-pill medium">try</span>
+      <span class="word-pill medium">back</span>
+      <span class="word-pill medium">haha</span>
+      <span class="word-pill">munster</span>
+      <span class="word-pill">tickets</span>
+      <span class="word-pill">pints</span>
+      <span class="word-pill">sexton</span>
+      <span class="word-pill">ireland</span>
+      <span class="word-pill">season</span>
+      <span class="word-pill">match</span>
+      <span class="word-pill small">scrum</span>
+      <span class="word-pill small">amazing</span>
+      <span class="word-pill small">ffs</span>
+      <span class="word-pill small">agreed</span>
+      <span class="word-pill small">class</span>
+      <span class="word-pill small">ugh</span>
+      <span class="word-pill small">cheesecake</span>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- NIGHT OWLS -->
+<section>
+  <div class="reveal">
+    <div class="section-label">Midnight – 4am</div>
+    <div class="section-title">Who Was Still<br>Awake</div>
+  </div>
+  <div class="reveal reveal-delay-1">
+    <p style="color:var(--muted); font-size:14px; margin-bottom:28px;">Total messages sent between midnight and 4am across the entire decade.</p>
+    <div class="owl-list">
+      <div class="owl-row">
+        <div class="owl-name">Chris Lee</div>
+        <div class="owl-bar-wrap"><div class="owl-bar" style="width:100%"></div></div>
+        <div class="owl-count">340</div>
+      </div>
+      <div class="owl-row">
+        <div class="owl-name">Chris Scollard</div>
+        <div class="owl-bar-wrap"><div class="owl-bar" style="width:43%"></div></div>
+        <div class="owl-count">147</div>
+      </div>
+      <div class="owl-row">
+        <div class="owl-name">Rob McMahon</div>
+        <div class="owl-bar-wrap"><div class="owl-bar" style="width:36%"></div></div>
+        <div class="owl-count">123</div>
+      </div>
+      <div class="owl-row">
+        <div class="owl-name">Gurj Sandhu</div>
+        <div class="owl-bar-wrap"><div class="owl-bar" style="width:24%"></div></div>
+        <div class="owl-count">81</div>
+      </div>
+      <div class="owl-row">
+        <div class="owl-name">Colman Humphrey</div>
+        <div class="owl-bar-wrap"><div class="owl-bar" style="width:24%"></div></div>
+        <div class="owl-count">83</div>
+      </div>
+      <div class="owl-row">
+        <div class="owl-name">Matty Morrow</div>
+        <div class="owl-bar-wrap"><div class="owl-bar" style="width:27%"></div></div>
+        <div class="owl-count">93</div>
+      </div>
+      <div class="owl-row">
+        <div class="owl-name">Jamie Martin Grace</div>
+        <div class="owl-bar-wrap"><div class="owl-bar" style="width:21%"></div></div>
+        <div class="owl-count">72</div>
+      </div>
+      <div class="owl-row">
+        <div class="owl-name">Eoin Gray</div>
+        <div class="owl-bar-wrap"><div class="owl-bar" style="width:16%"></div></div>
+        <div class="owl-count">55</div>
+      </div>
+      <div class="owl-row">
+        <div class="owl-name">Owen Collins</div>
+        <div class="owl-bar-wrap"><div class="owl-bar" style="width:14%"></div></div>
+        <div class="owl-count">48</div>
+      </div>
+      <div class="owl-row">
+        <div class="owl-name">Luke Madden</div>
+        <div class="owl-bar-wrap"><div class="owl-bar" style="width:11%"></div></div>
+        <div class="owl-count">37</div>
+      </div>
+    </div>
+    <p style="color:var(--muted); font-size:12px; margin-top:20px; font-family:'DM Mono',monospace;">Note: many of these are live match threads where the game ran late. Some are just insomnia.</p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- THE FADE-OUTS -->
+<section>
+  <div class="reveal">
+    <div class="section-label">In Memoriam</div>
+    <div class="section-title">The Ones<br>Who Got Quiet</div>
+  </div>
+
+  <div class="reveal reveal-delay-1">
+    <p style="color:var(--muted); font-size:14px; margin-bottom:24px;">Every group has them. The ones who were there, then weren't. This is not a condemnation — life happens, group chats drift, phones get lost. But the data is the data.</p>
+
+    <div class="fadeout-section">
+      <div class="fadeout-title">Still in the group. No longer speaking.</div>
+      <div class="fadeout-list">
+
+        <div class="fadeout-item">
+          <div>
+            <div class="fadeout-name">Gary Foxton</div>
+            <div class="fadeout-last">Last message: 18 August 2019</div>
+          </div>
+          <div class="fadeout-desc">Peaked at 173 messages in 2016. Called himself Fat Tony in a fantasy league. Properly engaged in the early years. Then, gradually, wasn't. Has now been silent for over 5 years. <strong>His longest gap between messages was 123 days in 2017</strong> — a warning sign in retrospect.</div>
+        </div>
+
+        <div class="fadeout-item">
+          <div>
+            <div class="fadeout-name">Tim White-Flynn</div>
+            <div class="fadeout-last">Last message: 11 October 2021</div>
+          </div>
+          <div class="fadeout-desc">Arrived in February 2017. Sent 113 messages that year. Then 34. Then 9. Then zero for <strong>672 consecutive days</strong>. Returned for one message in 2021. Left again. This is, genuinely, a ghost story.</div>
+        </div>
+
+        <div class="fadeout-item">
+          <div>
+            <div class="fadeout-name">Mark O'Caglahan</div>
+            <div class="fadeout-last">Last message: 3 September 2022</div>
+          </div>
+          <div class="fadeout-desc">A founding member. 178 messages in 2016. Held on through 2019 (29 messages), 2020 (42), 2021 (15). Then five in 2022 and gone. <strong>His most used word in later years was "lads"</strong> — always reaching out, less and less often.</div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="tl-card" style="margin-top:16px; border-color:rgba(255,68,68,0.15);">
+      <span class="tl-card-tag tag-sad">The Partial Fades</span>
+      <div class="tl-card-text">
+        <strong>Jamie Martin Grace</strong> — the group's founder — has been trending down since his 2017 peak of 2,488 messages. In 2025 he sent just 243. He's still there, still sharp when he appears, but increasingly rare. 
+        <br><br>
+        <strong>Chris Scollard</strong> — who changed the group icon in the first five minutes — went from 3,243 in 2017 to 299 in 2025, including one 38-day gap of silence. The co-founder, fading quietly.
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PROFILES -->
+<section>
+  <div class="reveal">
+    <div class="section-label">Character Studies</div>
+    <div class="section-title">The Starting<br>Fifteen</div>
+  </div>
+
+  <div class="profiles-grid reveal reveal-delay-1">
+
+    <div class="profile-card">
+      <div class="profile-header">
+        <div>
+          <div class="profile-name">Chris Lee</div>
+          <div class="profile-msgs">32,422 messages · #1</div>
+        </div>
+        <div class="profile-rank">1</div>
+      </div>
+      <div class="profile-stats">
+        <div class="profile-stat">
+          <div class="profile-stat-label">Peak Year</div>
+          <div class="profile-stat-val">2017 (6,809)</div>
+        </div>
+        <div class="profile-stat">
+          <div class="profile-stat-label">After Midnight</div>
+          <div class="profile-stat-val">340 messages</div>
+        </div>
+        <div class="profile-stat">
+          <div class="profile-stat-label">Top Word</div>
+          <div class="profile-stat-val">"Leinster"</div>
+        </div>
+        <div class="profile-stat">
+          <div class="profile-stat-label">Media Sent</div>
+          <div class="profile-stat-val">2,124 files</div>
+        </div>
+      </div>
+      <div class="profile-verdict">The <strong>main character</strong>. A quarter of everything ever said in this group came from him. Still going. Shows no signs of stopping. Sent 340 messages between midnight and 4am. His top word is "Leinster", naturally.</div>
+    </div>
+
+    <div class="profile-card">
+      <div class="profile-header">
+        <div>
+          <div class="profile-name">Matty Morrow</div>
+          <div class="profile-msgs">28,725 messages · #2</div>
+        </div>
+        <div class="profile-rank">2</div>
+      </div>
+      <div class="profile-stats">
+        <div class="profile-stat">
+          <div class="profile-stat-label">Peak Year</div>
+          <div class="profile-stat-val">2025 (3,030)</div>
+        </div>
+        <div class="profile-stat">
+          <div class="profile-stat-label">Top Word</div>
+          <div class="profile-stat-val">"Leinster"</div>
+        </div>
+        <div class="profile-stat">
+          <div class="profile-stat-label">Also Used</div>
+          <div class="profile-stat-val">"Ulster" 623×</div>
+        </div>
+        <div class="profile-stat">
+          <div class="profile-stat-label">Joined</div>
+          <div class="profile-stat-val">Aug 2016</div>
+        </div>
+      </div>
+      <div class="profile-verdict">Joined a few months late but <strong>almost caught up</strong>. His most active year was actually 2025 — still growing. Has written "Leinster" 912 times and "Ulster" 623 times. A man of the provinces.</div>
+    </div>
+
+    <div class="profile-card">
+      <div class="profile-header">
+        <div>
+          <div class="profile-name">Jamie Martin Grace</div>
+          <div class="profile-msgs">8,989 messages · #7</div>
+        </div>
+        <div class="profile-rank">7</div>
+      </div>
+      <div class="profile-stats">
+        <div class="profile-stat">
+          <div class="profile-stat-label">Role</div>
+          <div class="profile-stat-val">Founder</div>
+        </div>
+        <div class="profile-stat">
+          <div class="profile-stat-label">First Line</div>
+          <div class="profile-stat-val">"About time"</div>
+        </div>
+        <div class="profile-stat">
+          <div class="profile-stat-label">Peak Year</div>
+          <div class="profile-stat-val">2017 (2,488)</div>
+        </div>
+        <div class="profile-stat">
+          <div class="profile-stat-label">2025 Messages</div>
+          <div class="profile-stat-val">243</div>
+        </div>
+      </div>
+      <div class="profile-verdict">Created the group. Delivered its first message. Has been <strong>fading since 2017</strong>. His decline from founder to occasional presence is the group's quiet tragedy. Still sharp when he shows up.</div>
+    </div>
+
+    <div class="profile-card">
+      <div class="profile-header">
+        <div>
+          <div class="profile-name">Chris Scollard</div>
+          <div class="profile-msgs">9,794 messages · #4</div>
+        </div>
+        <div class="profile-rank">4</div>
+      </div>
+      <div class="profile-stats">
+        <div class="profile-stat">
+          <div class="profile-stat-label">First Act</div>
+          <div class="profile-stat-val">Changed the icon</div>
+        </div>
+        <div class="profile-stat">
+          <div class="profile-stat-label">Top Word</div>
+          <div class="profile-stat-val">"Haha" (255×)</div>
+        </div>
+        <div class="profile-stat">
+          <div class="profile-stat-label">Peak</div>
+          <div class="profile-stat-val">2017 (3,243)</div>
+        </div>
+        <div class="profile-stat">
+          <div class="profile-stat-label">2025 Messages</div>
+          <div class="profile-stat-val">299</div>
+        </div>
+      </div>
+      <div class="profile-verdict">Changed the group icon within minutes of it being created. Has been <strong>declining ever since</strong>, in message terms. Still produces some of the group's funniest lines. Coined "Graucho Sexton".</div>
+    </div>
+
+    <div class="profile-card">
+      <div class="profile-header">
+        <div>
+          <div class="profile-name">Gurj Sandhu</div>
+          <div class="profile-msgs">4,011 messages · #9</div>
+        </div>
+        <div class="profile-rank">9</div>
+      </div>
+      <div class="profile-stats">
+        <div class="profile-stat">
+          <div class="profile-stat-label">Top Word</div>
+          <div class="profile-stat-val">"Tickets"</div>
+        </div>
+        <div class="profile-stat">
+          <div class="profile-stat-label">Also Top</div>
+          <div class="profile-stat-val">"Haha" (151×)</div>
+        </div>
+        <div class="profile-stat">
+          <div class="profile-stat-label">Short Msgs</div>
+          <div class="profile-stat-val">11.2% of total</div>
+        </div>
+        <div class="profile-stat">
+          <div class="profile-stat-label">Joined</div>
+          <div class="profile-stat-val">July 2016</div>
+        </div>
+      </div>
+      <div class="profile-verdict">Man of few words, big asks. <strong>"Tickets"</strong> is literally his top unique word. 11% of his messages are five characters or fewer — the highest short-message rate of the core group. Still going strong.</div>
+    </div>
+
+    <div class="profile-card">
+      <div class="profile-header">
+        <div>
+          <div class="profile-name">Owen Collins</div>
+          <div class="profile-msgs">2,889 messages · #10</div>
+        </div>
+        <div class="profile-rank">10</div>
+      </div>
+      <div class="profile-stats">
+        <div class="profile-stat">
+          <div class="profile-stat-label">Top Word</div>
+          <div class="profile-stat-val">"Great"</div>
+        </div>
+        <div class="profile-stat">
+          <div class="profile-stat-label">Also Top</div>
+          <div class="profile-stat-val">"Actually" (62×)</div>
+        </div>
+        <div class="profile-stat">
+          <div class="profile-stat-label">Peak Year</div>
+          <div class="profile-stat-val">2020 (469)</div>
+        </div>
+        <div class="profile-stat">
+          <div class="profile-stat-label">2023 Msgs</div>
+          <div class="profile-stat-val">72 (career low)</div>
+        </div>
+      </div>
+      <div class="profile-verdict">The group's most <strong>relentlessly positive</strong> contributor. "Great" is his most used word. His lowest year was 2023 (72 messages). He was also the one who ate a salad and immediately told everyone.</div>
+    </div>
+
+    <div class="profile-card">
+      <div class="profile-header">
+        <div>
+          <div class="profile-name">Lorcan Clarke</div>
+          <div class="profile-msgs">1,532 messages · #11</div>
+        </div>
+        <div class="profile-rank">11</div>
+      </div>
+      <div class="profile-stats">
+        <div class="profile-stat">
+          <div class="profile-stat-label">Avg Msg Length</div>
+          <div class="profile-stat-val">70.7 chars</div>
+        </div>
+        <div class="profile-stat">
+          <div class="profile-stat-label">Longest Msg</div>
+          <div class="profile-stat-val">743 chars</div>
+        </div>
+        <div class="profile-stat">
+          <div class="profile-stat-label">Joined</div>
+          <div class="profile-stat-val">Dec 2016</div>
+        </div>
+        <div class="profile-stat">
+          <div class="profile-stat-label">Trending</div>
+          <div class="profile-stat-val">Up (250 in 2025)</div>
+        </div>
+      </div>
+      <div class="profile-verdict">Writes the <strong>longest messages</strong> in the group — avg 70.7 characters, highest of anyone. When Lorcan shows up, he has thought things through. His comeback in 2024–25 is one of the chat's quiet successes.</div>
+    </div>
+
+    <div class="profile-card">
+      <div class="profile-header">
+        <div>
+          <div class="profile-name">Colman Humphrey</div>
+          <div class="profile-msgs">881 messages · #12</div>
+        </div>
+        <div class="profile-rank">12</div>
+      </div>
+      <div class="profile-stats">
+        <div class="profile-stat">
+          <div class="profile-stat-label">Top Word</div>
+          <div class="profile-stat-val">"Lmao"</div>
+        </div>
+        <div class="profile-stat">
+          <div class="profile-stat-label">Laugh Rate</div>
+          <div class="profile-stat-val">9.8% of msgs</div>
+        </div>
+        <div class="profile-stat">
+          <div class="profile-stat-label">Longest Gap</div>
+          <div class="profile-stat-val">314 days</div>
+        </div>
+        <div class="profile-stat">
+          <div class="profile-stat-label">Known As</div>
+          <div class="profile-stat-val">3 contact names</div>
+        </div>
+      </div>
+      <div class="profile-verdict">Three different contact names depending on where he was living. Vanished for <strong>314 days</strong> during the America period. Has the <strong>second highest laugh rate</strong> in the group at 9.8% — when he's here, he's entertained.</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <span class="footer-crab">🦀</span>
+  <div class="footer-title">Aguero Crabs</div>
+  <div class="footer-sub">9 April 2016 — 9 April 2026</div>
+  <p style="color:var(--muted); max-width:500px; margin:0 auto 32px; font-size:14px; line-height:1.8;">
+    127,892 messages. 10 years. 15 lads. A group that started with cold beers,<br>
+    became a rugby commentary box, survived a pandemic,<br>
+    and is still going. Somehow, still going.
+  </p>
+  <div class="footer-meta">Generated April 2026 · Aguero Crabs Analytics Department</div>
+</footer>
+
+<script>
+// Scroll reveal
+const revealEls = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+revealEls.forEach(el => observer.observe(el));
+
+// Animate leaderboard bars on scroll
+const lbRows = document.querySelectorAll('.lb-row');
+const lbObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateX(0)';
+      }, i * 50);
+      lbObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1 });
+
+lbRows.forEach((row, i) => {
+  row.style.opacity = '0';
+  row.style.transform = 'translateX(-20px)';
+  row.style.transition = `opacity 0.4s ease ${i * 0.04}s, transform 0.4s ease ${i * 0.04}s`;
+  lbObserver.observe(row);
+});
+</script>
+
+<style>
+.race-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 36px;
+  position: absolute;
+  width: 100%;
+  transition: top 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.race-rank {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 18px;
+  color: var(--faint);
+  width: 20px;
+  text-align: right;
+  flex-shrink: 0;
+  line-height: 1;
+  transition: color 0.3s;
+}
+.race-rank.top3 { color: var(--accent); }
+.race-name {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  width: 100px;
+  flex-shrink: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--text);
+}
+.race-bar-bg {
+  flex: 1;
+  height: 24px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+}
+.race-bar-fill {
+  height: 100%;
+  border-radius: 1px;
+  position: absolute;
+  top: 0; left: 0;
+  transition: width 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0.85;
+}
+.race-count {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  width: 56px;
+  text-align: right;
+  flex-shrink: 0;
+}
+@keyframes raceFlash {
+  0%   { opacity: 1; }
+  20%  { opacity: 0.25; }
+  60%  { opacity: 0.25; }
+  100% { opacity: 1; }
+}
+@keyframes raceGlow {
+  0%   { filter: brightness(1); }
+  40%  { filter: brightness(2); }
+  100% { filter: brightness(1); }
+}
+.race-row.overtaking .race-name {
+  animation: raceFlash 0.5s ease forwards;
+}
+.race-row.overtaking .race-bar-fill {
+  animation: raceGlow 0.5s ease forwards;
+}
+.race-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+.race-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 1px;
+  flex-shrink: 0;
+}
+</style>
+
+<script>
+(function() {
+  const COLORS = {
+    'Chris Lee':         '#3266ad',
+    'Matty Morrow':      '#1D9E75',
+    'Luke Madden':       '#D85A30',
+    'Chris Scollard':    '#8B5CF6',
+    'Adam McDermot':     '#BA7517',
+    'Eoin Gray':         '#D4537E',
+    'Jamie Martin Grace':'#185FA5',
+    'Rob McMahon':       '#639922',
+    'Owen Collins':      '#E24B4A',
+    'Lorcan Clarke':     '#0F6E56',
+    'Colman Humphrey':   '#993C1D',
+  };
+  const DISPLAY = {
+    'Chris Lee':         'C. Lee',
+    'Matty Morrow':      'M. Morrow',
+    'Luke Madden':       'L. Madden',
+    'Chris Scollard':    'C. Scollard',
+    'Adam McDermot':     'A. McDermot',
+    'Eoin Gray':         'E. Gray',
+    'Jamie Martin Grace':'J.M. Grace',
+    'Rob McMahon':       'R. McMahon',
+    'Owen Collins':      'O. Collins',
+    'Lorcan Clarke':     'L. Clarke',
+    'Colman Humphrey':   'C. Humphrey',
+  };
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  function fmtMonth(s) { const [y,m]=s.split('-'); return MONTHS[+m-1]+' '+y; }
+
+  const D=[{"month":"2016-04","rankings":[{"name":"Chris Lee","total":77},{"name":"Jamie Martin Grace","total":43},{"name":"Eoin Gray","total":38},{"name":"Chris Scollard","total":31},{"name":"Rob McMahon","total":28},{"name":"Owen Collins","total":25},{"name":"Adam McDermot","total":13},{"name":"Matty Morrow","total":0},{"name":"Luke Madden","total":0},{"name":"Lorcan Clarke","total":0},{"name":"Colman Humphrey","total":0}]},{"month":"2016-05","rankings":[{"name":"Chris Lee","total":276},{"name":"Jamie Martin Grace","total":178},{"name":"Eoin Gray","total":122},{"name":"Rob McMahon","total":119},{"name":"Chris Scollard","total":104},{"name":"Adam McDermot","total":63},{"name":"Owen Collins","total":58},{"name":"Luke Madden","total":39},{"name":"Matty Morrow","total":0},{"name":"Lorcan Clarke","total":0},{"name":"Colman Humphrey","total":0}]},{"month":"2016-06","rankings":[{"name":"Chris Lee","total":521},{"name":"Luke Madden","total":398},{"name":"Jamie Martin Grace","total":380},{"name":"Rob McMahon","total":190},{"name":"Chris Scollard","total":185},{"name":"Eoin Gray","total":183},{"name":"Adam McDermot","total":141},{"name":"Owen Collins","total":135},{"name":"Matty Morrow","total":0},{"name":"Lorcan Clarke","total":0},{"name":"Colman Humphrey","total":0}]},{"month":"2016-07","rankings":[{"name":"Chris Lee","total":597},{"name":"Jamie Martin Grace","total":461},{"name":"Luke Madden","total":440},{"name":"Eoin Gray","total":260},{"name":"Chris Scollard","total":259},{"name":"Rob McMahon","total":221},{"name":"Adam McDermot","total":163},{"name":"Owen Collins","total":148},{"name":"Matty Morrow","total":0},{"name":"Lorcan Clarke","total":0},{"name":"Colman Humphrey","total":0}]},{"month":"2016-08","rankings":[{"name":"Chris Lee","total":761},{"name":"Jamie Martin Grace","total":607},{"name":"Luke Madden","total":483},{"name":"Chris Scollard","total":325},{"name":"Eoin Gray","total":315},{"name":"Rob McMahon","total":290},{"name":"Adam McDermot","total":183},{"name":"Owen Collins","total":179},{"name":"Matty Morrow","total":5},{"name":"Lorcan Clarke","total":0},{"name":"Colman Humphrey","total":0}]},{"month":"2016-09","rankings":[{"name":"Chris Lee","total":1010},{"name":"Jamie Martin Grace","total":777},{"name":"Luke Madden","total":565},{"name":"Chris Scollard","total":486},{"name":"Rob McMahon","total":423},{"name":"Eoin Gray","total":411},{"name":"Adam McDermot","total":263},{"name":"Owen Collins","total":209},{"name":"Matty Morrow","total":60},{"name":"Lorcan Clarke","total":0},{"name":"Colman Humphrey","total":0}]},{"month":"2016-10","rankings":[{"name":"Chris Lee","total":1325},{"name":"Jamie Martin Grace","total":948},{"name":"Luke Madden","total":715},{"name":"Chris Scollard","total":646},{"name":"Rob McMahon","total":582},{"name":"Eoin Gray","total":503},{"name":"Adam McDermot","total":340},{"name":"Owen Collins","total":250},{"name":"Matty Morrow","total":208},{"name":"Lorcan Clarke","total":0},{"name":"Colman Humphrey","total":0}]},{"month":"2016-11","rankings":[{"name":"Chris Lee","total":1807},{"name":"Jamie Martin Grace","total":1189},{"name":"Luke Madden","total":875},{"name":"Chris Scollard","total":871},{"name":"Rob McMahon","total":815},{"name":"Eoin Gray","total":639},{"name":"Matty Morrow","total":466},{"name":"Adam McDermot","total":458},{"name":"Owen Collins","total":272},{"name":"Colman Humphrey","total":8},{"name":"Lorcan Clarke","total":0}]},{"month":"2016-12","rankings":[{"name":"Chris Lee","total":2361},{"name":"Chris Scollard","total":1339},{"name":"Jamie Martin Grace","total":1319},{"name":"Luke Madden","total":1264},{"name":"Rob McMahon","total":953},{"name":"Matty Morrow","total":778},{"name":"Eoin Gray","total":778},{"name":"Adam McDermot","total":604},{"name":"Owen Collins","total":289},{"name":"Colman Humphrey","total":15},{"name":"Lorcan Clarke","total":5}]},{"month":"2017-01","rankings":[{"name":"Chris Lee","total":3215},{"name":"Luke Madden","total":1777},{"name":"Chris Scollard","total":1745},{"name":"Jamie Martin Grace","total":1402},{"name":"Matty Morrow","total":1389},{"name":"Rob McMahon","total":1238},{"name":"Eoin Gray","total":959},{"name":"Adam McDermot","total":837},{"name":"Owen Collins","total":314},{"name":"Colman Humphrey","total":30},{"name":"Lorcan Clarke","total":5}]},{"month":"2017-02","rankings":[{"name":"Chris Lee","total":4137},{"name":"Luke Madden","total":2579},{"name":"Chris Scollard","total":2176},{"name":"Matty Morrow","total":2099},{"name":"Jamie Martin Grace","total":1680},{"name":"Rob McMahon","total":1554},{"name":"Eoin Gray","total":1212},{"name":"Adam McDermot","total":1071},{"name":"Owen Collins","total":386},{"name":"Colman Humphrey","total":58},{"name":"Lorcan Clarke","total":32}]},{"month":"2017-03","rankings":[{"name":"Chris Lee","total":4799},{"name":"Luke Madden","total":2804},{"name":"Matty Morrow","total":2460},{"name":"Chris Scollard","total":2427},{"name":"Jamie Martin Grace","total":1936},{"name":"Rob McMahon","total":1745},{"name":"Eoin Gray","total":1351},{"name":"Adam McDermot","total":1184},{"name":"Owen Collins","total":434},{"name":"Colman Humphrey","total":70},{"name":"Lorcan Clarke","total":43}]},{"month":"2017-04","rankings":[{"name":"Chris Lee","total":5199},{"name":"Luke Madden","total":3016},{"name":"Matty Morrow","total":2676},{"name":"Chris Scollard","total":2626},{"name":"Jamie Martin Grace","total":2065},{"name":"Rob McMahon","total":1943},{"name":"Eoin Gray","total":1480},{"name":"Adam McDermot","total":1287},{"name":"Owen Collins","total":455},{"name":"Colman Humphrey","total":77},{"name":"Lorcan Clarke","total":50}]},{"month":"2017-05","rankings":[{"name":"Chris Lee","total":5692},{"name":"Luke Madden","total":3206},{"name":"Matty Morrow","total":3022},{"name":"Chris Scollard","total":2842},{"name":"Jamie Martin Grace","total":2241},{"name":"Rob McMahon","total":2133},{"name":"Eoin Gray","total":1674},{"name":"Adam McDermot","total":1474},{"name":"Owen Collins","total":479},{"name":"Colman Humphrey","total":88},{"name":"Lorcan Clarke","total":79}]},{"month":"2017-06","rankings":[{"name":"Chris Lee","total":6228},{"name":"Matty Morrow","total":3638},{"name":"Luke Madden","total":3609},{"name":"Chris Scollard","total":3203},{"name":"Jamie Martin Grace","total":2592},{"name":"Rob McMahon","total":2345},{"name":"Eoin Gray","total":1863},{"name":"Adam McDermot","total":1694},{"name":"Owen Collins","total":510},{"name":"Colman Humphrey","total":130},{"name":"Lorcan Clarke","total":94}]},{"month":"2017-07","rankings":[{"name":"Chris Lee","total":6519},{"name":"Matty Morrow","total":3817},{"name":"Luke Madden","total":3790},{"name":"Chris Scollard","total":3366},{"name":"Jamie Martin Grace","total":2683},{"name":"Rob McMahon","total":2416},{"name":"Eoin Gray","total":1960},{"name":"Adam McDermot","total":1718},{"name":"Owen Collins","total":521},{"name":"Colman Humphrey","total":140},{"name":"Lorcan Clarke","total":100}]},{"month":"2017-08","rankings":[{"name":"Chris Lee","total":6978},{"name":"Matty Morrow","total":4099},{"name":"Luke Madden","total":4028},{"name":"Chris Scollard","total":3523},{"name":"Jamie Martin Grace","total":2891},{"name":"Rob McMahon","total":2546},{"name":"Eoin Gray","total":2049},{"name":"Adam McDermot","total":1871},{"name":"Owen Collins","total":546},{"name":"Colman Humphrey","total":164},{"name":"Lorcan Clarke","total":106}]},{"month":"2017-09","rankings":[{"name":"Chris Lee","total":7271},{"name":"Matty Morrow","total":4277},{"name":"Luke Madden","total":4123},{"name":"Chris Scollard","total":3637},{"name":"Jamie Martin Grace","total":3030},{"name":"Rob McMahon","total":2613},{"name":"Eoin Gray","total":2086},{"name":"Adam McDermot","total":1977},{"name":"Owen Collins","total":553},{"name":"Colman Humphrey","total":170},{"name":"Lorcan Clarke","total":115}]},{"month":"2017-10","rankings":[{"name":"Chris Lee","total":7994},{"name":"Matty Morrow","total":4769},{"name":"Luke Madden","total":4275},{"name":"Chris Scollard","total":3963},{"name":"Jamie Martin Grace","total":3281},{"name":"Rob McMahon","total":2745},{"name":"Eoin Gray","total":2219},{"name":"Adam McDermot","total":2134},{"name":"Owen Collins","total":629},{"name":"Colman Humphrey","total":184},{"name":"Lorcan Clarke","total":155}]},{"month":"2017-11","rankings":[{"name":"Chris Lee","total":8518},{"name":"Matty Morrow","total":4990},{"name":"Luke Madden","total":4540},{"name":"Chris Scollard","total":4322},{"name":"Jamie Martin Grace","total":3481},{"name":"Rob McMahon","total":2892},{"name":"Eoin Gray","total":2379},{"name":"Adam McDermot","total":2286},{"name":"Owen Collins","total":663},{"name":"Colman Humphrey","total":193},{"name":"Lorcan Clarke","total":168}]},{"month":"2017-12","rankings":[{"name":"Chris Lee","total":9170},{"name":"Matty Morrow","total":5335},{"name":"Luke Madden","total":4753},{"name":"Chris Scollard","total":4582},{"name":"Jamie Martin Grace","total":3807},{"name":"Rob McMahon","total":3097},{"name":"Eoin Gray","total":2543},{"name":"Adam McDermot","total":2396},{"name":"Owen Collins","total":678},{"name":"Lorcan Clarke","total":222},{"name":"Colman Humphrey","total":195}]},{"month":"2018-01","rankings":[{"name":"Chris Lee","total":9852},{"name":"Matty Morrow","total":5723},{"name":"Luke Madden","total":4881},{"name":"Chris Scollard","total":4799},{"name":"Jamie Martin Grace","total":4007},{"name":"Rob McMahon","total":3242},{"name":"Eoin Gray","total":2672},{"name":"Adam McDermot","total":2547},{"name":"Owen Collins","total":703},{"name":"Lorcan Clarke","total":231},{"name":"Colman Humphrey","total":215}]},{"month":"2018-02","rankings":[{"name":"Chris Lee","total":10463},{"name":"Matty Morrow","total":6056},{"name":"Luke Madden","total":5090},{"name":"Chris Scollard","total":4975},{"name":"Jamie Martin Grace","total":4240},{"name":"Rob McMahon","total":3422},{"name":"Eoin Gray","total":2826},{"name":"Adam McDermot","total":2683},{"name":"Owen Collins","total":723},{"name":"Lorcan Clarke","total":256},{"name":"Colman Humphrey","total":225}]},{"month":"2018-03","rankings":[{"name":"Chris Lee","total":11003},{"name":"Matty Morrow","total":6406},{"name":"Luke Madden","total":5375},{"name":"Chris Scollard","total":5170},{"name":"Jamie Martin Grace","total":4414},{"name":"Rob McMahon","total":3570},{"name":"Eoin Gray","total":2958},{"name":"Adam McDermot","total":2778},{"name":"Owen Collins","total":782},{"name":"Lorcan Clarke","total":279},{"name":"Colman Humphrey","total":259}]},{"month":"2018-04","rankings":[{"name":"Chris Lee","total":11596},{"name":"Matty Morrow","total":6757},{"name":"Luke Madden","total":5530},{"name":"Chris Scollard","total":5286},{"name":"Jamie Martin Grace","total":4529},{"name":"Rob McMahon","total":3741},{"name":"Eoin Gray","total":3076},{"name":"Adam McDermot","total":2850},{"name":"Owen Collins","total":807},{"name":"Lorcan Clarke","total":298},{"name":"Colman Humphrey","total":264}]},{"month":"2018-05","rankings":[{"name":"Chris Lee","total":12044},{"name":"Matty Morrow","total":7118},{"name":"Luke Madden","total":5676},{"name":"Chris Scollard","total":5519},{"name":"Jamie Martin Grace","total":4639},{"name":"Rob McMahon","total":3868},{"name":"Eoin Gray","total":3179},{"name":"Adam McDermot","total":2999},{"name":"Owen Collins","total":835},{"name":"Lorcan Clarke","total":313},{"name":"Colman Humphrey","total":267}]},{"month":"2018-06","rankings":[{"name":"Chris Lee","total":12570},{"name":"Matty Morrow","total":7513},{"name":"Luke Madden","total":5853},{"name":"Chris Scollard","total":5759},{"name":"Jamie Martin Grace","total":4717},{"name":"Rob McMahon","total":3987},{"name":"Eoin Gray","total":3274},{"name":"Adam McDermot","total":3120},{"name":"Owen Collins","total":862},{"name":"Lorcan Clarke","total":344},{"name":"Colman Humphrey","total":271}]},{"month":"2018-07","rankings":[{"name":"Chris Lee","total":12853},{"name":"Matty Morrow","total":7670},{"name":"Luke Madden","total":5942},{"name":"Chris Scollard","total":5872},{"name":"Jamie Martin Grace","total":4828},{"name":"Rob McMahon","total":4055},{"name":"Eoin Gray","total":3344},{"name":"Adam McDermot","total":3171},{"name":"Owen Collins","total":899},{"name":"Lorcan Clarke","total":356},{"name":"Colman Humphrey","total":279}]},{"month":"2018-08","rankings":[{"name":"Chris Lee","total":13094},{"name":"Matty Morrow","total":7772},{"name":"Luke Madden","total":5982},{"name":"Chris Scollard","total":5930},{"name":"Jamie Martin Grace","total":4909},{"name":"Rob McMahon","total":4119},{"name":"Eoin Gray","total":3375},{"name":"Adam McDermot","total":3201},{"name":"Owen Collins","total":922},{"name":"Lorcan Clarke","total":361},{"name":"Colman Humphrey","total":285}]},{"month":"2018-09","rankings":[{"name":"Chris Lee","total":13438},{"name":"Matty Morrow","total":8007},{"name":"Luke Madden","total":6030},{"name":"Chris Scollard","total":5999},{"name":"Jamie Martin Grace","total":4987},{"name":"Rob McMahon","total":4167},{"name":"Eoin Gray","total":3404},{"name":"Adam McDermot","total":3253},{"name":"Owen Collins","total":939},{"name":"Lorcan Clarke","total":366},{"name":"Colman Humphrey","total":285}]},{"month":"2018-10","rankings":[{"name":"Chris Lee","total":13752},{"name":"Matty Morrow","total":8244},{"name":"Luke Madden","total":6089},{"name":"Chris Scollard","total":6063},{"name":"Jamie Martin Grace","total":5071},{"name":"Rob McMahon","total":4210},{"name":"Eoin Gray","total":3437},{"name":"Adam McDermot","total":3274},{"name":"Owen Collins","total":960},{"name":"Lorcan Clarke","total":376},{"name":"Colman Humphrey","total":285}]},{"month":"2018-11","rankings":[{"name":"Chris Lee","total":14013},{"name":"Matty Morrow","total":8442},{"name":"Luke Madden","total":6206},{"name":"Chris Scollard","total":6101},{"name":"Jamie Martin Grace","total":5180},{"name":"Rob McMahon","total":4280},{"name":"Eoin Gray","total":3481},{"name":"Adam McDermot","total":3314},{"name":"Owen Collins","total":991},{"name":"Lorcan Clarke","total":384},{"name":"Colman Humphrey","total":286}]},{"month":"2018-12","rankings":[{"name":"Chris Lee","total":14324},{"name":"Matty Morrow","total":8604},{"name":"Luke Madden","total":6269},{"name":"Chris Scollard","total":6116},{"name":"Jamie Martin Grace","total":5254},{"name":"Rob McMahon","total":4324},{"name":"Eoin Gray","total":3526},{"name":"Adam McDermot","total":3381},{"name":"Owen Collins","total":1004},{"name":"Lorcan Clarke","total":398},{"name":"Colman Humphrey","total":286}]},{"month":"2019-01","rankings":[{"name":"Chris Lee","total":14845},{"name":"Matty Morrow","total":9044},{"name":"Luke Madden","total":6303},{"name":"Chris Scollard","total":6218},{"name":"Jamie Martin Grace","total":5338},{"name":"Rob McMahon","total":4396},{"name":"Eoin Gray","total":3573},{"name":"Adam McDermot","total":3511},{"name":"Owen Collins","total":1031},{"name":"Lorcan Clarke","total":426},{"name":"Colman Humphrey","total":286}]},{"month":"2019-02","rankings":[{"name":"Chris Lee","total":15168},{"name":"Matty Morrow","total":9360},{"name":"Luke Madden","total":6386},{"name":"Chris Scollard","total":6300},{"name":"Jamie Martin Grace","total":5415},{"name":"Rob McMahon","total":4445},{"name":"Eoin Gray","total":3611},{"name":"Adam McDermot","total":3607},{"name":"Owen Collins","total":1088},{"name":"Lorcan Clarke","total":445},{"name":"Colman Humphrey","total":286}]},{"month":"2019-03","rankings":[{"name":"Chris Lee","total":15505},{"name":"Matty Morrow","total":9628},{"name":"Luke Madden","total":6440},{"name":"Chris Scollard","total":6388},{"name":"Jamie Martin Grace","total":5489},{"name":"Rob McMahon","total":4507},{"name":"Adam McDermot","total":3675},{"name":"Eoin Gray","total":3645},{"name":"Owen Collins","total":1135},{"name":"Lorcan Clarke","total":462},{"name":"Colman Humphrey","total":286}]},{"month":"2019-04","rankings":[{"name":"Chris Lee","total":15813},{"name":"Matty Morrow","total":9749},{"name":"Luke Madden","total":6462},{"name":"Chris Scollard","total":6420},{"name":"Jamie Martin Grace","total":5586},{"name":"Rob McMahon","total":4584},{"name":"Adam McDermot","total":3743},{"name":"Eoin Gray","total":3656},{"name":"Owen Collins","total":1185},{"name":"Lorcan Clarke","total":482},{"name":"Colman Humphrey","total":286}]},{"month":"2019-05","rankings":[{"name":"Chris Lee","total":16140},{"name":"Matty Morrow","total":10060},{"name":"Luke Madden","total":6493},{"name":"Chris Scollard","total":6458},{"name":"Jamie Martin Grace","total":5650},{"name":"Rob McMahon","total":4645},{"name":"Adam McDermot","total":3804},{"name":"Eoin Gray","total":3688},{"name":"Owen Collins","total":1210},{"name":"Lorcan Clarke","total":527},{"name":"Colman Humphrey","total":286}]},{"month":"2019-06","rankings":[{"name":"Chris Lee","total":16322},{"name":"Matty Morrow","total":10163},{"name":"Chris Scollard","total":6523},{"name":"Luke Madden","total":6501},{"name":"Jamie Martin Grace","total":5714},{"name":"Rob McMahon","total":4703},{"name":"Adam McDermot","total":3849},{"name":"Eoin Gray","total":3702},{"name":"Owen Collins","total":1243},{"name":"Lorcan Clarke","total":538},{"name":"Colman Humphrey","total":286}]},{"month":"2019-07","rankings":[{"name":"Chris Lee","total":16467},{"name":"Matty Morrow","total":10250},{"name":"Chris Scollard","total":6555},{"name":"Luke Madden","total":6524},{"name":"Jamie Martin Grace","total":5741},{"name":"Rob McMahon","total":4727},{"name":"Adam McDermot","total":3880},{"name":"Eoin Gray","total":3727},{"name":"Owen Collins","total":1251},{"name":"Lorcan Clarke","total":549},{"name":"Colman Humphrey","total":286}]},{"month":"2019-08","rankings":[{"name":"Chris Lee","total":16693},{"name":"Matty Morrow","total":10408},{"name":"Chris Scollard","total":6600},{"name":"Luke Madden","total":6583},{"name":"Jamie Martin Grace","total":5801},{"name":"Rob McMahon","total":4772},{"name":"Adam McDermot","total":3932},{"name":"Eoin Gray","total":3789},{"name":"Owen Collins","total":1287},{"name":"Lorcan Clarke","total":556},{"name":"Colman Humphrey","total":286}]},{"month":"2019-09","rankings":[{"name":"Chris Lee","total":17089},{"name":"Matty Morrow","total":10655},{"name":"Chris Scollard","total":6668},{"name":"Luke Madden","total":6643},{"name":"Jamie Martin Grace","total":5898},{"name":"Rob McMahon","total":4816},{"name":"Adam McDermot","total":4042},{"name":"Eoin Gray","total":3858},{"name":"Owen Collins","total":1303},{"name":"Lorcan Clarke","total":586},{"name":"Colman Humphrey","total":288}]},{"month":"2019-10","rankings":[{"name":"Chris Lee","total":17370},{"name":"Matty Morrow","total":10982},{"name":"Chris Scollard","total":6793},{"name":"Luke Madden","total":6700},{"name":"Jamie Martin Grace","total":6103},{"name":"Rob McMahon","total":4871},{"name":"Adam McDermot","total":4198},{"name":"Eoin Gray","total":3924},{"name":"Owen Collins","total":1386},{"name":"Lorcan Clarke","total":591},{"name":"Colman Humphrey","total":288}]},{"month":"2019-11","rankings":[{"name":"Chris Lee","total":17534},{"name":"Matty Morrow","total":11187},{"name":"Chris Scollard","total":6858},{"name":"Luke Madden","total":6708},{"name":"Jamie Martin Grace","total":6124},{"name":"Rob McMahon","total":4907},{"name":"Adam McDermot","total":4275},{"name":"Eoin Gray","total":3955},{"name":"Owen Collins","total":1400},{"name":"Lorcan Clarke","total":597},{"name":"Colman Humphrey","total":290}]},{"month":"2019-12","rankings":[{"name":"Chris Lee","total":17693},{"name":"Matty Morrow","total":11313},{"name":"Chris Scollard","total":6882},{"name":"Luke Madden","total":6745},{"name":"Jamie Martin Grace","total":6145},{"name":"Rob McMahon","total":4961},{"name":"Adam McDermot","total":4300},{"name":"Eoin Gray","total":3971},{"name":"Owen Collins","total":1427},{"name":"Lorcan Clarke","total":605},{"name":"Colman Humphrey","total":290}]},{"month":"2020-01","rankings":[{"name":"Chris Lee","total":17924},{"name":"Matty Morrow","total":11632},{"name":"Chris Scollard","total":6967},{"name":"Luke Madden","total":6758},{"name":"Jamie Martin Grace","total":6175},{"name":"Rob McMahon","total":5003},{"name":"Adam McDermot","total":4400},{"name":"Eoin Gray","total":4019},{"name":"Owen Collins","total":1439},{"name":"Lorcan Clarke","total":608},{"name":"Colman Humphrey","total":290}]},{"month":"2020-02","rankings":[{"name":"Chris Lee","total":18277},{"name":"Matty Morrow","total":11926},{"name":"Chris Scollard","total":7173},{"name":"Luke Madden","total":6795},{"name":"Jamie Martin Grace","total":6299},{"name":"Rob McMahon","total":5073},{"name":"Adam McDermot","total":4596},{"name":"Eoin Gray","total":4091},{"name":"Owen Collins","total":1501},{"name":"Lorcan Clarke","total":610},{"name":"Colman Humphrey","total":292}]},{"month":"2020-03","rankings":[{"name":"Chris Lee","total":18565},{"name":"Matty Morrow","total":12112},{"name":"Chris Scollard","total":7292},{"name":"Luke Madden","total":6829},{"name":"Jamie Martin Grace","total":6385},{"name":"Rob McMahon","total":5153},{"name":"Adam McDermot","total":4684},{"name":"Eoin Gray","total":4131},{"name":"Owen Collins","total":1558},{"name":"Lorcan Clarke","total":626},{"name":"Colman Humphrey","total":295}]},{"month":"2020-04","rankings":[{"name":"Chris Lee","total":18646},{"name":"Matty Morrow","total":12213},{"name":"Chris Scollard","total":7304},{"name":"Luke Madden","total":6841},{"name":"Jamie Martin Grace","total":6424},{"name":"Rob McMahon","total":5181},{"name":"Adam McDermot","total":4728},{"name":"Eoin Gray","total":4149},{"name":"Owen Collins","total":1580},{"name":"Lorcan Clarke","total":626},{"name":"Colman Humphrey","total":297}]},{"month":"2020-05","rankings":[{"name":"Chris Lee","total":18787},{"name":"Matty Morrow","total":12297},{"name":"Chris Scollard","total":7351},{"name":"Luke Madden","total":6885},{"name":"Jamie Martin Grace","total":6444},{"name":"Rob McMahon","total":5266},{"name":"Adam McDermot","total":4758},{"name":"Eoin Gray","total":4161},{"name":"Owen Collins","total":1629},{"name":"Lorcan Clarke","total":631},{"name":"Colman Humphrey","total":297}]},{"month":"2020-06","rankings":[{"name":"Chris Lee","total":18897},{"name":"Matty Morrow","total":12379},{"name":"Chris Scollard","total":7372},{"name":"Luke Madden","total":6908},{"name":"Jamie Martin Grace","total":6483},{"name":"Rob McMahon","total":5321},{"name":"Adam McDermot","total":4798},{"name":"Eoin Gray","total":4176},{"name":"Owen Collins","total":1652},{"name":"Lorcan Clarke","total":632},{"name":"Colman Humphrey","total":298}]},{"month":"2020-07","rankings":[{"name":"Chris Lee","total":19005},{"name":"Matty Morrow","total":12474},{"name":"Chris Scollard","total":7403},{"name":"Luke Madden","total":6931},{"name":"Jamie Martin Grace","total":6494},{"name":"Rob McMahon","total":5365},{"name":"Adam McDermot","total":4821},{"name":"Eoin Gray","total":4197},{"name":"Owen Collins","total":1667},{"name":"Lorcan Clarke","total":632},{"name":"Colman Humphrey","total":298}]},{"month":"2020-08","rankings":[{"name":"Chris Lee","total":19165},{"name":"Matty Morrow","total":12646},{"name":"Chris Scollard","total":7442},{"name":"Luke Madden","total":7001},{"name":"Jamie Martin Grace","total":6549},{"name":"Rob McMahon","total":5403},{"name":"Adam McDermot","total":4881},{"name":"Eoin Gray","total":4264},{"name":"Owen Collins","total":1683},{"name":"Lorcan Clarke","total":634},{"name":"Colman Humphrey","total":314}]},{"month":"2020-09","rankings":[{"name":"Chris Lee","total":19371},{"name":"Matty Morrow","total":12930},{"name":"Chris Scollard","total":7469},{"name":"Luke Madden","total":7060},{"name":"Jamie Martin Grace","total":6573},{"name":"Rob McMahon","total":5447},{"name":"Adam McDermot","total":4943},{"name":"Eoin Gray","total":4385},{"name":"Owen Collins","total":1695},{"name":"Lorcan Clarke","total":638},{"name":"Colman Humphrey","total":315}]},{"month":"2020-10","rankings":[{"name":"Chris Lee","total":19693},{"name":"Matty Morrow","total":13456},{"name":"Chris Scollard","total":7555},{"name":"Luke Madden","total":7119},{"name":"Jamie Martin Grace","total":6698},{"name":"Rob McMahon","total":5569},{"name":"Adam McDermot","total":5088},{"name":"Eoin Gray","total":4590},{"name":"Owen Collins","total":1757},{"name":"Lorcan Clarke","total":661},{"name":"Colman Humphrey","total":315}]},{"month":"2020-11","rankings":[{"name":"Chris Lee","total":20097},{"name":"Matty Morrow","total":14140},{"name":"Chris Scollard","total":7623},{"name":"Luke Madden","total":7268},{"name":"Jamie Martin Grace","total":6769},{"name":"Rob McMahon","total":5710},{"name":"Adam McDermot","total":5165},{"name":"Eoin Gray","total":4922},{"name":"Owen Collins","total":1875},{"name":"Lorcan Clarke","total":700},{"name":"Colman Humphrey","total":434}]},{"month":"2020-12","rankings":[{"name":"Chris Lee","total":20398},{"name":"Matty Morrow","total":14521},{"name":"Chris Scollard","total":7664},{"name":"Luke Madden","total":7377},{"name":"Jamie Martin Grace","total":6814},{"name":"Rob McMahon","total":5827},{"name":"Adam McDermot","total":5196},{"name":"Eoin Gray","total":5001},{"name":"Owen Collins","total":1896},{"name":"Lorcan Clarke","total":708},{"name":"Colman Humphrey","total":454}]},{"month":"2021-01","rankings":[{"name":"Chris Lee","total":20672},{"name":"Matty Morrow","total":14844},{"name":"Chris Scollard","total":7716},{"name":"Luke Madden","total":7435},{"name":"Jamie Martin Grace","total":6856},{"name":"Rob McMahon","total":5929},{"name":"Adam McDermot","total":5244},{"name":"Eoin Gray","total":5171},{"name":"Owen Collins","total":1929},{"name":"Lorcan Clarke","total":717},{"name":"Colman Humphrey","total":522}]},{"month":"2021-02","rankings":[{"name":"Chris Lee","total":21190},{"name":"Matty Morrow","total":15564},{"name":"Chris Scollard","total":7781},{"name":"Luke Madden","total":7544},{"name":"Jamie Martin Grace","total":6961},{"name":"Rob McMahon","total":6002},{"name":"Eoin Gray","total":5605},{"name":"Adam McDermot","total":5454},{"name":"Owen Collins","total":1961},{"name":"Lorcan Clarke","total":725},{"name":"Colman Humphrey","total":534}]},{"month":"2021-03","rankings":[{"name":"Chris Lee","total":21667},{"name":"Matty Morrow","total":16437},{"name":"Chris Scollard","total":7881},{"name":"Luke Madden","total":7613},{"name":"Jamie Martin Grace","total":7166},{"name":"Rob McMahon","total":6170},{"name":"Eoin Gray","total":5997},{"name":"Adam McDermot","total":5718},{"name":"Owen Collins","total":2011},{"name":"Lorcan Clarke","total":751},{"name":"Colman Humphrey","total":538}]},{"month":"2021-04","rankings":[{"name":"Chris Lee","total":21912},{"name":"Matty Morrow","total":16795},{"name":"Chris Scollard","total":7917},{"name":"Luke Madden","total":7688},{"name":"Jamie Martin Grace","total":7204},{"name":"Rob McMahon","total":6272},{"name":"Eoin Gray","total":6226},{"name":"Adam McDermot","total":5836},{"name":"Owen Collins","total":2024},{"name":"Lorcan Clarke","total":768},{"name":"Colman Humphrey","total":538}]},{"month":"2021-05","rankings":[{"name":"Chris Lee","total":22157},{"name":"Matty Morrow","total":17072},{"name":"Chris Scollard","total":7937},{"name":"Luke Madden","total":7796},{"name":"Jamie Martin Grace","total":7250},{"name":"Rob McMahon","total":6411},{"name":"Eoin Gray","total":6307},{"name":"Adam McDermot","total":5927},{"name":"Owen Collins","total":2054},{"name":"Lorcan Clarke","total":768},{"name":"Colman Humphrey","total":539}]},{"month":"2021-06","rankings":[{"name":"Chris Lee","total":22285},{"name":"Matty Morrow","total":17274},{"name":"Chris Scollard","total":7957},{"name":"Luke Madden","total":7844},{"name":"Jamie Martin Grace","total":7287},{"name":"Rob McMahon","total":6493},{"name":"Eoin Gray","total":6364},{"name":"Adam McDermot","total":5980},{"name":"Owen Collins","total":2087},{"name":"Lorcan Clarke","total":770},{"name":"Colman Humphrey","total":544}]},{"month":"2021-07","rankings":[{"name":"Chris Lee","total":22455},{"name":"Matty Morrow","total":17439},{"name":"Chris Scollard","total":7981},{"name":"Luke Madden","total":7945},{"name":"Jamie Martin Grace","total":7360},{"name":"Rob McMahon","total":6608},{"name":"Eoin Gray","total":6518},{"name":"Adam McDermot","total":6041},{"name":"Owen Collins","total":2121},{"name":"Lorcan Clarke","total":773},{"name":"Colman Humphrey","total":559}]},{"month":"2021-08","rankings":[{"name":"Chris Lee","total":22526},{"name":"Matty Morrow","total":17502},{"name":"Chris Scollard","total":7997},{"name":"Luke Madden","total":7972},{"name":"Jamie Martin Grace","total":7372},{"name":"Rob McMahon","total":6656},{"name":"Eoin Gray","total":6585},{"name":"Adam McDermot","total":6049},{"name":"Owen Collins","total":2129},{"name":"Lorcan Clarke","total":774},{"name":"Colman Humphrey","total":571}]},{"month":"2021-09","rankings":[{"name":"Chris Lee","total":22637},{"name":"Matty Morrow","total":17600},{"name":"Chris Scollard","total":8018},{"name":"Luke Madden","total":8003},{"name":"Jamie Martin Grace","total":7380},{"name":"Rob McMahon","total":6681},{"name":"Eoin Gray","total":6610},{"name":"Adam McDermot","total":6093},{"name":"Owen Collins","total":2133},{"name":"Lorcan Clarke","total":782},{"name":"Colman Humphrey","total":573}]},{"month":"2021-10","rankings":[{"name":"Chris Lee","total":22765},{"name":"Matty Morrow","total":17697},{"name":"Chris Scollard","total":8042},{"name":"Luke Madden","total":8029},{"name":"Jamie Martin Grace","total":7396},{"name":"Rob McMahon","total":6715},{"name":"Eoin Gray","total":6665},{"name":"Adam McDermot","total":6131},{"name":"Owen Collins","total":2146},{"name":"Lorcan Clarke","total":783},{"name":"Colman Humphrey","total":573}]},{"month":"2021-11","rankings":[{"name":"Chris Lee","total":22976},{"name":"Matty Morrow","total":18018},{"name":"Chris Scollard","total":8128},{"name":"Luke Madden","total":8070},{"name":"Jamie Martin Grace","total":7417},{"name":"Rob McMahon","total":6826},{"name":"Eoin Gray","total":6808},{"name":"Adam McDermot","total":6221},{"name":"Owen Collins","total":2162},{"name":"Lorcan Clarke","total":786},{"name":"Colman Humphrey","total":577}]},{"month":"2021-12","rankings":[{"name":"Chris Lee","total":23098},{"name":"Matty Morrow","total":18162},{"name":"Chris Scollard","total":8152},{"name":"Luke Madden","total":8092},{"name":"Jamie Martin Grace","total":7447},{"name":"Rob McMahon","total":6865},{"name":"Eoin Gray","total":6844},{"name":"Adam McDermot","total":6259},{"name":"Owen Collins","total":2175},{"name":"Lorcan Clarke","total":794},{"name":"Colman Humphrey","total":594}]},{"month":"2022-01","rankings":[{"name":"Chris Lee","total":23298},{"name":"Matty Morrow","total":18401},{"name":"Chris Scollard","total":8166},{"name":"Luke Madden","total":8123},{"name":"Jamie Martin Grace","total":7486},{"name":"Eoin Gray","total":6927},{"name":"Rob McMahon","total":6902},{"name":"Adam McDermot","total":6345},{"name":"Owen Collins","total":2212},{"name":"Lorcan Clarke","total":795},{"name":"Colman Humphrey","total":597}]},{"month":"2022-02","rankings":[{"name":"Chris Lee","total":23427},{"name":"Matty Morrow","total":18622},{"name":"Chris Scollard","total":8238},{"name":"Luke Madden","total":8153},{"name":"Jamie Martin Grace","total":7605},{"name":"Eoin Gray","total":7061},{"name":"Rob McMahon","total":6962},{"name":"Adam McDermot","total":6420},{"name":"Owen Collins","total":2235},{"name":"Lorcan Clarke","total":799},{"name":"Colman Humphrey","total":597}]},{"month":"2022-03","rankings":[{"name":"Chris Lee","total":23575},{"name":"Matty Morrow","total":18797},{"name":"Chris Scollard","total":8269},{"name":"Luke Madden","total":8207},{"name":"Jamie Martin Grace","total":7646},{"name":"Eoin Gray","total":7158},{"name":"Rob McMahon","total":7028},{"name":"Adam McDermot","total":6440},{"name":"Owen Collins","total":2250},{"name":"Lorcan Clarke","total":802},{"name":"Colman Humphrey","total":598}]},{"month":"2022-04","rankings":[{"name":"Chris Lee","total":23737},{"name":"Matty Morrow","total":18964},{"name":"Chris Scollard","total":8272},{"name":"Luke Madden","total":8219},{"name":"Jamie Martin Grace","total":7673},{"name":"Eoin Gray","total":7235},{"name":"Rob McMahon","total":7080},{"name":"Adam McDermot","total":6508},{"name":"Owen Collins","total":2255},{"name":"Lorcan Clarke","total":807},{"name":"Colman Humphrey","total":599}]},{"month":"2022-05","rankings":[{"name":"Chris Lee","total":23979},{"name":"Matty Morrow","total":19127},{"name":"Chris Scollard","total":8284},{"name":"Luke Madden","total":8247},{"name":"Jamie Martin Grace","total":7751},{"name":"Eoin Gray","total":7387},{"name":"Rob McMahon","total":7112},{"name":"Adam McDermot","total":6539},{"name":"Owen Collins","total":2276},{"name":"Lorcan Clarke","total":810},{"name":"Colman Humphrey","total":608}]},{"month":"2022-06","rankings":[{"name":"Chris Lee","total":24050},{"name":"Matty Morrow","total":19231},{"name":"Chris Scollard","total":8301},{"name":"Luke Madden","total":8269},{"name":"Jamie Martin Grace","total":7764},{"name":"Eoin Gray","total":7475},{"name":"Rob McMahon","total":7147},{"name":"Adam McDermot","total":6565},{"name":"Owen Collins","total":2282},{"name":"Lorcan Clarke","total":811},{"name":"Colman Humphrey","total":608}]},{"month":"2022-07","rankings":[{"name":"Chris Lee","total":24212},{"name":"Matty Morrow","total":19418},{"name":"Chris Scollard","total":8320},{"name":"Luke Madden","total":8286},{"name":"Jamie Martin Grace","total":7852},{"name":"Eoin Gray","total":7648},{"name":"Rob McMahon","total":7169},{"name":"Adam McDermot","total":6609},{"name":"Owen Collins","total":2306},{"name":"Lorcan Clarke","total":814},{"name":"Colman Humphrey","total":611}]},{"month":"2022-08","rankings":[{"name":"Chris Lee","total":24295},{"name":"Matty Morrow","total":19512},{"name":"Chris Scollard","total":8337},{"name":"Luke Madden","total":8304},{"name":"Jamie Martin Grace","total":7876},{"name":"Eoin Gray","total":7684},{"name":"Rob McMahon","total":7192},{"name":"Adam McDermot","total":6627},{"name":"Owen Collins","total":2323},{"name":"Lorcan Clarke","total":822},{"name":"Colman Humphrey","total":626}]},{"month":"2022-09","rankings":[{"name":"Chris Lee","total":24449},{"name":"Matty Morrow","total":19726},{"name":"Chris Scollard","total":8386},{"name":"Luke Madden","total":8324},{"name":"Jamie Martin Grace","total":7895},{"name":"Eoin Gray","total":7765},{"name":"Rob McMahon","total":7224},{"name":"Adam McDermot","total":6643},{"name":"Owen Collins","total":2325},{"name":"Lorcan Clarke","total":829},{"name":"Colman Humphrey","total":628}]},{"month":"2022-10","rankings":[{"name":"Chris Lee","total":24558},{"name":"Matty Morrow","total":19859},{"name":"Chris Scollard","total":8413},{"name":"Luke Madden","total":8335},{"name":"Jamie Martin Grace","total":7910},{"name":"Eoin Gray","total":7797},{"name":"Rob McMahon","total":7244},{"name":"Adam McDermot","total":6666},{"name":"Owen Collins","total":2330},{"name":"Lorcan Clarke","total":829},{"name":"Colman Humphrey","total":638}]},{"month":"2022-11","rankings":[{"name":"Chris Lee","total":24770},{"name":"Matty Morrow","total":19859},{"name":"Chris Scollard","total":8454},{"name":"Luke Madden","total":8367},{"name":"Jamie Martin Grace","total":7927},{"name":"Eoin Gray","total":7906},{"name":"Rob McMahon","total":7295},{"name":"Adam McDermot","total":6693},{"name":"Owen Collins","total":2378},{"name":"Lorcan Clarke","total":834},{"name":"Colman Humphrey","total":641}]},{"month":"2022-12","rankings":[{"name":"Chris Lee","total":24936},{"name":"Matty Morrow","total":20161},{"name":"Chris Scollard","total":8522},{"name":"Luke Madden","total":8378},{"name":"Eoin Gray","total":7960},{"name":"Jamie Martin Grace","total":7936},{"name":"Rob McMahon","total":7323},{"name":"Adam McDermot","total":6748},{"name":"Owen Collins","total":2398},{"name":"Lorcan Clarke","total":838},{"name":"Colman Humphrey","total":642}]},{"month":"2023-01","rankings":[{"name":"Chris Lee","total":25119},{"name":"Matty Morrow","total":20421},{"name":"Chris Scollard","total":8554},{"name":"Luke Madden","total":8385},{"name":"Eoin Gray","total":7979},{"name":"Jamie Martin Grace","total":7951},{"name":"Rob McMahon","total":7349},{"name":"Adam McDermot","total":6831},{"name":"Owen Collins","total":2398},{"name":"Lorcan Clarke","total":845},{"name":"Colman Humphrey","total":642}]},{"month":"2023-02","rankings":[{"name":"Chris Lee","total":25311},{"name":"Matty Morrow","total":20711},{"name":"Chris Scollard","total":8613},{"name":"Luke Madden","total":8399},{"name":"Eoin Gray","total":8069},{"name":"Jamie Martin Grace","total":7969},{"name":"Rob McMahon","total":7401},{"name":"Adam McDermot","total":6865},{"name":"Owen Collins","total":2402},{"name":"Lorcan Clarke","total":851},{"name":"Colman Humphrey","total":643}]},{"month":"2023-03","rankings":[{"name":"Chris Lee","total":25586},{"name":"Matty Morrow","total":21054},{"name":"Chris Scollard","total":8656},{"name":"Luke Madden","total":8407},{"name":"Eoin Gray","total":8172},{"name":"Jamie Martin Grace","total":8005},{"name":"Rob McMahon","total":7460},{"name":"Adam McDermot","total":6928},{"name":"Owen Collins","total":2411},{"name":"Lorcan Clarke","total":860},{"name":"Colman Humphrey","total":653}]},{"month":"2023-04","rankings":[{"name":"Chris Lee","total":25773},{"name":"Matty Morrow","total":21205},{"name":"Chris Scollard","total":8692},{"name":"Luke Madden","total":8413},{"name":"Eoin Gray","total":8222},{"name":"Jamie Martin Grace","total":8020},{"name":"Rob McMahon","total":7483},{"name":"Adam McDermot","total":6978},{"name":"Owen Collins","total":2418},{"name":"Lorcan Clarke","total":867},{"name":"Colman Humphrey","total":655}]},{"month":"2023-05","rankings":[{"name":"Chris Lee","total":25991},{"name":"Matty Morrow","total":21386},{"name":"Chris Scollard","total":8741},{"name":"Luke Madden","total":8421},{"name":"Eoin Gray","total":8270},{"name":"Jamie Martin Grace","total":8047},{"name":"Rob McMahon","total":7532},{"name":"Adam McDermot","total":7048},{"name":"Owen Collins","total":2420},{"name":"Lorcan Clarke","total":877},{"name":"Colman Humphrey","total":655}]},{"month":"2023-06","rankings":[{"name":"Chris Lee","total":26070},{"name":"Matty Morrow","total":21471},{"name":"Chris Scollard","total":8757},{"name":"Luke Madden","total":8428},{"name":"Eoin Gray","total":8276},{"name":"Jamie Martin Grace","total":8066},{"name":"Rob McMahon","total":7548},{"name":"Adam McDermot","total":7095},{"name":"Owen Collins","total":2420},{"name":"Lorcan Clarke","total":883},{"name":"Colman Humphrey","total":655}]},{"month":"2023-07","rankings":[{"name":"Chris Lee","total":26175},{"name":"Matty Morrow","total":21577},{"name":"Chris Scollard","total":8790},{"name":"Luke Madden","total":8437},{"name":"Eoin Gray","total":8287},{"name":"Jamie Martin Grace","total":8107},{"name":"Rob McMahon","total":7576},{"name":"Adam McDermot","total":7115},{"name":"Owen Collins","total":2423},{"name":"Lorcan Clarke","total":885},{"name":"Colman Humphrey","total":657}]},{"month":"2023-08","rankings":[{"name":"Chris Lee","total":26360},{"name":"Matty Morrow","total":21699},{"name":"Chris Scollard","total":8825},{"name":"Luke Madden","total":8459},{"name":"Eoin Gray","total":8340},{"name":"Jamie Martin Grace","total":8116},{"name":"Rob McMahon","total":7595},{"name":"Adam McDermot","total":7170},{"name":"Owen Collins","total":2428},{"name":"Lorcan Clarke","total":891},{"name":"Colman Humphrey","total":662}]},{"month":"2023-09","rankings":[{"name":"Chris Lee","total":26556},{"name":"Matty Morrow","total":21777},{"name":"Chris Scollard","total":8880},{"name":"Luke Madden","total":8488},{"name":"Eoin Gray","total":8355},{"name":"Jamie Martin Grace","total":8196},{"name":"Rob McMahon","total":7647},{"name":"Adam McDermot","total":7220},{"name":"Owen Collins","total":2436},{"name":"Lorcan Clarke","total":893},{"name":"Colman Humphrey","total":666}]},{"month":"2023-10","rankings":[{"name":"Chris Lee","total":26845},{"name":"Matty Morrow","total":22058},{"name":"Chris Scollard","total":8937},{"name":"Luke Madden","total":8599},{"name":"Eoin Gray","total":8415},{"name":"Jamie Martin Grace","total":8310},{"name":"Rob McMahon","total":7744},{"name":"Adam McDermot","total":7353},{"name":"Owen Collins","total":2466},{"name":"Lorcan Clarke","total":912},{"name":"Colman Humphrey","total":688}]},{"month":"2023-11","rankings":[{"name":"Chris Lee","total":26961},{"name":"Matty Morrow","total":22180},{"name":"Chris Scollard","total":8974},{"name":"Luke Madden","total":8605},{"name":"Eoin Gray","total":8421},{"name":"Jamie Martin Grace","total":8316},{"name":"Rob McMahon","total":7765},{"name":"Adam McDermot","total":7374},{"name":"Owen Collins","total":2470},{"name":"Lorcan Clarke","total":913},{"name":"Colman Humphrey","total":688}]},{"month":"2023-12","rankings":[{"name":"Chris Lee","total":27061},{"name":"Matty Morrow","total":22277},{"name":"Chris Scollard","total":9008},{"name":"Luke Madden","total":8609},{"name":"Eoin Gray","total":8450},{"name":"Jamie Martin Grace","total":8326},{"name":"Rob McMahon","total":7776},{"name":"Adam McDermot","total":7428},{"name":"Owen Collins","total":2470},{"name":"Lorcan Clarke","total":918},{"name":"Colman Humphrey","total":688}]},{"month":"2024-01","rankings":[{"name":"Chris Lee","total":27250},{"name":"Matty Morrow","total":22503},{"name":"Chris Scollard","total":9066},{"name":"Luke Madden","total":8618},{"name":"Eoin Gray","total":8478},{"name":"Jamie Martin Grace","total":8369},{"name":"Rob McMahon","total":7810},{"name":"Adam McDermot","total":7484},{"name":"Owen Collins","total":2477},{"name":"Lorcan Clarke","total":927},{"name":"Colman Humphrey","total":695}]},{"month":"2024-02","rankings":[{"name":"Chris Lee","total":27407},{"name":"Matty Morrow","total":22781},{"name":"Chris Scollard","total":9096},{"name":"Luke Madden","total":8661},{"name":"Eoin Gray","total":8533},{"name":"Jamie Martin Grace","total":8395},{"name":"Rob McMahon","total":7886},{"name":"Adam McDermot","total":7541},{"name":"Owen Collins","total":2517},{"name":"Lorcan Clarke","total":937},{"name":"Colman Humphrey","total":700}]},{"month":"2024-03","rankings":[{"name":"Chris Lee","total":27556},{"name":"Matty Morrow","total":22988},{"name":"Chris Scollard","total":9152},{"name":"Luke Madden","total":8699},{"name":"Eoin Gray","total":8558},{"name":"Jamie Martin Grace","total":8418},{"name":"Rob McMahon","total":7909},{"name":"Adam McDermot","total":7602},{"name":"Owen Collins","total":2518},{"name":"Lorcan Clarke","total":949},{"name":"Colman Humphrey","total":703}]},{"month":"2024-04","rankings":[{"name":"Chris Lee","total":27698},{"name":"Matty Morrow","total":23192},{"name":"Chris Scollard","total":9170},{"name":"Luke Madden","total":8730},{"name":"Eoin Gray","total":8588},{"name":"Jamie Martin Grace","total":8495},{"name":"Rob McMahon","total":7943},{"name":"Adam McDermot","total":7642},{"name":"Owen Collins","total":2524},{"name":"Lorcan Clarke","total":968},{"name":"Colman Humphrey","total":707}]},{"month":"2024-05","rankings":[{"name":"Chris Lee","total":27920},{"name":"Matty Morrow","total":23515},{"name":"Chris Scollard","total":9232},{"name":"Luke Madden","total":8772},{"name":"Eoin Gray","total":8641},{"name":"Jamie Martin Grace","total":8509},{"name":"Rob McMahon","total":7966},{"name":"Adam McDermot","total":7723},{"name":"Owen Collins","total":2537},{"name":"Lorcan Clarke","total":993},{"name":"Colman Humphrey","total":708}]},{"month":"2024-06","rankings":[{"name":"Chris Lee","total":28067},{"name":"Matty Morrow","total":23638},{"name":"Chris Scollard","total":9247},{"name":"Luke Madden","total":8789},{"name":"Eoin Gray","total":8664},{"name":"Jamie Martin Grace","total":8519},{"name":"Rob McMahon","total":7970},{"name":"Adam McDermot","total":7795},{"name":"Owen Collins","total":2549},{"name":"Lorcan Clarke","total":1015},{"name":"Colman Humphrey","total":708}]},{"month":"2024-07","rankings":[{"name":"Chris Lee","total":28543},{"name":"Matty Morrow","total":23950},{"name":"Chris Scollard","total":9332},{"name":"Luke Madden","total":8919},{"name":"Eoin Gray","total":8777},{"name":"Jamie Martin Grace","total":8644},{"name":"Rob McMahon","total":8045},{"name":"Adam McDermot","total":7917},{"name":"Owen Collins","total":2591},{"name":"Lorcan Clarke","total":1045},{"name":"Colman Humphrey","total":723}]},{"month":"2024-08","rankings":[{"name":"Chris Lee","total":28647},{"name":"Matty Morrow","total":24075},{"name":"Chris Scollard","total":9355},{"name":"Luke Madden","total":8982},{"name":"Eoin Gray","total":8793},{"name":"Jamie Martin Grace","total":8648},{"name":"Rob McMahon","total":8055},{"name":"Adam McDermot","total":7982},{"name":"Owen Collins","total":2596},{"name":"Lorcan Clarke","total":1063},{"name":"Colman Humphrey","total":748}]},{"month":"2024-09","rankings":[{"name":"Chris Lee","total":28782},{"name":"Matty Morrow","total":24171},{"name":"Chris Scollard","total":9381},{"name":"Luke Madden","total":9001},{"name":"Eoin Gray","total":8799},{"name":"Jamie Martin Grace","total":8654},{"name":"Rob McMahon","total":8068},{"name":"Adam McDermot","total":7999},{"name":"Owen Collins","total":2599},{"name":"Lorcan Clarke","total":1074},{"name":"Colman Humphrey","total":750}]},{"month":"2024-10","rankings":[{"name":"Chris Lee","total":28895},{"name":"Matty Morrow","total":24291},{"name":"Chris Scollard","total":9392},{"name":"Luke Madden","total":9027},{"name":"Eoin Gray","total":8812},{"name":"Jamie Martin Grace","total":8661},{"name":"Rob McMahon","total":8070},{"name":"Adam McDermot","total":8024},{"name":"Owen Collins","total":2599},{"name":"Lorcan Clarke","total":1098},{"name":"Colman Humphrey","total":750}]},{"month":"2024-11","rankings":[{"name":"Chris Lee","total":29176},{"name":"Matty Morrow","total":24662},{"name":"Chris Scollard","total":9410},{"name":"Luke Madden","total":9108},{"name":"Eoin Gray","total":8845},{"name":"Jamie Martin Grace","total":8720},{"name":"Rob McMahon","total":8125},{"name":"Adam McDermot","total":8113},{"name":"Owen Collins","total":2617},{"name":"Lorcan Clarke","total":1118},{"name":"Colman Humphrey","total":764}]},{"month":"2024-12","rankings":[{"name":"Chris Lee","total":29287},{"name":"Matty Morrow","total":24823},{"name":"Chris Scollard","total":9440},{"name":"Luke Madden","total":9154},{"name":"Eoin Gray","total":8861},{"name":"Jamie Martin Grace","total":8728},{"name":"Adam McDermot","total":8172},{"name":"Rob McMahon","total":8159},{"name":"Owen Collins","total":2631},{"name":"Lorcan Clarke","total":1137},{"name":"Colman Humphrey","total":769}]},{"month":"2025-01","rankings":[{"name":"Chris Lee","total":29591},{"name":"Matty Morrow","total":25195},{"name":"Chris Scollard","total":9504},{"name":"Luke Madden","total":9196},{"name":"Eoin Gray","total":8871},{"name":"Jamie Martin Grace","total":8735},{"name":"Adam McDermot","total":8266},{"name":"Rob McMahon","total":8192},{"name":"Owen Collins","total":2644},{"name":"Lorcan Clarke","total":1174},{"name":"Colman Humphrey","total":769}]},{"month":"2025-02","rankings":[{"name":"Chris Lee","total":29832},{"name":"Matty Morrow","total":25575},{"name":"Chris Scollard","total":9541},{"name":"Luke Madden","total":9306},{"name":"Eoin Gray","total":8973},{"name":"Jamie Martin Grace","total":8815},{"name":"Adam McDermot","total":8363},{"name":"Rob McMahon","total":8259},{"name":"Owen Collins","total":2663},{"name":"Lorcan Clarke","total":1201},{"name":"Colman Humphrey","total":781}]},{"month":"2025-03","rankings":[{"name":"Chris Lee","total":30110},{"name":"Matty Morrow","total":26052},{"name":"Chris Scollard","total":9551},{"name":"Luke Madden","total":9372},{"name":"Eoin Gray","total":9037},{"name":"Jamie Martin Grace","total":8842},{"name":"Adam McDermot","total":8498},{"name":"Rob McMahon","total":8280},{"name":"Owen Collins","total":2713},{"name":"Lorcan Clarke","total":1243},{"name":"Colman Humphrey","total":782}]},{"month":"2025-04","rankings":[{"name":"Chris Lee","total":30313},{"name":"Matty Morrow","total":26290},{"name":"Chris Scollard","total":9593},{"name":"Luke Madden","total":9417},{"name":"Eoin Gray","total":9069},{"name":"Jamie Martin Grace","total":8853},{"name":"Adam McDermot","total":8600},{"name":"Rob McMahon","total":8343},{"name":"Owen Collins","total":2722},{"name":"Lorcan Clarke","total":1275},{"name":"Colman Humphrey","total":808}]},{"month":"2025-05","rankings":[{"name":"Chris Lee","total":30575},{"name":"Matty Morrow","total":26554},{"name":"Chris Scollard","total":9630},{"name":"Luke Madden","total":9473},{"name":"Eoin Gray","total":9106},{"name":"Jamie Martin Grace","total":8867},{"name":"Adam McDermot","total":8795},{"name":"Rob McMahon","total":8422},{"name":"Owen Collins","total":2735},{"name":"Lorcan Clarke","total":1283},{"name":"Colman Humphrey","total":808}]},{"month":"2025-06","rankings":[{"name":"Chris Lee","total":30735},{"name":"Matty Morrow","total":26657},{"name":"Chris Scollard","total":9648},{"name":"Luke Madden","total":9508},{"name":"Eoin Gray","total":9116},{"name":"Jamie Martin Grace","total":8882},{"name":"Adam McDermot","total":8872},{"name":"Rob McMahon","total":8453},{"name":"Owen Collins","total":2738},{"name":"Lorcan Clarke","total":1291},{"name":"Colman Humphrey","total":810}]},{"month":"2025-07","rankings":[{"name":"Chris Lee","total":30930},{"name":"Matty Morrow","total":26893},{"name":"Chris Scollard","total":9654},{"name":"Luke Madden","total":9604},{"name":"Eoin Gray","total":9136},{"name":"Adam McDermot","total":8939},{"name":"Jamie Martin Grace","total":8895},{"name":"Rob McMahon","total":8539},{"name":"Owen Collins","total":2766},{"name":"Lorcan Clarke","total":1311},{"name":"Colman Humphrey","total":813}]},{"month":"2025-08","rankings":[{"name":"Chris Lee","total":30976},{"name":"Matty Morrow","total":26956},{"name":"Chris Scollard","total":9658},{"name":"Luke Madden","total":9613},{"name":"Eoin Gray","total":9142},{"name":"Adam McDermot","total":8959},{"name":"Jamie Martin Grace","total":8905},{"name":"Rob McMahon","total":8576},{"name":"Owen Collins","total":2777},{"name":"Lorcan Clarke","total":1321},{"name":"Colman Humphrey","total":815}]},{"month":"2025-09","rankings":[{"name":"Chris Lee","total":31011},{"name":"Matty Morrow","total":26978},{"name":"Chris Scollard","total":9660},{"name":"Luke Madden","total":9628},{"name":"Eoin Gray","total":9145},{"name":"Adam McDermot","total":8972},{"name":"Jamie Martin Grace","total":8906},{"name":"Rob McMahon","total":8586},{"name":"Owen Collins","total":2783},{"name":"Lorcan Clarke","total":1322},{"name":"Colman Humphrey","total":816}]},{"month":"2025-10","rankings":[{"name":"Chris Lee","total":31179},{"name":"Matty Morrow","total":27143},{"name":"Chris Scollard","total":9664},{"name":"Luke Madden","total":9640},{"name":"Eoin Gray","total":9159},{"name":"Adam McDermot","total":9007},{"name":"Jamie Martin Grace","total":8917},{"name":"Rob McMahon","total":8619},{"name":"Owen Collins","total":2790},{"name":"Lorcan Clarke","total":1336},{"name":"Colman Humphrey","total":816}]},{"month":"2025-11","rankings":[{"name":"Chris Lee","total":31550},{"name":"Matty Morrow","total":27645},{"name":"Luke Madden","total":9728},{"name":"Chris Scollard","total":9722},{"name":"Eoin Gray","total":9244},{"name":"Adam McDermot","total":9183},{"name":"Jamie Martin Grace","total":8963},{"name":"Rob McMahon","total":8715},{"name":"Owen Collins","total":2807},{"name":"Lorcan Clarke","total":1351},{"name":"Colman Humphrey","total":826}]},{"month":"2025-12","rankings":[{"name":"Chris Lee","total":31742},{"name":"Matty Morrow","total":27853},{"name":"Luke Madden","total":9747},{"name":"Chris Scollard","total":9739},{"name":"Eoin Gray","total":9270},{"name":"Adam McDermot","total":9261},{"name":"Jamie Martin Grace","total":8971},{"name":"Rob McMahon","total":8759},{"name":"Owen Collins","total":2815},{"name":"Lorcan Clarke","total":1387},{"name":"Colman Humphrey","total":832}]},{"month":"2026-01","rankings":[{"name":"Chris Lee","total":31927},{"name":"Matty Morrow","total":28075},{"name":"Luke Madden","total":9758},{"name":"Chris Scollard","total":9743},{"name":"Adam McDermot","total":9326},{"name":"Eoin Gray","total":9297},{"name":"Jamie Martin Grace","total":8972},{"name":"Rob McMahon","total":8786},{"name":"Owen Collins","total":2823},{"name":"Lorcan Clarke","total":1426},{"name":"Colman Humphrey","total":832}]},{"month":"2026-02","rankings":[{"name":"Chris Lee","total":32252},{"name":"Matty Morrow","total":28511},{"name":"Luke Madden","total":9828},{"name":"Chris Scollard","total":9767},{"name":"Adam McDermot","total":9402},{"name":"Eoin Gray","total":9384},{"name":"Jamie Martin Grace","total":8980},{"name":"Rob McMahon","total":8877},{"name":"Owen Collins","total":2862},{"name":"Lorcan Clarke","total":1465},{"name":"Colman Humphrey","total":848}]},{"month":"2026-03","rankings":[{"name":"Chris Lee","total":32420},{"name":"Matty Morrow","total":28725},{"name":"Luke Madden","total":9926},{"name":"Chris Scollard","total":9794},{"name":"Adam McDermot","total":9496},{"name":"Eoin Gray","total":9412},{"name":"Jamie Martin Grace","total":8989},{"name":"Rob McMahon","total":8934},{"name":"Owen Collins","total":2889},{"name":"Lorcan Clarke","total":1532},{"name":"Colman Humphrey","total":881}]}];
+
+  const ROW_H = 38;
+  let raceIdx = 0, racePlaying = false, raceTimer = null;
+  const racePrevRanks = {};
+  const raceDomRows = {};
+
+  const raceCont = document.getElementById('raceContainer');
+
+  function raceInit() {
+    const f = D[0];
+    const maxV = f.rankings[0].total || 1;
+    f.rankings.forEach((r, i) => {
+      const row = document.createElement('div');
+      row.className = 'race-row';
+      row.style.top = (i * ROW_H) + 'px';
+      const rankEl = document.createElement('span');
+      rankEl.className = 'race-rank' + (i < 3 ? ' top3' : '');
+      rankEl.textContent = i + 1;
+      const nameEl = document.createElement('span');
+      nameEl.className = 'race-name';
+      nameEl.textContent = DISPLAY[r.name] || r.name;
+      const bgEl = document.createElement('div');
+      bgEl.className = 'race-bar-bg';
+      const fillEl = document.createElement('div');
+      fillEl.className = 'race-bar-fill';
+      fillEl.style.background = COLORS[r.name] || '#666';
+      fillEl.style.width = Math.max(1, Math.round(r.total / maxV * 100)) + '%';
+      bgEl.appendChild(fillEl);
+      const countEl = document.createElement('span');
+      countEl.className = 'race-count';
+      countEl.textContent = r.total.toLocaleString();
+      row.appendChild(rankEl);
+      row.appendChild(nameEl);
+      row.appendChild(bgEl);
+      row.appendChild(countEl);
+      raceCont.appendChild(row);
+      raceDomRows[r.name] = row;
+      racePrevRanks[r.name] = i;
+    });
+    raceCont.style.height = (f.rankings.length * ROW_H) + 'px';
+
+    const leg = document.getElementById('raceLegend');
+    Object.entries(COLORS).forEach(([name, col]) => {
+      const el = document.createElement('span');
+      el.className = 'race-legend-item';
+      el.innerHTML = `<span class="race-legend-dot" style="background:${col}"></span>${DISPLAY[name] || name}`;
+      leg.appendChild(el);
+    });
+  }
+
+  function raceRender(i) {
+    const f = D[i];
+    document.getElementById('raceMLabel').textContent = fmtMonth(f.month);
+    document.getElementById('raceSlider').value = i;
+    const maxV = f.rankings[0].total || 1;
+    f.rankings.forEach((r, newRank) => {
+      const row = raceDomRows[r.name];
+      if (!row) return;
+      const oldRank = racePrevRanks[r.name] ?? newRank;
+      row.style.top = (newRank * ROW_H) + 'px';
+      const rankEl = row.querySelector('.race-rank');
+      rankEl.textContent = newRank + 1;
+      rankEl.className = 'race-rank' + (newRank < 3 ? ' top3' : '');
+      row.querySelector('.race-bar-fill').style.width = Math.max(1, Math.round(r.total / maxV * 100)) + '%';
+      row.querySelector('.race-count').textContent = r.total.toLocaleString();
+      if (oldRank !== newRank && i > 0) {
+        row.classList.remove('overtaking');
+        void row.offsetWidth;
+        row.classList.add('overtaking');
+        setTimeout(() => row.classList.remove('overtaking'), 500);
+      }
+      racePrevRanks[r.name] = newRank;
+    });
+  }
+
+  window.raceTogglePlay = function() {
+    racePlaying = !racePlaying;
+    const btn = document.getElementById('racePlayBtn');
+    btn.textContent = racePlaying ? 'Pause' : 'Play';
+    btn.style.background = racePlaying ? 'var(--muted)' : 'var(--green)';
+    if (racePlaying) {
+      if (raceIdx >= D.length - 1) raceIdx = 0;
+      const spd = +document.getElementById('raceSpeed').value;
+      raceTimer = setInterval(() => {
+        raceIdx++;
+        raceRender(raceIdx);
+        if (raceIdx >= D.length - 1) {
+          racePlaying = false;
+          clearInterval(raceTimer);
+          btn.textContent = 'Play';
+          btn.style.background = 'var(--green)';
+        }
+      }, spd);
+    } else {
+      clearInterval(raceTimer);
+    }
+  };
+
+  window.raceOnSlide = function(v) {
+    clearInterval(raceTimer);
+    racePlaying = false;
+    document.getElementById('racePlayBtn').textContent = 'Play';
+    document.getElementById('racePlayBtn').style.background = 'var(--green)';
+    raceIdx = v;
+    raceRender(v);
+  };
+
+  window.raceSpeedChange = function() {
+    if (racePlaying) { window.raceTogglePlay(); window.raceTogglePlay(); }
+  };
+
+  raceInit();
+  raceRender(0);
+})();
+</script>
+</body>
+</html>
