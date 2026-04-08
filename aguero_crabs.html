@@ -1290,8 +1290,8 @@
   <div id="tl-year-pill" style="
     position:fixed; top:18px; left:50%; transform:translateX(-50%);
     background:var(--card); border:1px solid var(--border);
-    font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:0.12em;
-    color:var(--green); padding:4px 20px; border-radius:3px;
+    font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:0.08em;
+    color:var(--green); padding:6px 20px; border-radius:3px;
     pointer-events:none; opacity:0; transition:opacity 0.25s;
     z-index:100;
   "></div>
@@ -1358,8 +1358,49 @@
   const outer = document.getElementById('tl-outer');
   const pill  = document.getElementById('tl-year-pill');
 
+  // ── Mobile layout: simple stacked cards ──────────────────────────────────
+  function buildMobile(pins) {
+    outer.innerHTML = '';
+    outer.style.height = 'auto';
+    outer.style.minHeight = 'unset';
+
+    let lastYr = null;
+    pins.forEach(p => {
+      const yr = p.ev.date.slice(0,4);
+      if (yr !== lastYr) {
+        const yd = document.createElement('div');
+        yd.className = 'mob-year-divider';
+        yd.textContent = yr;
+        outer.appendChild(yd);
+        lastYr = yr;
+      }
+      const el = document.createElement('div');
+      el.className = 'tl-card';
+      el.style.color  = p.color;
+      el.style.cursor = 'pointer';
+      el.innerHTML =
+        '<div class="tl-card-date">' + fmtDate(p.ev.date) + '</div>' +
+        '<div class="tl-card-label">' + p.ev.label + '</div>' +
+        '<div class="tl-card-detail">' + p.ev.detail + '</div>';
+      // Tap → modal
+      el.addEventListener('click', (function(ev, color) { return function(e) {
+        e.stopPropagation();
+        var modal = document.getElementById('tl-modal');
+        if (!modal) return;
+        document.getElementById('tl-modal-date').textContent   = fmtDate(ev.date);
+        document.getElementById('tl-modal-label').textContent  = ev.label;
+        document.getElementById('tl-modal-detail').textContent = ev.detail;
+        document.getElementById('tl-modal-inner').style.borderTop = '3px solid ' + color;
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+      };})(p.ev, p.color));
+      outer.appendChild(el);
+    });
+  }
+
   function build() {
-    const W = Math.max(outer.getBoundingClientRect().width || 900, 600);
+    const W = outer.getBoundingClientRect().width || window.innerWidth || 360;
+    const isMob = W <= 640;
 
     const PAD_TOP = 70;
     const PAD_BOT = 100;
@@ -1379,6 +1420,8 @@
 
     outer.innerHTML = '';
 
+    if (isMob) { buildMobile(pins); return; }
+
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
     svg.setAttribute('width', '100%');
@@ -1387,7 +1430,8 @@
     svg.style.display = 'block';
     svg.style.overflow = 'visible';
     outer.appendChild(svg);
-    outer.style.height = TOTAL_H + 'px';
+    if (!isMob) outer.style.height = TOTAL_H + 'px';
+    else outer.style.height = 'auto';
 
     function normToX(n) { return X_MIN + n * (X_MAX - X_MIN); }
     function dateToY(iso) {
@@ -1410,6 +1454,9 @@
     }
     const pts  = PATH_PTS.map(p => ({ x: normToX(p.norm), y: dateToY(p.date) }));
     const pathD = buildPath(pts);
+    // Store rendered path points for scroll crosshair
+    window._tlPathPts  = pts.map((pt, i) => ({ y: pt.y, avg: PATH_PTS[i] ? PATH_PTS[i].avg : 0 }));
+    window._tlPathPtsX = pts.map(pt => pt.x);
 
     // Axis guide lines
     [X_MIN, X_MAX].forEach((gx, gi) => {
@@ -1432,6 +1479,58 @@
       t.textContent = txt;
       svg.appendChild(t);
     });
+
+    // Scrolling crosshair line (updated by scroll handler)
+    const xhair = document.createElementNS('http://www.w3.org/2000/svg','line');
+    xhair.setAttribute('x1','0'); xhair.setAttribute('x2', W);
+    xhair.setAttribute('y1','0'); xhair.setAttribute('y2','0');
+    xhair.setAttribute('stroke','#00c853'); xhair.setAttribute('stroke-width','1');
+    xhair.setAttribute('stroke-opacity','0.35'); xhair.setAttribute('stroke-dasharray','4 6');
+    xhair.style.display = 'none';
+    svg.appendChild(xhair);
+
+    // Dot where crosshair meets the string
+    const xhairDot = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    xhairDot.setAttribute('r','6');
+    xhairDot.setAttribute('fill','#050505');
+    xhairDot.setAttribute('stroke','#00c853');
+    xhairDot.setAttribute('stroke-width','2');
+    xhairDot.style.display = 'none';
+    svg.appendChild(xhairDot);
+
+    // Label next to the dot
+    const xhairBg = document.createElementNS('http://www.w3.org/2000/svg','rect');
+    xhairBg.setAttribute('rx','3'); xhairBg.setAttribute('ry','3');
+    xhairBg.setAttribute('fill','#050505');
+    xhairBg.setAttribute('stroke','#00c853'); xhairBg.setAttribute('stroke-width','1');
+    xhairBg.style.display = 'none';
+    svg.appendChild(xhairBg);
+
+    const xhairLabel = document.createElementNS('http://www.w3.org/2000/svg','text');
+    xhairLabel.setAttribute('font-family','DM Mono, monospace');
+    xhairLabel.setAttribute('font-size','11');
+    xhairLabel.setAttribute('fill','#00c853');
+    xhairLabel.style.display = 'none';
+    svg.appendChild(xhairLabel);
+
+    // Static right-edge label: "120-day rolling avg"
+    const xhairRightLbl = document.createElementNS('http://www.w3.org/2000/svg','text');
+    xhairRightLbl.setAttribute('font-family','DM Mono, monospace');
+    xhairRightLbl.setAttribute('font-size','9');
+    xhairRightLbl.setAttribute('fill','#00c853');
+    xhairRightLbl.setAttribute('fill-opacity','0.5');
+    xhairRightLbl.setAttribute('text-anchor','end');
+    xhairRightLbl.setAttribute('letter-spacing','1');
+    xhairRightLbl.textContent = '120-DAY ROLLING AVG';
+    xhairRightLbl.style.display = 'none';
+    svg.appendChild(xhairRightLbl);
+
+    window._tlXhair      = xhair;
+    window._tlXhairDot   = xhairDot;
+    window._tlXhairBg    = xhairBg;
+    window._tlXhairLbl   = xhairLabel;
+    window._tlXhairRLbl  = xhairRightLbl;
+    window._tlXhairW     = W;
 
     // Year grid lines + labels in SVG
     for (let yr = 2016; yr <= 2026; yr++) {
@@ -1501,7 +1600,7 @@
     const finalH = Math.max(TOTAL_H, maxBottom);
     svg.setAttribute('height', finalH);
     svg.setAttribute('viewBox', '0 0 ' + W + ' ' + finalH);
-    outer.style.height = finalH + 'px';
+    if (!isMob) outer.style.height = finalH + 'px';
 
     // Draw connectors
     pins.forEach((p, i) => {
@@ -1544,18 +1643,72 @@
     });
 
     // Place cards
+    let lastMobYr = null;
+
     pins.forEach((p, i) => {
+      // Mobile: inject year dividers
+      if (isMob) {
+        const yr = p.ev.date.slice(0,4);
+        if (yr !== lastMobYr) {
+          const yd = document.createElement('div');
+          yd.className = 'mob-year-divider';
+          yd.textContent = yr;
+          outer.appendChild(yd);
+          lastMobYr = yr;
+        }
+      }
+
       const el = document.createElement('div');
       el.className = 'tl-card' + (p.right ? '' : ' left-card');
-      el.style.color    = p.color;
-      el.style.width    = CARD_W + 'px';
-      el.style.left     = p._cardLeft + 'px';
-      el.style.top      = cardYs[i] + 'px';
+      el.style.color = p.color;
+      el.style.cursor = 'pointer';
+
+      if (!isMob) {
+        el.style.width = CARD_W + 'px';
+        el.style.left  = p._cardLeft + 'px';
+        el.style.top   = cardYs[i] + 'px';
+      }
+
       el.innerHTML =
         '<div class="tl-card-date">' + fmtDate(p.ev.date) + '</div>' +
         '<div class="tl-card-label">' + p.ev.label + '</div>' +
         '<div class="tl-card-detail">' + p.ev.detail + '</div>';
+
+      // ── Tap/click interaction ──────────────────────────────────────
+      (function(el, ev, color) {
+        el.addEventListener('click', function(e) {
+          e.stopPropagation();
+          if (window.innerWidth <= 640) {
+            // Mobile: modal
+            var modal  = document.getElementById('tl-modal');
+            if (!modal) return;
+            document.getElementById('tl-modal-date').textContent   = fmtDate(ev.date);
+            document.getElementById('tl-modal-label').textContent  = ev.label;
+            document.getElementById('tl-modal-detail').textContent = ev.detail;
+            document.getElementById('tl-modal-inner').style.borderTop = '3px solid ' + color;
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+          } else {
+            // Desktop: lift card
+            var prev = document.querySelector('.tl-card-active');
+            if (prev && prev !== el) { prev.classList.remove('tl-card-active'); prev.style.zIndex=''; }
+            if (el.classList.contains('tl-card-active')) {
+              el.classList.remove('tl-card-active'); el.style.zIndex = '';
+            } else {
+              el.classList.add('tl-card-active'); el.style.zIndex = '50';
+            }
+          }
+        });
+      })(el, p.ev, p.color);
+      // ──────────────────────────────────────────────────────────────
+
       outer.appendChild(el);
+    });
+
+    // Dismiss active card on background click
+    document.addEventListener('click', function() {
+      var prev = document.querySelector('.tl-card-active');
+      if (prev) { prev.classList.remove('tl-card-active'); prev.style.zIndex = ''; }
     });
 
     // ── Floating year pill ────────────────────────────────────────────────
@@ -1570,27 +1723,122 @@
 
   // Year pill scroll handler
   function updatePill() {
-    const el = window._tlOuterEl;
-    const p  = window._tlPill;
-    if (!el || !p || !window._tlYearBreaks) return;
+    const outerEl = window._tlOuterEl;
+    const pill    = window._tlPill;
+    const xhair   = window._tlXhair;
+    if (!outerEl || !pill) return;
 
-    const rect = el.getBoundingClientRect();
-    // How far have we scrolled into the timeline from its top?
-    const scrolledIn = -rect.top;
+    const rect     = outerEl.getBoundingClientRect();
+    const scrolledIn = -rect.top;          // px scrolled past top of timeline
+    const viewH    = window.innerHeight;
+    const midY     = viewH / 2;            // viewport midpoint (crosshair position)
+    const inTimeline = rect.top < midY && rect.bottom > midY;
 
-    if (scrolledIn < -60 || scrolledIn > rect.height + 60) {
-      p.style.opacity = '0';
+    // ── Year pill ──────────────────────────────────────────────────
+    if (!inTimeline) {
+      pill.style.opacity = '0';
+      if (xhair)    xhair.style.display    = 'none';
+      if (window._tlXhairDot)  window._tlXhairDot.style.display  = 'none';
+      if (window._tlXhairBg)   window._tlXhairBg.style.display   = 'none';
+      if (window._tlXhairLbl)  window._tlXhairLbl.style.display  = 'none';
+      if (window._tlXhairRLbl) window._tlXhairRLbl.style.display = 'none';
       return;
     }
 
-    // Which year are we currently at?
-    const breaks = window._tlYearBreaks;
-    let currentYr = breaks[0].yr;
+    const breaks = window._tlYearBreaks || [];
+    let currentYr = breaks.length ? breaks[0].yr : 2016;
+    const svgRelY = midY - rect.top;   // y position relative to timeline SVG
     for (let i = 0; i < breaks.length; i++) {
-      if (scrolledIn + 80 >= breaks[i].y) currentYr = breaks[i].yr;
+      if (svgRelY >= breaks[i].y) currentYr = breaks[i].yr;
     }
-    p.textContent = currentYr;
-    p.style.opacity = (scrolledIn > -40 && scrolledIn < rect.height + 40) ? '1' : '0';
+
+    // ── Daily average from nearest path point ──────────────────────
+    const pts = window._tlPathPts || [];
+    let nearest = null, nearestDist = Infinity;
+    for (let i = 0; i < pts.length; i++) {
+      const dist = Math.abs(pts[i].y - svgRelY);
+      if (dist < nearestDist) { nearestDist = dist; nearest = pts[i]; }
+    }
+    const avg = nearest ? nearest.avg : null;
+
+    pill.textContent = currentYr + (avg !== null ? '  ·  ' + avg.toFixed(0) + ' msgs/day' : '');
+    pill.style.opacity = '1';
+
+    // ── Move crosshair line ────────────────────────────────────────
+    // ── Move crosshair + dot + label ──────────────────────────────────
+    const xhairDot = window._tlXhairDot;
+    const xhairBg  = window._tlXhairBg;
+    const xhairLbl = window._tlXhairLbl;
+    const xhairW   = window._tlXhairW;
+
+    if (xhair && xhairW) {
+      xhair.setAttribute('x1','0');
+      xhair.setAttribute('x2', xhairW);
+      xhair.setAttribute('y1', svgRelY.toFixed(1));
+      xhair.setAttribute('y2', svgRelY.toFixed(1));
+      xhair.style.display = 'block';
+
+      // Interpolate X position on the string at svgRelY
+      // Find the two path points that bracket this Y and lerp between them
+      let stringX = null;
+      if (pts.length >= 2) {
+        // pts are sorted top-to-bottom (ascending Y)
+        for (let i = 0; i < pts.length - 1; i++) {
+          const a = pts[i], b = pts[i+1];
+          if (svgRelY >= a.y && svgRelY <= b.y) {
+            const t = (svgRelY - a.y) / (b.y - a.y);
+            // We need X too — store it on _tlPathPts
+            const ax = window._tlPathPtsX ? window._tlPathPtsX[i]   : (xhairW * 0.3);
+            const bx = window._tlPathPtsX ? window._tlPathPtsX[i+1] : (xhairW * 0.3);
+            stringX = ax + t * (bx - ax);
+            break;
+          }
+        }
+        if (stringX === null) {
+          // Outside range — clamp to nearest end
+          const lastX = window._tlPathPtsX;
+          stringX = lastX ? (svgRelY < pts[0].y ? lastX[0] : lastX[lastX.length-1]) : xhairW * 0.3;
+        }
+      }
+
+      if (stringX !== null && avg !== null && xhairDot) {
+        const labelText = Math.round(avg) + ' /day';
+        const onRight   = stringX < xhairW * 0.6;  // put label to right of dot when string is left
+        const labelX    = onRight ? stringX + 14 : stringX - 14;
+        const labelAnchor = onRight ? 'start' : 'end';
+
+        xhairDot.setAttribute('cx', stringX.toFixed(1));
+        xhairDot.setAttribute('cy', svgRelY.toFixed(1));
+        xhairDot.style.display = 'block';
+
+        xhairLbl.setAttribute('x', labelX.toFixed(1));
+        xhairLbl.setAttribute('y', (svgRelY + 4).toFixed(1));
+        xhairLbl.setAttribute('text-anchor', labelAnchor);
+        xhairLbl.textContent = labelText;
+        xhairLbl.style.display = 'block';
+
+        // Static right-edge label — rides at same Y as crosshair
+        const rLbl = window._tlXhairRLbl;
+        if (rLbl) {
+          rLbl.setAttribute('x', (xhairW - 6).toFixed(1));
+          rLbl.setAttribute('y', (svgRelY - 6).toFixed(1));
+          rLbl.style.display = 'block';
+        }
+
+        // Background rect — size to text
+        const approxW = labelText.length * 6.8 + 16;
+        const bgX = onRight ? labelX - 8 : labelX - approxW + 8;
+        xhairBg.setAttribute('x', bgX.toFixed(1));
+        xhairBg.setAttribute('y', (svgRelY - 10).toFixed(1));
+        xhairBg.setAttribute('width', approxW.toFixed(1));
+        xhairBg.setAttribute('height', '18');
+        xhairBg.style.display = 'block';
+      }
+    } else {
+      if (xhairDot)  xhairDot.style.display  = 'none';
+      if (xhairBg)   xhairBg.style.display   = 'none';
+      if (xhairLbl)  xhairLbl.style.display  = 'none';
+    }
   }
 
   window.addEventListener('scroll', updatePill, { passive: true });
@@ -1961,22 +2209,10 @@
         <div class="profile-rank">1</div>
       </div>
       <div class="profile-stats">
-        <div class="profile-stat">
-          <div class="profile-stat-label">Peak Year</div>
-          <div class="profile-stat-val">2017 (6,809)</div>
-        </div>
-        <div class="profile-stat">
-          <div class="profile-stat-label">After Midnight</div>
-          <div class="profile-stat-val">340 messages</div>
-        </div>
-        <div class="profile-stat">
-          <div class="profile-stat-label">Top Word</div>
-          <div class="profile-stat-val">"Leinster"</div>
-        </div>
-        <div class="profile-stat">
-          <div class="profile-stat-label">Media Sent</div>
-          <div class="profile-stat-val">2,124 files</div>
-        </div>
+        <div class="profile-stat"><div class="profile-stat-label">Peak Year</div><div class="profile-stat-val">2017 (6,809)</div></div>
+        <div class="profile-stat"><div class="profile-stat-label">After Midnight</div><div class="profile-stat-val">340 messages</div></div>
+        <div class="profile-stat"><div class="profile-stat-label">Top Word</div><div class="profile-stat-val">"Leinster"</div></div>
+        <div class="profile-stat"><div class="profile-stat-label">Media Sent</div><div class="profile-stat-val">2,124 files</div></div>
       </div>
       <div class="profile-verdict">The <strong>main character</strong>. A quarter of everything ever said in this group came from him. Still going. Shows no signs of stopping. Sent 340 messages between midnight and 4am. His top word is "Leinster", naturally.</div>
     </div>
@@ -1990,22 +2226,10 @@
         <div class="profile-rank">2</div>
       </div>
       <div class="profile-stats">
-        <div class="profile-stat">
-          <div class="profile-stat-label">Peak Year</div>
-          <div class="profile-stat-val">2025 (3,030)</div>
-        </div>
-        <div class="profile-stat">
-          <div class="profile-stat-label">Top Word</div>
-          <div class="profile-stat-val">"Leinster"</div>
-        </div>
-        <div class="profile-stat">
-          <div class="profile-stat-label">Also Used</div>
-          <div class="profile-stat-val">"Ulster" 623×</div>
-        </div>
-        <div class="profile-stat">
-          <div class="profile-stat-label">Joined</div>
-          <div class="profile-stat-val">Aug 2016</div>
-        </div>
+        <div class="profile-stat"><div class="profile-stat-label">Peak Year</div><div class="profile-stat-val">2025 (3,030)</div></div>
+        <div class="profile-stat"><div class="profile-stat-label">Top Word</div><div class="profile-stat-val">"Leinster"</div></div>
+        <div class="profile-stat"><div class="profile-stat-label">Also Used</div><div class="profile-stat-val">"Ulster" 623×</div></div>
+        <div class="profile-stat"><div class="profile-stat-label">Joined</div><div class="profile-stat-val">Aug 2016</div></div>
       </div>
       <div class="profile-verdict">Joined a few months late but <strong>almost caught up</strong>. His most active year was actually 2025 — still growing. Has written "Leinster" 912 times and "Ulster" 623 times. A man of the provinces.</div>
     </div>
@@ -2013,30 +2237,18 @@
     <div class="profile-card">
       <div class="profile-header">
         <div>
-          <div class="profile-name">Jamie Martin Grace</div>
-          <div class="profile-msgs">8,989 messages · #7</div>
+          <div class="profile-name">Luke Madden</div>
+          <div class="profile-msgs">9,926 messages · #3</div>
         </div>
-        <div class="profile-rank">7</div>
+        <div class="profile-rank">3</div>
       </div>
       <div class="profile-stats">
-        <div class="profile-stat">
-          <div class="profile-stat-label">Role</div>
-          <div class="profile-stat-val">Founder</div>
-        </div>
-        <div class="profile-stat">
-          <div class="profile-stat-label">First Line</div>
-          <div class="profile-stat-val">"About time"</div>
-        </div>
-        <div class="profile-stat">
-          <div class="profile-stat-label">Peak Year</div>
-          <div class="profile-stat-val">2017 (2,488)</div>
-        </div>
-        <div class="profile-stat">
-          <div class="profile-stat-label">2025 Messages</div>
-          <div class="profile-stat-val">243</div>
-        </div>
+        <div class="profile-stat"><div class="profile-stat-label">Peak Year</div><div class="profile-stat-val">2017 (3,489)</div></div>
+        <div class="profile-stat"><div class="profile-stat-label">2019 Messages</div><div class="profile-stat-val">476 (cliff edge)</div></div>
+        <div class="profile-stat"><div class="profile-stat-label">2025 Messages</div><div class="profile-stat-val">593</div></div>
+        <div class="profile-stat"><div class="profile-stat-label">Status</div><div class="profile-stat-val">Lives in Newcastle</div></div>
       </div>
-      <div class="profile-verdict">Created the group. Delivered its first message. Has been <strong>fading since 2017</strong>. His decline from founder to occasional presence is the group's quiet tragedy. Still sharp when he shows up.</div>
+      <div class="profile-verdict">Top 3 all-time but went from <strong>3,489 messages in 2017 to 476 in 2019</strong> — the group's steepest single drop. Moved to Newcastle. Married Rachel. Had baby Drico. Still shows up for the rugby.</div>
     </div>
 
     <div class="profile-card">
@@ -2048,24 +2260,80 @@
         <div class="profile-rank">4</div>
       </div>
       <div class="profile-stats">
-        <div class="profile-stat">
-          <div class="profile-stat-label">First Act</div>
-          <div class="profile-stat-val">Changed the icon</div>
-        </div>
-        <div class="profile-stat">
-          <div class="profile-stat-label">Top Word</div>
-          <div class="profile-stat-val">"Haha" (255×)</div>
-        </div>
-        <div class="profile-stat">
-          <div class="profile-stat-label">Peak</div>
-          <div class="profile-stat-val">2017 (3,243)</div>
-        </div>
-        <div class="profile-stat">
-          <div class="profile-stat-label">2025 Messages</div>
-          <div class="profile-stat-val">299</div>
-        </div>
+        <div class="profile-stat"><div class="profile-stat-label">First Act</div><div class="profile-stat-val">Changed the icon</div></div>
+        <div class="profile-stat"><div class="profile-stat-label">Top Word</div><div class="profile-stat-val">"Haha" (255×)</div></div>
+        <div class="profile-stat"><div class="profile-stat-label">Peak</div><div class="profile-stat-val">2017 (3,243)</div></div>
+        <div class="profile-stat"><div class="profile-stat-label">2025 Messages</div><div class="profile-stat-val">299</div></div>
       </div>
       <div class="profile-verdict">Changed the group icon within minutes of it being created. Has been <strong>declining ever since</strong>, in message terms. Still produces some of the group's funniest lines. Coined "Graucho Sexton".</div>
+    </div>
+
+    <div class="profile-card">
+      <div class="profile-header">
+        <div>
+          <div class="profile-name">Adam McDermot</div>
+          <div class="profile-msgs">9,496 messages · #5</div>
+        </div>
+        <div class="profile-rank">5</div>
+      </div>
+      <div class="profile-stats">
+        <div class="profile-stat"><div class="profile-stat-label">Peak Year</div><div class="profile-stat-val">2017 (1,792)</div></div>
+        <div class="profile-stat"><div class="profile-stat-label">2025 Messages</div><div class="profile-stat-val">1,089</div></div>
+        <div class="profile-stat"><div class="profile-stat-label">First Message</div><div class="profile-stat-val">"Fuck off ROG"</div></div>
+        <div class="profile-stat"><div class="profile-stat-label">Trending</div><div class="profile-stat-val">Strongly up</div></div>
+      </div>
+      <div class="profile-verdict">Arrived with opinions and never stopped having them. First message was <strong>"Fuck off ROG"</strong>. His 2025 output of 1,089 messages is one of the group's best late-career numbers. Lives in Bray. Has a house now.</div>
+    </div>
+
+    <div class="profile-card">
+      <div class="profile-header">
+        <div>
+          <div class="profile-name">Eoin Gray</div>
+          <div class="profile-msgs">9,412 messages · #6</div>
+        </div>
+        <div class="profile-rank">6</div>
+      </div>
+      <div class="profile-stats">
+        <div class="profile-stat"><div class="profile-stat-label">Peak Year</div><div class="profile-stat-val">2021 (1,843)</div></div>
+        <div class="profile-stat"><div class="profile-stat-label">After Midnight</div><div class="profile-stat-val">55 messages</div></div>
+        <div class="profile-stat"><div class="profile-stat-label">Avg Msg Length</div><div class="profile-stat-val">Longest in group</div></div>
+        <div class="profile-stat"><div class="profile-stat-label">2025</div><div class="profile-stat-val">Baby Eva arrived</div></div>
+      </div>
+      <div class="profile-verdict">Peaked in 2021 — later than anyone else in the top 6. Writes the <strong>longest messages per person</strong> in the group. Thoughtful, considered, occasionally sends 55 of them after midnight. Welcomed baby Eva in 2025.</div>
+    </div>
+
+    <div class="profile-card">
+      <div class="profile-header">
+        <div>
+          <div class="profile-name">Jamie Martin Grace</div>
+          <div class="profile-msgs">8,989 messages · #7</div>
+        </div>
+        <div class="profile-rank">7</div>
+      </div>
+      <div class="profile-stats">
+        <div class="profile-stat"><div class="profile-stat-label">Role</div><div class="profile-stat-val">Founder</div></div>
+        <div class="profile-stat"><div class="profile-stat-label">First Line</div><div class="profile-stat-val">"About time"</div></div>
+        <div class="profile-stat"><div class="profile-stat-label">Peak Year</div><div class="profile-stat-val">2017 (2,488)</div></div>
+        <div class="profile-stat"><div class="profile-stat-label">2025 Messages</div><div class="profile-stat-val">243</div></div>
+      </div>
+      <div class="profile-verdict">Created the group. Delivered its first message. Has been <strong>fading since 2017</strong>. His decline from founder to occasional presence is the group's quiet tragedy. Still sharp when he shows up.</div>
+    </div>
+
+    <div class="profile-card">
+      <div class="profile-header">
+        <div>
+          <div class="profile-name">Rob McMahon</div>
+          <div class="profile-msgs">8,936 messages · #8</div>
+        </div>
+        <div class="profile-rank">8</div>
+      </div>
+      <div class="profile-stats">
+        <div class="profile-stat"><div class="profile-stat-label">Peak Year</div><div class="profile-stat-val">2017 (2,144)</div></div>
+        <div class="profile-stat"><div class="profile-stat-label">After Midnight</div><div class="profile-stat-val">123 messages</div></div>
+        <div class="profile-stat"><div class="profile-stat-label">First Message</div><div class="profile-stat-val">His phone number</div></div>
+        <div class="profile-stat"><div class="profile-stat-label">2025 Messages</div><div class="profile-stat-val">600</div></div>
+      </div>
+      <div class="profile-verdict">Added to the group via Marc Golden's phone, whose first message was literally Rob's number. Has sent <strong>123 messages after midnight</strong> — second only to Chris Lee. The group's most reliable late-night correspondent.</div>
     </div>
 
     <div class="profile-card">
@@ -2077,24 +2345,12 @@
         <div class="profile-rank">9</div>
       </div>
       <div class="profile-stats">
-        <div class="profile-stat">
-          <div class="profile-stat-label">Top Word</div>
-          <div class="profile-stat-val">"Tickets"</div>
-        </div>
-        <div class="profile-stat">
-          <div class="profile-stat-label">Also Top</div>
-          <div class="profile-stat-val">"Haha" (151×)</div>
-        </div>
-        <div class="profile-stat">
-          <div class="profile-stat-label">Short Msgs</div>
-          <div class="profile-stat-val">11.2% of total</div>
-        </div>
-        <div class="profile-stat">
-          <div class="profile-stat-label">Joined</div>
-          <div class="profile-stat-val">July 2016</div>
-        </div>
+        <div class="profile-stat"><div class="profile-stat-label">Top Word</div><div class="profile-stat-val">"Tickets"</div></div>
+        <div class="profile-stat"><div class="profile-stat-label">Also Top</div><div class="profile-stat-val">"Haha" (151×)</div></div>
+        <div class="profile-stat"><div class="profile-stat-label">Short Msgs</div><div class="profile-stat-val">11.2% of total</div></div>
+        <div class="profile-stat"><div class="profile-stat-label">Side Project</div><div class="profile-stat-val">Off the Rails Coffee</div></div>
       </div>
-      <div class="profile-verdict">Man of few words, big asks. <strong>"Tickets"</strong> is literally his top unique word. 11% of his messages are five characters or fewer — the highest short-message rate of the core group. Still going strong.</div>
+      <div class="profile-verdict">Man of few words, big asks. <strong>"Tickets"</strong> is literally his top unique word. 11% of his messages are five characters or fewer. Opened a coffee shop in 2024 called Off the Rails. The group approved.</div>
     </div>
 
     <div class="profile-card">
@@ -2106,24 +2362,12 @@
         <div class="profile-rank">10</div>
       </div>
       <div class="profile-stats">
-        <div class="profile-stat">
-          <div class="profile-stat-label">Top Word</div>
-          <div class="profile-stat-val">"Great"</div>
-        </div>
-        <div class="profile-stat">
-          <div class="profile-stat-label">Also Top</div>
-          <div class="profile-stat-val">"Actually" (62×)</div>
-        </div>
-        <div class="profile-stat">
-          <div class="profile-stat-label">Peak Year</div>
-          <div class="profile-stat-val">2020 (469)</div>
-        </div>
-        <div class="profile-stat">
-          <div class="profile-stat-label">2023 Msgs</div>
-          <div class="profile-stat-val">72 (career low)</div>
-        </div>
+        <div class="profile-stat"><div class="profile-stat-label">Top Word</div><div class="profile-stat-val">"Great"</div></div>
+        <div class="profile-stat"><div class="profile-stat-label">Also Top</div><div class="profile-stat-val">"Actually" (62×)</div></div>
+        <div class="profile-stat"><div class="profile-stat-label">Peak Year</div><div class="profile-stat-val">2020 (469)</div></div>
+        <div class="profile-stat"><div class="profile-stat-label">2023 Msgs</div><div class="profile-stat-val">72 (career low)</div></div>
       </div>
-      <div class="profile-verdict">The group's most <strong>relentlessly positive</strong> contributor. "Great" is his most used word. His lowest year was 2023 (72 messages). He was also the one who ate a salad and immediately told everyone.</div>
+      <div class="profile-verdict">The group's most <strong>relentlessly positive</strong> contributor. "Great" is his most used word. 2023 was his quietest year at 72 messages. He was also the one who ate a salad and immediately told everyone.</div>
     </div>
 
     <div class="profile-card">
@@ -2135,22 +2379,10 @@
         <div class="profile-rank">11</div>
       </div>
       <div class="profile-stats">
-        <div class="profile-stat">
-          <div class="profile-stat-label">Avg Msg Length</div>
-          <div class="profile-stat-val">70.7 chars</div>
-        </div>
-        <div class="profile-stat">
-          <div class="profile-stat-label">Longest Msg</div>
-          <div class="profile-stat-val">743 chars</div>
-        </div>
-        <div class="profile-stat">
-          <div class="profile-stat-label">Joined</div>
-          <div class="profile-stat-val">Dec 2016</div>
-        </div>
-        <div class="profile-stat">
-          <div class="profile-stat-label">Trending</div>
-          <div class="profile-stat-val">Up (250 in 2025)</div>
-        </div>
+        <div class="profile-stat"><div class="profile-stat-label">Avg Msg Length</div><div class="profile-stat-val">70.7 chars</div></div>
+        <div class="profile-stat"><div class="profile-stat-label">Longest Msg</div><div class="profile-stat-val">743 chars</div></div>
+        <div class="profile-stat"><div class="profile-stat-label">Joined</div><div class="profile-stat-val">Dec 2016</div></div>
+        <div class="profile-stat"><div class="profile-stat-label">Trending</div><div class="profile-stat-val">Up (250 in 2025)</div></div>
       </div>
       <div class="profile-verdict">Writes the <strong>longest messages</strong> in the group — avg 70.7 characters, highest of anyone. When Lorcan shows up, he has thought things through. His comeback in 2024–25 is one of the chat's quiet successes.</div>
     </div>
@@ -2164,30 +2396,69 @@
         <div class="profile-rank">12</div>
       </div>
       <div class="profile-stats">
-        <div class="profile-stat">
-          <div class="profile-stat-label">Top Word</div>
-          <div class="profile-stat-val">"Lmao"</div>
-        </div>
-        <div class="profile-stat">
-          <div class="profile-stat-label">Laugh Rate</div>
-          <div class="profile-stat-val">9.8% of msgs</div>
-        </div>
-        <div class="profile-stat">
-          <div class="profile-stat-label">Longest Gap</div>
-          <div class="profile-stat-val">314 days</div>
-        </div>
-        <div class="profile-stat">
-          <div class="profile-stat-label">Known As</div>
-          <div class="profile-stat-val">3 contact names</div>
-        </div>
+        <div class="profile-stat"><div class="profile-stat-label">Top Word</div><div class="profile-stat-val">"Lmao"</div></div>
+        <div class="profile-stat"><div class="profile-stat-label">Laugh Rate</div><div class="profile-stat-val">9.8% of msgs</div></div>
+        <div class="profile-stat"><div class="profile-stat-label">Longest Gap</div><div class="profile-stat-val">314 days</div></div>
+        <div class="profile-stat"><div class="profile-stat-label">Known As</div><div class="profile-stat-val">3 contact names</div></div>
       </div>
       <div class="profile-verdict">Three different contact names depending on where he was living. Vanished for <strong>314 days</strong> during the America period. Has the <strong>second highest laugh rate</strong> in the group at 9.8% — when he's here, he's entertained.</div>
+    </div>
+
+    <div class="profile-card">
+      <div class="profile-header">
+        <div>
+          <div class="profile-name">Gary Foxton</div>
+          <div class="profile-msgs">559 messages · #13</div>
+        </div>
+        <div class="profile-rank">13</div>
+      </div>
+      <div class="profile-stats">
+        <div class="profile-stat"><div class="profile-stat-label">Peak Year</div><div class="profile-stat-val">2016 (173)</div></div>
+        <div class="profile-stat"><div class="profile-stat-label">Last Message</div><div class="profile-stat-val">18 Aug 2019</div></div>
+        <div class="profile-stat"><div class="profile-stat-label">Known As</div><div class="profile-stat-val">Fat Tony</div></div>
+        <div class="profile-stat"><div class="profile-stat-label">Status</div><div class="profile-stat-val">Gone quiet</div></div>
+      </div>
+      <div class="profile-verdict">A founding member who peaked early and faded gradually. Called himself <strong>Fat Tony</strong> in a fantasy league. His last message was August 2019. He has not been heard from since. Still in the group.</div>
+    </div>
+
+    <div class="profile-card">
+      <div class="profile-header">
+        <div>
+          <div class="profile-name">Tim White-Flynn</div>
+          <div class="profile-msgs">313 messages · #14</div>
+        </div>
+        <div class="profile-rank">14</div>
+      </div>
+      <div class="profile-stats">
+        <div class="profile-stat"><div class="profile-stat-label">Joined</div><div class="profile-stat-val">Feb 2017</div></div>
+        <div class="profile-stat"><div class="profile-stat-label">Longest Gap</div><div class="profile-stat-val">672 days</div></div>
+        <div class="profile-stat"><div class="profile-stat-label">The Return</div><div class="profile-stat-val">1 message, Oct 2021</div></div>
+        <div class="profile-stat"><div class="profile-stat-label">Status</div><div class="profile-stat-val">Gone again</div></div>
+      </div>
+      <div class="profile-verdict">Vanished for <strong>672 consecutive days</strong>. Returned on 11 October 2021. Sent exactly one message. Left again. This is, genuinely, a ghost story told in three acts.</div>
+    </div>
+
+    <div class="profile-card">
+      <div class="profile-header">
+        <div>
+          <div class="profile-name">Marc Golden</div>
+          <div class="profile-msgs">294 messages · #15</div>
+        </div>
+        <div class="profile-rank">15</div>
+      </div>
+      <div class="profile-stats">
+        <div class="profile-stat"><div class="profile-stat-label">Peak Year</div><div class="profile-stat-val">2016 (178)</div></div>
+        <div class="profile-stat"><div class="profile-stat-label">Last Message</div><div class="profile-stat-val">3 Sep 2022</div></div>
+        <div class="profile-stat"><div class="profile-stat-label">Most Used Word</div><div class="profile-stat-val">"Lads"</div></div>
+        <div class="profile-stat"><div class="profile-stat-label">Status</div><div class="profile-stat-val">Gone quiet</div></div>
+      </div>
+      <div class="profile-verdict">A founding member. His most used word in later years was <strong>"lads"</strong> — always reaching out, less and less often. Sent 5 messages in 2022. His last was 3 September 2022. Still in the group.</div>
     </div>
 
   </div>
 </section>
 
-<!-- FOOTER -->
+<!-- FOOTER -->>
 <footer class="footer">
   <span class="footer-crab">🦀</span>
   <div class="footer-title">Aguero Crabs</div>
