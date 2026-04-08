@@ -276,6 +276,32 @@
     padding: 0 0 32px 0;
     border-bottom: 1px solid var(--border);
     margin-bottom: 20px;
+    position: relative;
+  }
+  .year-tooltip {
+    position: fixed;
+    background: var(--card);
+    border: 1px solid var(--green);
+    border-radius: 3px;
+    padding: 7px 12px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.12s;
+    z-index: 200;
+    white-space: nowrap;
+  }
+  .year-tooltip strong { color: var(--green); }
+  .year-crosshair {
+    position: absolute;
+    top: 0; bottom: 32px;
+    width: 1px;
+    background: var(--green);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.12s;
   }
 
   .year-col {
@@ -759,6 +785,100 @@
   .owl-bar-wrap { flex: 1; height: 6px; background: var(--border); border-radius: 3px; }
   .owl-bar { height: 100%; background: #5533ff; border-radius: 3px; }
   .owl-count { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); width: 40px; text-align: right; }
+
+  /* ═══════════════════════════════════════════════════
+     MOBILE  (≤ 640px)
+  ═══════════════════════════════════════════════════ */
+  @media (max-width: 640px) {
+
+    /* Base */
+    body { padding: 20px 16px 60px; font-size: 14px; }
+    section { padding: 40px 0; }
+    .section-title { font-size: clamp(32px, 9vw, 56px); }
+    .section-label { font-size: 9px; }
+    .divider { margin: 32px 0; }
+
+    /* Hero */
+    .hero-title { font-size: clamp(52px, 18vw, 100px); letter-spacing: -1px; }
+    .hero-stats { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .hero-stat-num { font-size: 28px; }
+
+    /* Bar chart race */
+    #raceContainer .race-bar-row { height: 22px; gap: 6px; }
+    #raceLegend { gap: 6px; }
+    #raceMLabel { font-size: 20px; min-width: 80px; }
+    #racePlayBtn { padding: 8px 18px; font-size: 12px; }
+
+    /* Leaderboard */
+    .lb-bar-wrap { display: none; }
+    .lb-name { font-size: 13px; }
+    .lb-count { font-size: 12px; }
+
+    /* Activity chart */
+    .year-chart { height: 130px; gap: 6px; }
+    .year-count { font-size: 9px; }
+    .year-label { font-size: 9px; }
+
+    /* Timeline — switch to single-column stacked cards, hide SVG string */
+    #tl-outer { overflow: visible; }
+    #tl-outer svg { display: none !important; }
+    .tl-card {
+      position: relative !important;
+      left: auto !important;
+      top: auto !important;
+      width: 100% !important;
+      margin-bottom: 12px;
+      border-left: 3px solid currentColor !important;
+      border-right: none !important;
+      border-radius: 0 4px 4px 0 !important;
+      text-align: left !important;
+    }
+    .tl-card.left-card {
+      border-left: 3px solid currentColor !important;
+      border-right: none !important;
+      border-radius: 0 4px 4px 0 !important;
+      text-align: left !important;
+    }
+    #tl-outer {
+      display: flex !important;
+      flex-direction: column !important;
+      height: auto !important;
+      min-height: unset !important;
+    }
+    /* Year dividers between cards on mobile */
+    .mob-year-divider {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 15px;
+      letter-spacing: 0.2em;
+      color: var(--faint);
+      padding: 8px 0 4px;
+      border-top: 1px solid var(--border);
+      margin-top: 8px;
+    }
+
+    /* Records */
+    .records-grid { grid-template-columns: 1fr; }
+
+    /* Profiles */
+    .profiles-grid { grid-template-columns: 1fr; }
+    .profile-card { padding: 18px; }
+    .profile-stats { grid-template-columns: 1fr 1fr; }
+
+    /* Fade-outs */
+    .fadeout-section { padding: 20px; }
+
+    /* Night owls */
+    .night-owls-grid { grid-template-columns: 1fr 1fr; }
+
+    /* Word cloud */
+    .word-pill { font-size: 11px; padding: 4px 10px; }
+
+    /* Floating year pill — smaller on mobile */
+    #tl-year-pill { display: none; }
+
+    /* Timeline popup modal */
+    #tl-modal { padding: 20px; }
+  }
 </style>
 </head>
 <body>
@@ -810,15 +930,15 @@
 
   <div class="reveal reveal-delay-1">
     <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px; flex-wrap:wrap;">
-      <button id="racePlayBtn" onclick="raceTogglePlay()" style="font-family:'DM Mono',monospace; font-size:11px; letter-spacing:0.15em; text-transform:uppercase; padding:8px 20px; background:var(--green); color:#000; border:none; border-radius:2px; cursor:pointer; font-weight:500;">Play</button>
+      <button id="racePlayBtn" onclick="raceTogglePlay()" style="font-family:'DM Mono',monospace; font-size:13px; letter-spacing:0.15em; text-transform:uppercase; padding:10px 28px; background:var(--green); color:#000; border:none; border-radius:2px; cursor:pointer; font-weight:700; display:inline-flex; align-items:center; gap:8px; box-shadow:0 0 16px rgba(0,200,83,0.35);">&#9654; Play</button>
       <input type="range" id="raceSlider" min="0" max="120" value="0" step="1" oninput="raceOnSlide(+this.value)" style="flex:1; min-width:120px; accent-color:var(--green);">
       <span id="raceMLabel" style="font-family:'Bebas Neue',sans-serif; font-size:28px; color:var(--text); min-width:110px; text-align:right; line-height:1;">Apr 2016</span>
       <div style="display:flex; align-items:center; gap:6px;">
         <span style="font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.2em; color:var(--muted); text-transform:uppercase;">Speed</span>
         <select id="raceSpeed" onchange="raceSpeedChange()" style="font-family:'DM Mono',monospace; font-size:11px; padding:4px 8px; background:var(--card); border:1px solid var(--border); color:var(--text); border-radius:2px;">
           <option value="700">Slow</option>
-          <option value="400" selected>Normal</option>
-          <option value="180">Fast</option>
+          <option value="400">Normal</option>
+          <option value="180" selected>Fast</option>
           <option value="70">Ludicrous</option>
         </select>
       </div>
@@ -961,7 +1081,7 @@
     <div class="lb-row">
       <div class="lb-rank">13</div>
       <div>
-        <div class="lb-name">Mark O'Caglahan</div>
+        <div class="lb-name">Marc Golden</div>
         <div class="lb-tag">Last message: September 2022. Simply stopped.</div>
       </div>
       <div class="lb-bar-wrap"><div class="lb-bar" style="width:1.3%"></div></div>
@@ -1087,457 +1207,409 @@
       </div>
     </div>
   </div>
+  <!-- year chart tooltip -->
+  <div class="year-tooltip" id="yearTooltip"></div>
+  <div class="year-crosshair" id="yearCrosshair"></div>
 </section>
+
+<script>
+(function(){
+  const chart = document.querySelector('.year-chart');
+  const tip   = document.getElementById('yearTooltip');
+  const cross = document.getElementById('yearCrosshair');
+  if (!chart || !tip || !cross) return;
+
+  const DATA = [
+    {yr:'2016', val:10211, label:'10,211 msgs'},
+    {yr:'2017', val:27989, label:'27,989 msgs'},
+    {yr:'2018', val:17568, label:'17,568 msgs'},
+    {yr:'2019', val:11339, label:'11,339 msgs'},
+    {yr:'2020', val:12129, label:'12,129 msgs'},
+    {yr:'2021', val:13183, label:'13,183 msgs'},
+    {yr:'2022', val:7612,  label:'7,612 msgs'},
+    {yr:'2023', val:7411,  label:'7,411 msgs'},
+    {yr:'2024', val:8453,  label:'8,453 msgs'},
+    {yr:'2025', val:9364,  label:'9,364 msgs'},
+  ];
+
+  chart.addEventListener('mousemove', e => {
+    const cols = chart.querySelectorAll('.year-col');
+    const chartRect = chart.getBoundingClientRect();
+    const mouseX = e.clientX - chartRect.left;
+    const colW = chartRect.width / cols.length;
+    const idx = Math.min(DATA.length - 1, Math.max(0, Math.floor(mouseX / colW)));
+    const d = DATA[idx];
+    if (!d) return;
+
+    tip.innerHTML = '<strong>' + d.yr + '</strong> — ' + d.label;
+    tip.style.opacity = '1';
+    // Position tooltip above cursor, avoiding edges
+    const tx = Math.min(e.clientX + 14, window.innerWidth - 160);
+    const ty = e.clientY - 44;
+    tip.style.left = tx + 'px';
+    tip.style.top  = ty + 'px';
+
+    // Crosshair: centre of the hovered column
+    const colCentreX = (idx + 0.5) * colW;
+    cross.style.left    = colCentreX + 'px';
+    cross.style.opacity = '0.4';
+  });
+
+  chart.addEventListener('mouseleave', () => {
+    tip.style.opacity   = '0';
+    cross.style.opacity = '0';
+  });
+})();
+</script>
 
 <div class="divider"></div>
 
 <!-- TIMELINE -->
-<section>
+<section id="timeline-section" style="padding-bottom:0">
   <div class="reveal">
     <div class="section-label">Year by Year</div>
     <div class="section-title">The Decade<br>In Review</div>
+    <p style="color:var(--muted); font-size:14px; margin-bottom:20px; max-width:580px; line-height:1.8;">
+      The string's position traces a 120-day rolling average of messages.
+      When the chat was loud it swings right. When life got quiet it drifts back.
+      Events are pinned at the exact date they happened.
+    </p>
   </div>
 
-  <div class="timeline reveal reveal-delay-1">
-
-    <!-- 2016 -->
-    <div class="tl-year">
-      <div class="tl-year-heading">2016</div>
-      <div class="tl-year-count">10,211 messages · Founded 9 April</div>
-      <div class="tl-cards">
-        <div class="tl-card highlight">
-          <span class="tl-card-tag tag-moment">The Birth</span>
-          <div class="tl-card-text">
-            Jamie Martin Grace created a group called <strong>"USA Alpha Males"</strong> and immediately added everyone. Chris Scollard changed the icon within minutes. The first actual item of business, per Chris Lee: <em>is anyone getting a few cold beers later?</em>
-          </div>
-        </div>
-        <div class="tl-card">
-          <span class="tl-card-tag tag-funny">Opening Moves</span>
-          <div class="tl-card-text">
-            Jamie declined the first pint invitation on account of, in his words, <strong>"being a pussy"</strong>. The chat was already working exactly as intended.
-            <div class="quote">"Just one or two pints. Of gin."</div>
-            <div class="quote-attr">— Chris Lee, Day One</div>
-          </div>
-        </div>
-        <div class="tl-card">
-          <span class="tl-card-tag tag-stat">By the Numbers</span>
-          <div class="tl-card-text">
-            <strong>Chris Lee</strong> — 2,361 messages in just 8 months of the group existing. Already the clear leader. <strong>Gary Foxton</strong> — 173 messages, his most active period in the chat. Make the most of it, Gary.
-          </div>
-        </div>
-        <div class="tl-card">
-          <span class="tl-card-tag tag-funny">From the Archive</span>
-          <div class="tl-card-text">
-            <div class="quote">"I found a girl for you. Get on Tinder and let me know what you think 😊"</div>
-            <div class="quote-attr">— Chris Lee, playing matchmaker</div>
-            <div class="quote" style="margin-top:12px">"I have chosen to go with Fat Tony"</div>
-            <div class="quote-attr">— Gary Foxton, on his fantasy team name. Never explained.</div>
-          </div>
-        </div>
-        <div class="tl-card highlight">
-          <span class="tl-card-tag tag-moment">Banna Beach</span>
-          <div class="tl-card-text">
-            The group's first big social event. <strong>Banna Beach, Kerry</strong> — September 2016 — a lads' weekend away. Rob McMahon only found out he wasn't being sent to Saudi Arabia in time to join. Costumes were discussed. Eoin Gray was chasing €52.50 from people. The group had found its first tradition.
-          </div>
-        </div>
-        <div class="tl-card">
-          <span class="tl-card-tag tag-funny">Night Out Dispatch, 2:30am</span>
-          <div class="tl-card-text">
-            May 28, 2016. The chat goes active again at 2:30am.
-            <div class="quote">"Flannerys"</div>
-            <div class="quote-attr">— Chris Lee, 02:30am, location confirmed</div>
-            <div class="quote" style="margin-top:10px">"Fuck off!"</div>
-            <div class="quote-attr">— Eoin Gray, 02:47am, apparently surprised by this information</div>
-            The full context remains classified. The Flannery's era had begun.
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 2017 -->
-    <div class="tl-year">
-      <div class="tl-year-heading">2017</div>
-      <div class="tl-year-count">27,989 messages · The Golden Year</div>
-      <div class="tl-cards">
-        <div class="tl-card highlight">
-          <span class="tl-card-tag tag-stat">Peak Everything</span>
-          <div class="tl-card-text">
-            The group's single biggest year by a mile. February alone saw over <strong>4,140 messages</strong>. January 20 (364 messages) was one of the top 10 busiest days ever. The lads were in their prime.
-          </div>
-        </div>
-        <div class="tl-card sad">
-          <span class="tl-card-tag tag-sad">The Beginning of the End (for some)</span>
-          <div class="tl-card-text">
-            <strong>Gary Foxton</strong> sends just 31 messages all year — down from 173 in 2016. He's still technically present, but he's already fading. <strong>Tim White-Flynn</strong> joins mid-year, fires off 113 messages, then starts his long drift toward silence.
-          </div>
-        </div>
-        <div class="tl-card">
-          <span class="tl-card-tag tag-funny">On the Lions Tour</span>
-          <div class="tl-card-text">
-            The British & Irish Lions vs NZ tour generated some of the group's most intense activity. June 8 and 13 both cracked 350+ messages. The group had opinions. Many of them.
-            <div class="quote">"Lions need to use that flat ball more often."</div>
-            <div class="quote-attr">— Matty Morrow, definitive analyst</div>
-          </div>
-        </div>
-        <div class="tl-card">
-          <span class="tl-card-tag tag-funny">From the Archive</span>
-          <div class="tl-card-text">
-            <div class="quote">"Gurj is currently eating his way through Dublin dessert menus, one cheesecake at a time."</div>
-            <div class="quote-attr">— Chris Lee, providing a service</div>
-          </div>
-        </div>
-        <div class="tl-card highlight">
-          <span class="tl-card-tag tag-moment">Secret Hitler Era</span>
-          <div class="tl-card-text">
-            October 2017. Mark O'Caglahan floated Dungeons & Dragons. The group countered with <strong>Secret Hitler</strong>. Luke Madden declared it "so goooood". Lorcan Clarke: "the king of all games". Chris Scollard: "Does it tick all the Reich boxes?" Chris Lee subsequently ordered it from the US via AddressPal.
-          </div>
-        </div>
-        <div class="tl-card">
-          <span class="tl-card-tag tag-funny">Gurj's First Date Dispatch</span>
-          <div class="tl-card-text">
-            October 20, 2017. At <strong>2:08am</strong>, Gurj provided an unsolicited update to the group chat.
-            <div class="quote">"It wasn't really a first date but I definitely appreciate this haha. We ended up going to canal bank cafe for those of you wondering 😂"</div>
-            <div class="quote-attr">— Gurj Sandhu, 2:08am, keeping the lads informed</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 2018 -->
-    <div class="tl-year">
-      <div class="tl-year-heading">2018</div>
-      <div class="tl-year-count">17,568 messages · Post-Peak, Still Loud</div>
-      <div class="tl-cards">
-        <div class="tl-card">
-          <span class="tl-card-tag tag-stat">The Drop</span>
-          <div class="tl-card-text">
-            Down 37% from 2017 — still nearly 18,000 messages, still a very active group. Everyone still participating, even if less frantically. This is the normal that the group settled into.
-          </div>
-        </div>
-        <div class="tl-card sad">
-          <span class="tl-card-tag tag-sad">Colman Goes Dark</span>
-          <div class="tl-card-text">
-            <strong>Colman Humphrey</strong> sends 91 messages in 2018, his last on November 17. He then disappears for <strong>314 consecutive days</strong> — almost a full year. We now know this as the America period (he was saved as "Colman AMERICA" upon return).
-          </div>
-        </div>
-        <div class="tl-card">
-          <span class="tl-card-tag tag-funny">Peak Scollard</span>
-          <div class="tl-card-text">
-            <div class="quote">"Cause Chris has no shame"</div>
-            <div class="quote-attr">— Chris Scollard, correctly</div>
-            <div class="quote" style="margin-top:12px">"What if he accidentally books a bunch of chairs masquerading as a table?"</div>
-            <div class="quote-attr">— Chris Scollard, raising a legitimate concern</div>
-          </div>
-        </div>
-        <div class="tl-card">
-          <span class="tl-card-tag tag-funny">Herron Watch</span>
-          <div class="tl-card-text">
-            <div class="quote">"Herron can fuck off back to England anyway, no way he'll be offered an extension. Genuinely the worst professional player in Ireland."</div>
-            <div class="quote-attr">— Matty Morrow, not mincing words</div>
-          </div>
-        </div>
-        <div class="tl-card highlight">
-          <span class="tl-card-tag tag-moment">Rugby 08 Night</span>
-          <div class="tl-card-text">
-            July 28, 2018. The eternal question — pub or home? — resolved itself beautifully.
-            <div class="quote">"Rugby 08 in mine starting soon"</div>
-            <div class="quote-attr">— Chris Lee, 6:33pm, establishing the venue</div>
-            Matty confirmed he was "a few scoops in". Rob needed to shower first. Chris Lee floated that it "may sort of become pre drinks." The evening escalated from there.
-          </div>
-        </div>
-        <div class="tl-card">
-          <span class="tl-card-tag tag-funny">Lads vs Judo</span>
-          <div class="tl-card-text">
-            March 2018. Luke Madden, apparently speaking from experience, issued a firm warning to the group.
-            <div class="quote">"I would advise absolutely nobody to start judo as an adult. Horrible injury is basically guaranteed."</div>
-            <div class="quote-attr">— Luke Madden, the voice of experience</div>
-            Nobody had asked about judo. Nobody was considering judo. Classic Aguero Crabs.
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 2019 -->
-    <div class="tl-year">
-      <div class="tl-year-heading">2019</div>
-      <div class="tl-year-count">11,339 messages · The Rugby World Cup Year</div>
-      <div class="tl-cards">
-        <div class="tl-card highlight">
-          <span class="tl-card-tag tag-moment">Japan RWC</span>
-          <div class="tl-card-text">
-            The Rugby World Cup in Japan drove significant activity. Ireland's exit generated considerable post-mortem analysis in the group. <strong>Chris Lee</strong> had many thoughts. They were shared at length.
-            <div class="quote">"Time to put a bet on France winning the world cup"</div>
-            <div class="quote-attr">— Adam McDermot, in October 2019</div>
-          </div>
-        </div>
-        <div class="tl-card sad">
-          <span class="tl-card-tag tag-sad">Gary's Last Stand</span>
-          <div class="tl-card-text">
-            <strong>Gary Foxton</strong> sends his final 20 messages. His last ever message in the Aguero Crabs is on <strong>18 August 2019</strong>. We don't know what it was about. We do know he called himself Fat Tony once, and that's enough.
-          </div>
-        </div>
-        <div class="tl-card">
-          <span class="tl-card-tag tag-funny">Tim's Last Hurrah</span>
-          <div class="tl-card-text">
-            <strong>Tim White-Flynn</strong> sends just 9 messages all year — then goes fully silent on December 9, 2019. He will not return for <strong>672 days</strong>. That's nearly two years. Nobody noticed immediately.
-          </div>
-        </div>
-        <div class="tl-card">
-          <span class="tl-card-tag tag-stat">Luke's Cliff Edge</span>
-          <div class="tl-card-text">
-            <strong>Luke Madden</strong> drops from 3,489 messages in 2017 to just <strong>476 in 2019</strong>. The biggest fall from grace in the group. To be fair, he was still 9th overall. He came back a bit in later years.
-          </div>
-        </div>
-        <div class="tl-card highlight">
-          <span class="tl-card-tag tag-moment">March Night Out, 2019</span>
-          <div class="tl-card-text">
-            March 2, 2019. Chris Lee floated pints. Gary Foxton confirmed he'd be "floating about town from 8" with Scully and Ross. Luke had a dinner until 8:30. Rob needed to check his plans. The group converged. It remains one of the last documented nights out with the full complement before the numbers started thinning.
-          </div>
-        </div>
-        <div class="tl-card">
-          <span class="tl-card-tag tag-funny">The April Fools Victim</span>
-          <div class="tl-card-text">
-            April 1, 2019. Chris Lee was caught by an April Fools joke about Devon Toner playing for Lansdowne. He admitted it publicly.
-            <div class="quote">"Ah man, April fucking fools. I got destroyed."</div>
-            <div class="quote-attr">— Chris Lee, 2:47pm, April 1, 2019. The humiliation is in the timestamps.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 2020 -->
-    <div class="tl-year">
-      <div class="tl-year-heading">2020</div>
-      <div class="tl-year-count">12,129 messages · The Pandemic Year</div>
-      <div class="tl-cards">
-        <div class="tl-card highlight">
-          <span class="tl-card-tag tag-moment">Halloween Madness</span>
-          <div class="tl-card-text">
-            <strong>31 October 2020</strong> — the single busiest day in the group's entire history: <strong>619 messages</strong>. The world was in lockdown. Everyone was watching the Bledisloe Cup at midnight. The chat went properly feral.
-            <div class="quote">"How long is left. I could get out of bed."</div>
-            <div class="quote-attr">— Chris Lee, 1am, Halloween night</div>
-          </div>
-        </div>
-        <div class="tl-card">
-          <span class="tl-card-tag tag-funny">US Election Night</span>
-          <div class="tl-card-text">
-            November 4, 2020 — 418 messages as the US election count dragged on. The group was fully invested.
-            <div class="quote">"How the fuck is their counting so slow — it's taken them 5 hours to count 14k ballots."</div>
-            <div class="quote-attr">— Eoin Gray, with the hot take</div>
-          </div>
-        </div>
-        <div class="tl-card highlight">
-          <span class="tl-card-tag tag-funny">Owen's Salad</span>
-          <div class="tl-card-text">
-            In 2020, Owen Collins shared something deeply personal with the group.
-            <div class="quote">"Fuck. I just ate a salad. A salad like. Ugh."</div>
-            <div class="quote-attr">— Owen Collins, 2020. We've all been there.</div>
-          </div>
-        </div>
-        <div class="tl-card">
-          <span class="tl-card-tag tag-funny">Peak Lee</span>
-          <div class="tl-card-text">
-            <div class="quote">"Scully man, why are you awake. It's 7:30am, go back to bed."</div>
-            <div class="quote-attr">— Chris Lee, sent at 7:30am</div>
-            <div class="quote" style="margin-top:10px">"I am 100% confident we would have won the World Cup comfortably with Big Dev."</div>
-            <div class="quote-attr">— Chris Lee, with the confident take</div>
-          </div>
-        </div>
-        <div class="tl-card highlight">
-          <span class="tl-card-tag tag-moment">Election Night, 4am</span>
-          <div class="tl-card-text">
-            November 4, 2020. The US election count dragged through the night. The group was fully awake at 4am. Rob McMahon woke up to a much tighter scoreline than expected (224–213 electoral votes). Eoin Gray was tracking Georgia. Colman Humphrey was posting Nate Silver links. Chris Lee was offering tips on the Pennsylvania postal vote situation. <strong>418 messages</strong> on election day alone.
-          </div>
-        </div>
-        <div class="tl-card">
-          <span class="tl-card-tag tag-funny">The Bad Take Archive</span>
-          <div class="tl-card-text">
-            October 31, 2020 — the Halloween rugby session. Adam McDermot, watching England vs Australia:
-            <div class="quote">"England will win it now"</div>
-            <div class="quote-attr">— Adam McDermot, 9:45pm. England did not win it.</div>
-            Jamie Martin Grace, same session: "I don't want to see Stockdale in a green jersey again." Stockdale would go on to earn further caps.
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 2021 -->
-    <div class="tl-year">
-      <div class="tl-year-heading">2021</div>
-      <div class="tl-year-count">13,183 messages · The Recovery</div>
-      <div class="tl-cards">
-        <div class="tl-card highlight">
-          <span class="tl-card-tag tag-moment">Six Nations Frenzy</span>
-          <div class="tl-card-text">
-            March 2021 was the group's joint-third busiest month ever — <strong>2,735 messages</strong>. March 20 saw 425 messages. February 7 hit 412. The Six Nations was back, the world was opening up, and the lads had opinions.
-          </div>
-        </div>
-        <div class="tl-card sad">
-          <span class="tl-card-tag tag-sad">Tim's Brief Return</span>
-          <div class="tl-card-text">
-            After 672 days of total silence, <strong>Tim White-Flynn</strong> sends exactly <strong>one message</strong> on 11 October 2021. Then goes silent again forever. A ghost story in three acts.
-          </div>
-        </div>
-        <div class="tl-card">
-          <span class="tl-card-tag tag-funny">Lorcan on Naggins</span>
-          <div class="tl-card-text">
-            <div class="quote">"We brought naggins in, didn't we."</div>
-            <div class="quote-attr">— Lorcan Clarke, confirming important historical facts</div>
-          </div>
-        </div>
-        <div class="tl-card">
-          <span class="tl-card-tag tag-funny">Gurj Judges People</span>
-          <div class="tl-card-text">
-            <div class="quote">"But I enjoy it cause it lets me judge people."</div>
-            <div class="quote-attr">— Gurj, on something. Context unclear. Vibe: impeccable.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 2022 -->
-    <div class="tl-year">
-      <div class="tl-year-heading">2022</div>
-      <div class="tl-year-count">7,612 messages · The Quiet Era Begins</div>
-      <div class="tl-cards">
-        <div class="tl-card sad">
-          <span class="tl-card-tag tag-sad">Mark Goes Silent</span>
-          <div class="tl-card-text">
-            <strong>Mark O'Caglahan</strong> sends just 5 messages in 2022. His last ever message in the Aguero Crabs lands on <strong>3 September 2022</strong>. He had been drifting since 2016's 178 messages. His absence was quiet but total.
-          </div>
-        </div>
-        <div class="tl-card">
-          <span class="tl-card-tag tag-stat">Eoin's Revival</span>
-          <div class="tl-card-text">
-            Interesting counter-trend: <strong>Eoin Gray</strong> hits <strong>1,116 messages</strong> in 2022 — his second-best year ever, up from just 445 in 2019. Life ebbs and flows. Sometimes you're more online. Eoin was more online.
-          </div>
-        </div>
-        <div class="tl-card">
-          <span class="tl-card-tag tag-funny">Scollard's Best Line</span>
-          <div class="tl-card-text">
-            <div class="quote">"It's so much less stressful when Vahaamahina or Houas aren't on the pitch to just randomly punch someone in the head."</div>
-            <div class="quote-attr">— Chris Scollard, French rugby correspondent</div>
-          </div>
-        </div>
-        <div class="tl-card">
-          <span class="tl-card-tag tag-funny">Graucho Sexton</span>
-          <div class="tl-card-text">
-            <div class="quote">"Graucho Sexton en route"</div>
-            <div class="quote-attr">— Chris Scollard. This nickname has no explanation. It doesn't need one.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 2023 -->
-    <div class="tl-year">
-      <div class="tl-year-heading">2023</div>
-      <div class="tl-year-count">7,411 messages · The Quietest Year</div>
-      <div class="tl-cards">
-        <div class="tl-card sad">
-          <span class="tl-card-tag tag-sad">The 12-Day Silence</span>
-          <div class="tl-card-text">
-            September 6–17, 2023: the group went <strong>12 days without a single message</strong>. The longest silence in the group's history. Everyone presumably had a lot going on. The group survived it.
-          </div>
-        </div>
-        <div class="tl-card highlight">
-          <span class="tl-card-tag tag-moment">Rugby World Cup France</span>
-          <div class="tl-card-text">
-            Ireland's World Cup campaign in France drove a late surge. The group was not short of analysis, takes, or post-mortems.
-            <div class="quote">"Gordon Darcy: 'It'd be so French to lose to New Zealand in the first game, then win six games and win the cup. Only the French could do that.'"</div>
-            <div class="quote-attr">— Chris Lee, quoting Second Captains</div>
-          </div>
-        </div>
-        <div class="tl-card">
-          <span class="tl-card-tag tag-funny">The Haka Question</span>
-          <div class="tl-card-text">
-            <div class="quote">"Lads how long has the main haka guy been able to carry a wooden sword?"</div>
-            <div class="quote-attr">— Chris Lee, asking the real questions</div>
-          </div>
-        </div>
-        <div class="tl-card">
-          <span class="tl-card-tag tag-funny">Owen Clocks Out</span>
-          <div class="tl-card-text">
-            <strong>Owen Collins</strong> sends just 72 messages in 2023 — his worst year, down from a peak of 469 in 2020. He still shows up when needed, just with exceptional energy efficiency.
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 2024 -->
-    <div class="tl-year">
-      <div class="tl-year-heading">2024</div>
-      <div class="tl-year-count">8,453 messages · The Uptick</div>
-      <div class="tl-cards">
-        <div class="tl-card highlight">
-          <span class="tl-card-tag tag-moment">Green Shoots</span>
-          <div class="tl-card-text">
-            After two quiet years, activity nudges back up. <strong>Matty Morrow</strong> has his best year in a while at 2,546 messages. <strong>Chris Lee</strong> remains relentlessly, stubbornly present at 2,226.
-          </div>
-        </div>
-        <div class="tl-card">
-          <span class="tl-card-tag tag-funny">Lorcan Resurfaces</span>
-          <div class="tl-card-text">
-            <strong>Lorcan Clarke</strong> has his busiest year since 2017 — 219 messages. He's coming back. He has opinions about Leinster's Champions Cup form, which he is happy to share.
-            <div class="quote">"The underdog has won this fixture in 4/4 games."</div>
-            <div class="quote-attr">— Lorcan, with receipts</div>
-          </div>
-        </div>
-        <div class="tl-card">
-          <span class="tl-card-tag tag-funny">Matty on Aido</span>
-          <div class="tl-card-text">
-            <div class="quote">"When I lived with Aido, he once broke his wrist and didn't go to hospital for over 24 hours."</div>
-            <div class="quote-attr">— Matty Morrow, contextualising a rugby injury discussion with a devastating aside</div>
-          </div>
-        </div>
-        <div class="tl-card">
-          <span class="tl-card-tag tag-stat">Paris Olympics</span>
-          <div class="tl-card-text">
-            The Paris Olympics drove some side conversation. Matty was tracking medal hopes. Parkrun also gets a mention — the group is ageing into wellness, apparently.
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 2025 -->
-    <div class="tl-year">
-      <div class="tl-year-heading">2025</div>
-      <div class="tl-year-count">9,364 messages · Best Year Since 2021</div>
-      <div class="tl-cards">
-        <div class="tl-card highlight">
-          <span class="tl-card-tag tag-moment">The Revival</span>
-          <div class="tl-card-text">
-            The group's strongest year since 2021. <strong>Matty Morrow</strong> hits 3,030 messages — his best in years. <strong>Lorcan Clarke</strong> posts 250, up year on year. <strong>March 8</strong> hits 406 messages, the 5th busiest day ever. What happened? Rugby.
-          </div>
-        </div>
-        <div class="tl-card sad">
-          <span class="tl-card-tag tag-sad">Jamie Goes Quiet</span>
-          <div class="tl-card-text">
-            <strong>Jamie Martin Grace</strong> — the man who created the group, who delivered its first line — posts just <strong>243 messages</strong> in 2025. His worst year ever. The founder fades. His last message of the year is in late March.
-          </div>
-        </div>
-        <div class="tl-card">
-          <span class="tl-card-tag tag-funny">Scollard in Absentia</span>
-          <div class="tl-card-text">
-            <strong>Chris Scollard</strong> — who changed the original group icon in 2016 and once sent 3,243 messages in a year — posts just <strong>299</strong> in 2025. He disappeared for 38 days solid in late summer. No explanation given.
-          </div>
-        </div>
-        <div class="tl-card">
-          <span class="tl-card-tag tag-funny">From the Archive</span>
-          <div class="tl-card-text">
-            <div class="quote">"(Sorry that joke is an AWFUL stretch)"</div>
-            <div class="quote-attr">— Chris Lee, self-aware for once</div>
-            <div class="quote" style="margin-top:10px">"One week Smithwicks, the next Rascals"</div>
-            <div class="quote-attr">— Adam McDermot, on... something. The chaos, probably.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
+  <!-- Legend -->
+  <div class="reveal reveal-delay-1" style="display:flex;flex-wrap:wrap;gap:18px;margin-bottom:48px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.12em;color:var(--muted);text-transform:uppercase;">
+    <span style="display:flex;align-items:center;gap:7px;"><span style="width:9px;height:9px;border-radius:50%;background:#00c853;flex-shrink:0;"></span>Milestone</span>
+    <span style="display:flex;align-items:center;gap:7px;"><span style="width:9px;height:9px;border-radius:50%;background:#4488ff;flex-shrink:0;"></span>Rugby</span>
+    <span style="display:flex;align-items:center;gap:7px;"><span style="width:9px;height:9px;border-radius:50%;background:#f5c518;flex-shrink:0;"></span>Funny</span>
+    <span style="display:flex;align-items:center;gap:7px;"><span style="width:9px;height:9px;border-radius:50%;background:#d4537e;flex-shrink:0;"></span>Social</span>
+    <span style="display:flex;align-items:center;gap:7px;"><span style="width:9px;height:9px;border-radius:50%;background:#888;flex-shrink:0;"></span>Stat</span>
+    <span style="display:flex;align-items:center;gap:7px;"><span style="width:9px;height:9px;border-radius:50%;background:#ff4444;flex-shrink:0;"></span>Sad</span>
   </div>
+
+  <!-- Floating year pill — positioned by JS as user scrolls -->
+  <div id="tl-year-pill" style="
+    position:fixed; top:18px; left:50%; transform:translateX(-50%);
+    background:var(--card); border:1px solid var(--border);
+    font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:0.12em;
+    color:var(--green); padding:4px 20px; border-radius:3px;
+    pointer-events:none; opacity:0; transition:opacity 0.25s;
+    z-index:100;
+  "></div>
+
+  <div id="tl-outer" style="position:relative;width:100%;overflow:visible;min-height:200px;"></div>
 </section>
 
 <div class="divider"></div>
+
+<style>
+.tl-card {
+  position: absolute;
+  width: 240px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-left: 3px solid currentColor;
+  border-radius: 0 3px 3px 0;
+  padding: 13px 15px;
+  pointer-events: auto;
+  cursor: default;
+}
+.tl-card.left-card {
+  border-left: none;
+  border-right: 3px solid currentColor;
+  border-radius: 3px 0 0 3px;
+  text-align: right;
+}
+.tl-card:hover { background: var(--card2, #161616); }
+.tl-card-date {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 0.2em;
+  color: var(--muted); margin-bottom: 5px; text-transform: uppercase;
+}
+.tl-card-label {
+  font-size: 13px; font-weight: 500; color: var(--text);
+  margin-bottom: 6px; line-height: 1.3;
+}
+.tl-card-detail {
+  font-size: 11.5px; color: var(--muted);
+  line-height: 1.6; font-family: 'DM Serif Display', serif; font-style: italic;
+}
+</style>
+
+<script>
+(function() {
+  const PATH_PTS = [{"date": "2016-04-09", "avg": 21.22, "norm": 0.205}, {"date": "2016-04-23", "avg": 27.03, "norm": 0.2612}, {"date": "2016-05-07", "avg": 27.76, "norm": 0.2683}, {"date": "2016-05-21", "avg": 26.2, "norm": 0.2532}, {"date": "2016-06-04", "avg": 24.43, "norm": 0.2361}, {"date": "2016-06-18", "avg": 24.98, "norm": 0.2414}, {"date": "2016-07-02", "avg": 25.23, "norm": 0.2439}, {"date": "2016-07-16", "avg": 25.53, "norm": 0.2468}, {"date": "2016-07-30", "avg": 26.28, "norm": 0.254}, {"date": "2016-08-13", "avg": 28.59, "norm": 0.2763}, {"date": "2016-08-27", "avg": 28.66, "norm": 0.277}, {"date": "2016-09-10", "avg": 33.44, "norm": 0.3232}, {"date": "2016-09-24", "avg": 37.79, "norm": 0.3652}, {"date": "2016-10-08", "avg": 46.76, "norm": 0.4519}, {"date": "2016-10-22", "avg": 55.56, "norm": 0.5369}, {"date": "2016-11-05", "avg": 56.0, "norm": 0.5412}, {"date": "2016-11-19", "avg": 67.31, "norm": 0.6505}, {"date": "2016-12-03", "avg": 73.74, "norm": 0.7127}, {"date": "2016-12-17", "avg": 86.43, "norm": 0.8353}, {"date": "2016-12-31", "avg": 97.78, "norm": 0.9449}, {"date": "2017-01-14", "avg": 102.64, "norm": 0.9919}, {"date": "2017-01-28", "avg": 99.92, "norm": 0.9657}, {"date": "2017-02-11", "avg": 93.87, "norm": 0.9071}, {"date": "2017-02-25", "avg": 94.59, "norm": 0.9141}, {"date": "2017-03-11", "avg": 95.62, "norm": 0.9241}, {"date": "2017-03-25", "avg": 87.71, "norm": 0.8476}, {"date": "2017-04-08", "avg": 81.17, "norm": 0.7844}, {"date": "2017-04-22", "avg": 77.42, "norm": 0.7482}, {"date": "2017-05-06", "avg": 75.32, "norm": 0.7279}, {"date": "2017-05-20", "avg": 68.3, "norm": 0.6601}, {"date": "2017-06-03", "avg": 65.28, "norm": 0.6309}, {"date": "2017-06-17", "avg": 68.36, "norm": 0.6606}, {"date": "2017-07-01", "avg": 67.33, "norm": 0.6507}, {"date": "2017-07-15", "avg": 63.02, "norm": 0.6091}, {"date": "2017-07-29", "avg": 58.05, "norm": 0.561}, {"date": "2017-08-12", "avg": 53.94, "norm": 0.5213}, {"date": "2017-08-26", "avg": 52.83, "norm": 0.5105}, {"date": "2017-09-09", "avg": 54.2, "norm": 0.5238}, {"date": "2017-09-23", "avg": 59.57, "norm": 0.5757}, {"date": "2017-10-07", "avg": 65.91, "norm": 0.6369}, {"date": "2017-10-21", "avg": 71.22, "norm": 0.6883}, {"date": "2017-11-04", "avg": 68.23, "norm": 0.6594}, {"date": "2017-11-18", "avg": 75.16, "norm": 0.7263}, {"date": "2017-12-02", "avg": 77.17, "norm": 0.7458}, {"date": "2017-12-16", "avg": 78.34, "norm": 0.7571}, {"date": "2017-12-30", "avg": 75.76, "norm": 0.7321}, {"date": "2018-01-13", "avg": 74.28, "norm": 0.7179}, {"date": "2018-01-27", "avg": 72.87, "norm": 0.7042}, {"date": "2018-02-10", "avg": 69.92, "norm": 0.6757}, {"date": "2018-02-24", "avg": 68.9, "norm": 0.6659}, {"date": "2018-03-10", "avg": 67.21, "norm": 0.6495}, {"date": "2018-03-24", "avg": 65.34, "norm": 0.6315}, {"date": "2018-04-07", "avg": 63.18, "norm": 0.6106}, {"date": "2018-04-21", "avg": 61.27, "norm": 0.5922}, {"date": "2018-05-05", "avg": 63.14, "norm": 0.6102}, {"date": "2018-05-19", "avg": 57.73, "norm": 0.5579}, {"date": "2018-06-02", "avg": 53.88, "norm": 0.5207}, {"date": "2018-06-16", "avg": 49.51, "norm": 0.4785}, {"date": "2018-06-30", "avg": 45.49, "norm": 0.4396}, {"date": "2018-07-14", "avg": 46.02, "norm": 0.4447}, {"date": "2018-07-28", "avg": 40.15, "norm": 0.388}, {"date": "2018-08-11", "avg": 37.27, "norm": 0.3602}, {"date": "2018-08-25", "avg": 30.62, "norm": 0.2959}, {"date": "2018-09-08", "avg": 30.38, "norm": 0.2935}, {"date": "2018-09-22", "avg": 31.24, "norm": 0.3019}, {"date": "2018-10-06", "avg": 28.16, "norm": 0.2721}, {"date": "2018-10-20", "avg": 29.63, "norm": 0.2864}, {"date": "2018-11-03", "avg": 29.18, "norm": 0.282}, {"date": "2018-11-17", "avg": 30.9, "norm": 0.2986}, {"date": "2018-12-01", "avg": 33.92, "norm": 0.3278}, {"date": "2018-12-15", "avg": 36.92, "norm": 0.3568}, {"date": "2018-12-29", "avg": 38.27, "norm": 0.3699}, {"date": "2019-01-12", "avg": 38.57, "norm": 0.3727}, {"date": "2019-01-26", "avg": 37.94, "norm": 0.3667}, {"date": "2019-02-09", "avg": 39.48, "norm": 0.3816}, {"date": "2019-02-23", "avg": 39.75, "norm": 0.3842}, {"date": "2019-03-09", "avg": 38.31, "norm": 0.3702}, {"date": "2019-03-23", "avg": 35.74, "norm": 0.3454}, {"date": "2019-04-06", "avg": 32.43, "norm": 0.3134}, {"date": "2019-04-20", "avg": 31.8, "norm": 0.3073}, {"date": "2019-05-04", "avg": 28.93, "norm": 0.2795}, {"date": "2019-05-18", "avg": 25.71, "norm": 0.2484}, {"date": "2019-06-01", "avg": 24.38, "norm": 0.2356}, {"date": "2019-06-15", "avg": 22.99, "norm": 0.2222}, {"date": "2019-06-29", "avg": 23.0, "norm": 0.2223}, {"date": "2019-07-13", "avg": 25.16, "norm": 0.2431}, {"date": "2019-07-27", "avg": 22.93, "norm": 0.2216}, {"date": "2019-08-10", "avg": 26.55, "norm": 0.2566}, {"date": "2019-08-24", "avg": 29.82, "norm": 0.2882}, {"date": "2019-09-07", "avg": 32.62, "norm": 0.3152}, {"date": "2019-09-21", "avg": 33.08, "norm": 0.3196}, {"date": "2019-10-05", "avg": 32.94, "norm": 0.3184}, {"date": "2019-10-19", "avg": 31.73, "norm": 0.3067}, {"date": "2019-11-02", "avg": 29.53, "norm": 0.2854}, {"date": "2019-11-16", "avg": 30.47, "norm": 0.2944}, {"date": "2019-11-30", "avg": 28.2, "norm": 0.2725}, {"date": "2019-12-14", "avg": 28.67, "norm": 0.277}, {"date": "2019-12-28", "avg": 29.17, "norm": 0.2819}, {"date": "2020-01-11", "avg": 30.28, "norm": 0.2927}, {"date": "2020-01-25", "avg": 32.94, "norm": 0.3184}, {"date": "2020-02-08", "avg": 32.12, "norm": 0.3105}, {"date": "2020-02-22", "avg": 32.3, "norm": 0.3122}, {"date": "2020-03-07", "avg": 31.26, "norm": 0.3021}, {"date": "2020-03-21", "avg": 30.93, "norm": 0.2989}, {"date": "2020-04-04", "avg": 26.37, "norm": 0.2548}, {"date": "2020-04-18", "avg": 24.62, "norm": 0.238}, {"date": "2020-05-02", "avg": 20.43, "norm": 0.1975}, {"date": "2020-05-16", "avg": 15.2, "norm": 0.1469}, {"date": "2020-05-30", "avg": 14.6, "norm": 0.1411}, {"date": "2020-06-13", "avg": 15.37, "norm": 0.1485}, {"date": "2020-06-27", "avg": 16.84, "norm": 0.1628}, {"date": "2020-07-11", "avg": 19.02, "norm": 0.1839}, {"date": "2020-07-25", "avg": 19.5, "norm": 0.1885}, {"date": "2020-08-08", "avg": 21.55, "norm": 0.2083}, {"date": "2020-08-22", "avg": 22.73, "norm": 0.2196}, {"date": "2020-09-05", "avg": 31.74, "norm": 0.3068}, {"date": "2020-09-19", "avg": 42.64, "norm": 0.4121}, {"date": "2020-10-03", "avg": 47.29, "norm": 0.457}, {"date": "2020-10-17", "avg": 52.47, "norm": 0.507}, {"date": "2020-10-31", "avg": 50.16, "norm": 0.4847}, {"date": "2020-11-14", "avg": 53.48, "norm": 0.5168}, {"date": "2020-11-28", "avg": 53.15, "norm": 0.5137}, {"date": "2020-12-12", "avg": 59.14, "norm": 0.5716}, {"date": "2020-12-26", "avg": 61.02, "norm": 0.5898}, {"date": "2021-01-09", "avg": 54.02, "norm": 0.522}, {"date": "2021-01-23", "avg": 59.1, "norm": 0.5712}, {"date": "2021-02-06", "avg": 60.92, "norm": 0.5887}, {"date": "2021-02-20", "avg": 62.99, "norm": 0.6088}, {"date": "2021-03-06", "avg": 63.35, "norm": 0.6122}, {"date": "2021-03-20", "avg": 62.67, "norm": 0.6056}, {"date": "2021-04-03", "avg": 62.67, "norm": 0.6057}, {"date": "2021-04-17", "avg": 51.08, "norm": 0.4936}, {"date": "2021-05-01", "avg": 48.12, "norm": 0.4651}, {"date": "2021-05-15", "avg": 42.98, "norm": 0.4154}, {"date": "2021-05-29", "avg": 32.5, "norm": 0.3141}, {"date": "2021-06-12", "avg": 28.62, "norm": 0.2766}, {"date": "2021-06-26", "avg": 26.2, "norm": 0.2532}, {"date": "2021-07-10", "avg": 22.22, "norm": 0.2147}, {"date": "2021-07-24", "avg": 19.96, "norm": 0.1929}, {"date": "2021-08-07", "avg": 19.55, "norm": 0.1889}, {"date": "2021-08-21", "avg": 18.76, "norm": 0.1813}, {"date": "2021-09-04", "avg": 17.16, "norm": 0.1658}, {"date": "2021-09-18", "avg": 18.0, "norm": 0.174}, {"date": "2021-10-02", "avg": 18.82, "norm": 0.1819}, {"date": "2021-10-16", "avg": 19.33, "norm": 0.1868}, {"date": "2021-10-30", "avg": 20.45, "norm": 0.1976}, {"date": "2021-11-13", "avg": 20.02, "norm": 0.1935}, {"date": "2021-11-27", "avg": 22.34, "norm": 0.2159}, {"date": "2021-12-11", "avg": 24.57, "norm": 0.2375}, {"date": "2021-12-25", "avg": 26.51, "norm": 0.2562}, {"date": "2022-01-08", "avg": 26.18, "norm": 0.253}, {"date": "2022-01-22", "avg": 25.26, "norm": 0.2441}, {"date": "2022-02-05", "avg": 23.77, "norm": 0.2298}, {"date": "2022-02-19", "avg": 22.98, "norm": 0.2221}, {"date": "2022-03-05", "avg": 24.77, "norm": 0.2393}, {"date": "2022-03-19", "avg": 25.04, "norm": 0.242}, {"date": "2022-04-02", "avg": 24.71, "norm": 0.2388}, {"date": "2022-04-16", "avg": 21.42, "norm": 0.207}, {"date": "2022-04-30", "avg": 19.71, "norm": 0.1905}, {"date": "2022-05-14", "avg": 21.16, "norm": 0.2045}, {"date": "2022-05-28", "avg": 21.02, "norm": 0.2032}, {"date": "2022-06-11", "avg": 20.68, "norm": 0.1998}, {"date": "2022-06-25", "avg": 20.66, "norm": 0.1996}, {"date": "2022-07-09", "avg": 18.71, "norm": 0.1808}, {"date": "2022-07-23", "avg": 18.78, "norm": 0.1815}, {"date": "2022-08-06", "avg": 17.33, "norm": 0.1675}, {"date": "2022-08-20", "avg": 18.17, "norm": 0.1756}, {"date": "2022-09-03", "avg": 16.46, "norm": 0.1591}, {"date": "2022-09-17", "avg": 16.71, "norm": 0.1615}, {"date": "2022-10-01", "avg": 17.31, "norm": 0.1673}, {"date": "2022-10-15", "avg": 18.23, "norm": 0.1761}, {"date": "2022-10-29", "avg": 19.15, "norm": 0.1851}, {"date": "2022-11-12", "avg": 18.64, "norm": 0.1802}, {"date": "2022-11-26", "avg": 19.81, "norm": 0.1914}, {"date": "2022-12-10", "avg": 19.02, "norm": 0.1838}, {"date": "2022-12-24", "avg": 21.11, "norm": 0.204}, {"date": "2023-01-07", "avg": 21.51, "norm": 0.2079}, {"date": "2023-01-21", "avg": 24.41, "norm": 0.2359}, {"date": "2023-02-04", "avg": 24.79, "norm": 0.2396}, {"date": "2023-02-18", "avg": 24.02, "norm": 0.2322}, {"date": "2023-03-04", "avg": 24.35, "norm": 0.2353}, {"date": "2023-03-18", "avg": 23.57, "norm": 0.2278}, {"date": "2023-04-01", "avg": 25.17, "norm": 0.2432}, {"date": "2023-04-15", "avg": 22.82, "norm": 0.2206}, {"date": "2023-04-29", "avg": 21.12, "norm": 0.2042}, {"date": "2023-05-13", "avg": 17.43, "norm": 0.1685}, {"date": "2023-05-27", "avg": 16.4, "norm": 0.1585}, {"date": "2023-06-10", "avg": 14.01, "norm": 0.1354}, {"date": "2023-06-24", "avg": 14.93, "norm": 0.1442}, {"date": "2023-07-08", "avg": 15.62, "norm": 0.1509}, {"date": "2023-07-22", "avg": 12.37, "norm": 0.1195}, {"date": "2023-08-05", "avg": 14.93, "norm": 0.1443}, {"date": "2023-08-19", "avg": 21.47, "norm": 0.2075}, {"date": "2023-09-02", "avg": 22.9, "norm": 0.2213}, {"date": "2023-09-16", "avg": 21.85, "norm": 0.2112}, {"date": "2023-09-30", "avg": 22.77, "norm": 0.22}, {"date": "2023-10-14", "avg": 23.57, "norm": 0.2278}, {"date": "2023-10-28", "avg": 21.45, "norm": 0.2073}, {"date": "2023-11-11", "avg": 21.68, "norm": 0.2095}, {"date": "2023-11-25", "avg": 23.62, "norm": 0.2283}, {"date": "2023-12-09", "avg": 21.86, "norm": 0.2112}, {"date": "2023-12-23", "avg": 17.62, "norm": 0.1703}, {"date": "2024-01-06", "avg": 18.22, "norm": 0.176}, {"date": "2024-01-20", "avg": 21.15, "norm": 0.2044}, {"date": "2024-02-03", "avg": 20.23, "norm": 0.1955}, {"date": "2024-02-17", "avg": 22.11, "norm": 0.2137}, {"date": "2024-03-02", "avg": 22.49, "norm": 0.2174}, {"date": "2024-03-16", "avg": 23.82, "norm": 0.2302}, {"date": "2024-03-30", "avg": 25.06, "norm": 0.2422}, {"date": "2024-04-13", "avg": 22.16, "norm": 0.2141}, {"date": "2024-04-27", "avg": 21.35, "norm": 0.2063}, {"date": "2024-05-11", "avg": 22.09, "norm": 0.2135}, {"date": "2024-05-25", "avg": 25.27, "norm": 0.2442}, {"date": "2024-06-08", "avg": 30.92, "norm": 0.2988}, {"date": "2024-06-22", "avg": 27.63, "norm": 0.2671}, {"date": "2024-07-06", "avg": 27.07, "norm": 0.2616}, {"date": "2024-07-20", "avg": 26.61, "norm": 0.2571}, {"date": "2024-08-03", "avg": 23.18, "norm": 0.224}, {"date": "2024-08-17", "avg": 22.98, "norm": 0.2221}, {"date": "2024-08-31", "avg": 22.77, "norm": 0.2201}, {"date": "2024-09-14", "avg": 20.96, "norm": 0.2025}, {"date": "2024-09-28", "avg": 17.82, "norm": 0.1723}, {"date": "2024-10-12", "avg": 17.42, "norm": 0.1683}, {"date": "2024-10-26", "avg": 19.28, "norm": 0.1864}, {"date": "2024-11-09", "avg": 18.27, "norm": 0.1765}, {"date": "2024-11-23", "avg": 22.47, "norm": 0.2171}, {"date": "2024-12-07", "avg": 24.94, "norm": 0.241}, {"date": "2024-12-21", "avg": 28.56, "norm": 0.276}, {"date": "2025-01-04", "avg": 30.02, "norm": 0.2902}, {"date": "2025-01-18", "avg": 32.37, "norm": 0.3128}, {"date": "2025-02-01", "avg": 32.2, "norm": 0.3112}, {"date": "2025-02-15", "avg": 34.61, "norm": 0.3345}, {"date": "2025-03-01", "avg": 34.68, "norm": 0.3352}, {"date": "2025-03-15", "avg": 37.23, "norm": 0.3597}, {"date": "2025-03-29", "avg": 35.71, "norm": 0.3451}, {"date": "2025-04-12", "avg": 30.91, "norm": 0.2987}, {"date": "2025-04-26", "avg": 29.27, "norm": 0.2829}, {"date": "2025-05-10", "avg": 26.96, "norm": 0.2605}, {"date": "2025-05-24", "avg": 25.68, "norm": 0.2482}, {"date": "2025-06-07", "avg": 23.26, "norm": 0.2248}, {"date": "2025-06-21", "avg": 21.29, "norm": 0.2058}, {"date": "2025-07-05", "avg": 19.73, "norm": 0.1906}, {"date": "2025-07-19", "avg": 15.53, "norm": 0.15}, {"date": "2025-08-02", "avg": 13.32, "norm": 0.1288}, {"date": "2025-08-16", "avg": 11.95, "norm": 0.1155}, {"date": "2025-08-30", "avg": 13.17, "norm": 0.1272}, {"date": "2025-09-13", "avg": 14.92, "norm": 0.1442}, {"date": "2025-09-27", "avg": 18.1, "norm": 0.1749}, {"date": "2025-10-11", "avg": 20.77, "norm": 0.2008}, {"date": "2025-10-25", "avg": 22.39, "norm": 0.2164}, {"date": "2025-11-08", "avg": 23.09, "norm": 0.2232}, {"date": "2025-11-22", "avg": 25.09, "norm": 0.2425}, {"date": "2025-12-06", "avg": 26.92, "norm": 0.2601}, {"date": "2025-12-20", "avg": 31.23, "norm": 0.3018}, {"date": "2026-01-03", "avg": 31.97, "norm": 0.3089}, {"date": "2026-01-17", "avg": 30.09, "norm": 0.2908}, {"date": "2026-01-31", "avg": 27.32, "norm": 0.2641}, {"date": "2026-02-14", "avg": 26.1, "norm": 0.2523}, {"date": "2026-02-28", "avg": 28.31, "norm": 0.2736}, {"date": "2026-03-14", "avg": 30.57, "norm": 0.2954}, {"date": "2026-03-28", "avg": 33.08, "norm": 0.3197}];
+  const EVENTS   = [{"date": "2016-04-09", "label": "Group created", "type": "milestone", "side": "R", "detail": "Jamie Martin Grace creates 'USA Alpha Males'. First message: 'About time someone took the initiative.'", "norm": 0.2084}, {"date": "2016-04-12", "label": "Opening Moves", "type": "funny", "side": "L", "detail": "Jamie declined the first pint invitation on account of, in his words, \"being a pussy\" . The chat was already working exactly as intended. \"Just one or two pints. Of gin.\" \u2014 Chris Lee, Day One", "norm": 0.22}, {"date": "2016-05-28", "label": "Night at Flannery's", "type": "funny", "side": "L", "detail": "Chris Lee texts 'Flannerys' at 2:30am. Eoin Gray: 'Fuck off!' at 2:47am. Full context remains classified.", "norm": 0.2436}, {"date": "2016-09-15", "label": "Banna Beach weekend", "type": "social", "side": "R", "detail": "The group's first big collective trip. 52.50 per head. Rob McMahon found out in time after nearly being sent to Saudi Arabia.", "norm": 0.3381}, {"date": "2016-12-31", "label": "2016 by the numbers", "type": "stat", "side": "R", "detail": "Chris Lee \u2014 2,361 messages in just 8 months of the group existing. Already the clear leader. Gary Foxton \u2014 173 messages, his most active period in the chat. Make the most of it, Gary.", "norm": 0.9449}, {"date": "2017-01-20", "label": "364 messages in one day", "type": "stat", "side": "L", "detail": "January 2017 - the golden era. The group is at full capacity and will not stop.", "norm": 0.998}, {"date": "2017-02-01", "label": "Peak Everything", "type": "stat", "side": "R", "detail": "The group's single biggest year by a mile. February alone saw over 4,140 messages . January 20 (364 messages) was one of the top 10 busiest days ever. The lads were in their prime.", "norm": 0.9931}, {"date": "2017-06-08", "label": "Lions tour madness", "type": "rugby", "side": "R", "detail": "351 messages. British & Irish Lions vs NZ - the group becomes a full-time commentary box for the summer.", "norm": 0.6264}, {"date": "2017-06-08", "label": "On the Lions Tour", "type": "funny", "side": "R", "detail": "The British & Irish Lions vs NZ tour generated some of the group's most intense activity. June 8 and 13 both cracked 350+ messages. The group had opinions. Many of them. \"Lions need to use that flat ball more often.\" \u2014 Matty Morrow, definitive analyst", "norm": 0.6264}, {"date": "2017-10-06", "label": "Secret Hitler era", "type": "funny", "side": "L", "detail": "Marc Golden pitches D&D. Countered with Secret Hitler. Scollard: 'Does it tick all the Reich boxes?' Luke: 'So goooood.' Lorcan: 'King of all games.'", "norm": 0.6295}, {"date": "2017-10-20", "label": "Gurj's First Date Dispatch", "type": "funny", "side": "L", "detail": "October 20, 2017. At 2:08am , Gurj provided an unsolicited update to the group chat. \"It wasn't really a first date but I definitely appreciate this haha. We ended up going to canal bank cafe for those of you wondering \ud83d\ude02\" \u2014 Gurj Sandhu, 2:08am, keeping the lads informed", "norm": 0.6871}, {"date": "2017-12-31", "label": "Gary starts fading", "type": "sad", "side": "L", "detail": "Gary Foxton sends just 31 messages all year \u2014 down from 173 in 2016. He's still technically present, but he's already fading. Tim White-Flynn joins mid-year, fires off 113 messages, then starts his long drift toward silence.", "norm": 0.7294}, {"date": "2018-01-01", "label": "2018: post-peak", "type": "stat", "side": "R", "detail": "Down 37% from 2017 \u2014 still nearly 18,000 messages, still a very active group. Everyone still participating, even if less frantically. This is the normal that the group settled into.", "norm": 0.7305}, {"date": "2018-03-15", "label": "Lads vs Judo", "type": "funny", "side": "L", "detail": "March 2018. Luke Madden, apparently speaking from experience, issued a firm warning to the group. \"I would advise absolutely nobody to start judo as an adult. Horrible injury is basically guaranteed.\" \u2014 Luke Madden, the voice of experience Nobody had asked about judo. Nobody was considering judo. Classic Aguero Crabs.", "norm": 0.6287}, {"date": "2018-06-01", "label": "Peak Scollard", "type": "funny", "side": "R", "detail": "\"Cause Chris has no shame\" \u2014 Chris Scollard, correctly \"What if he accidentally books a bunch of chairs masquerading as a table?\" \u2014 Chris Scollard, raising a legitimate concern", "norm": 0.5203}, {"date": "2018-07-28", "label": "Rugby 08 Night", "type": "milestone", "side": "R", "detail": "July 28, 2018. The eternal question \u2014 pub or home? \u2014 resolved itself beautifully. \"Rugby 08 in mine starting soon\" \u2014 Chris Lee, 6:33pm, establishing the venue Matty confirmed he was \"a few scoops in\". Rob needed to shower first. Chris Lee floated that it \"may sort of become pre drinks.\" The evening escalated from there.", "norm": 0.3881}, {"date": "2018-09-01", "label": "Herron Watch", "type": "funny", "side": "L", "detail": "\"Herron can fuck off back to England anyway, no way he'll be offered an extension. Genuinely the worst professional player in Ireland.\" \u2014 Matty Morrow, not mincing words", "norm": 0.2853}, {"date": "2018-11-17", "label": "Colman goes dark", "type": "sad", "side": "R", "detail": "Last message before 314 consecutive days of silence. He resurfaces saved as 'Colman AMERICA' - now watching games from Brooklyn.", "norm": 0.2989}, {"date": "2019-03-02", "label": "March Night Out, 2019", "type": "milestone", "side": "R", "detail": "March 2, 2019. Chris Lee floated pints. Gary Foxton confirmed he'd be \"floating about town from 8\" with Scully and Ross. Luke had a dinner until 8:30. Rob needed to check his plans. The group converged. It remains one of the last documented nights out with the full complement before the numbers started thinning.", "norm": 0.3778}, {"date": "2019-04-01", "label": "The April Fools Victim", "type": "funny", "side": "L", "detail": "April 1, 2019. Chris Lee was caught by an April Fools joke about Devon Toner playing for Lansdowne. He admitted it publicly. \"Ah man, April fucking fools. I got destroyed.\" \u2014 Chris Lee, 2:47pm, April 1, 2019. The humiliation is in the timestamps.", "norm": 0.3406}, {"date": "2019-06-01", "label": "Luke's Cliff Edge", "type": "stat", "side": "L", "detail": "Luke Madden drops from 3,489 messages in 2017 to just 476 in 2019 . The biggest fall from grace in the group. To be fair, he was still 9th overall. He came back a bit in later years.", "norm": 0.2356}, {"date": "2019-08-18", "label": "Gary's last message", "type": "sad", "side": "L", "detail": "Gary 'Fat Tony' Foxton sends his final message to the Aguero Crabs. Gone, but not forgotten.", "norm": 0.2804}, {"date": "2019-10-19", "label": "Japan RWC", "type": "milestone", "side": "R", "detail": "The Rugby World Cup in Japan drove significant activity. Ireland's exit generated considerable post-mortem analysis in the group. Chris Lee had many thoughts. They were shared at length. \"Time to put a bet on France winning the world cup\" \u2014 Adam McDermot, in October 2019", "norm": 0.3067}, {"date": "2019-12-09", "label": "Tim goes silent", "type": "sad", "side": "R", "detail": "Tim White-Flynn's last message before a 672-day absence. He will return once, in October 2021, then vanish again.", "norm": 0.2881}, {"date": "2020-03-01", "label": "Peak Lee", "type": "funny", "side": "L", "detail": "\"Scully man, why are you awake. It's 7:30am, go back to bed.\" \u2014 Chris Lee, sent at 7:30am \"I am 100% confident we would have won the World Cup comfortably with Big Dev.\" \u2014 Chris Lee, with the confident take", "norm": 0.3088}, {"date": "2020-03-13", "label": "Lockdown begins", "type": "milestone", "side": "L", "detail": "Ireland shuts down. The group suddenly has nowhere to be but here. Message volume, somehow, drops.", "norm": 0.2832}, {"date": "2020-07-01", "label": "Owen's Salad", "type": "funny", "side": "R", "detail": "In 2020, Owen Collins shared something deeply personal with the group. \"Fuck. I just ate a salad. A salad like. Ugh.\" \u2014 Owen Collins, 2020. We've all been there.", "norm": 0.1713}, {"date": "2020-10-31", "label": "619 messages - all-time record", "type": "stat", "side": "R", "detail": "Halloween. Lockdown. Bledisloe Cup at midnight. The group loses its mind completely.", "norm": 0.4847}, {"date": "2020-10-31", "label": "The Bad Take Archive", "type": "funny", "side": "L", "detail": "October 31, 2020 \u2014 the Halloween rugby session. Adam McDermot, watching England vs Australia: \"England will win it now\" \u2014 Adam McDermot, 9:45pm. England did not win it. Jamie Martin Grace, same session: \"I don't want to see Stockdale in a green jersey again.\" Stockdale would go on to earn further caps.", "norm": 0.4847}, {"date": "2020-11-04", "label": "US Election night", "type": "milestone", "side": "L", "detail": "418 messages past 4am. Rob McMahon wakes to 224-213. Eoin Gray: 'How the fuck is their counting so slow.'", "norm": 0.4942}, {"date": "2021-02-07", "label": "Six Nations frenzy", "type": "rugby", "side": "R", "detail": "412 messages. Scotland vs England - the group is back and louder than the lockdown years.", "norm": 0.5848}, {"date": "2021-07-01", "label": "Lorcan on Naggins", "type": "funny", "side": "R", "detail": "\"We brought naggins in, didn't we.\" \u2014 Lorcan Clarke, confirming important historical facts", "norm": 0.2456}, {"date": "2021-09-04", "label": "Newcastle trip", "type": "social", "side": "L", "detail": "Luke floats a visit. Chris books flights in 15 minutes. Adam in an hour. Adam's review: 'piss on the floor. Vile, but great night.'", "norm": 0.1658}, {"date": "2021-09-15", "label": "Gurj Judges People", "type": "funny", "side": "L", "detail": "\"But I enjoy it cause it lets me judge people.\" \u2014 Gurj, on something. Context unclear. Vibe: impeccable.", "norm": 0.1712}, {"date": "2021-10-11", "label": "Tim's one return", "type": "sad", "side": "R", "detail": "After 672 days of silence, Tim White-Flynn sends exactly one message. Then leaves again forever.", "norm": 0.1717}, {"date": "2022-01-31", "label": "Adam's house in Bray", "type": "social", "side": "L", "detail": "Adam hosts the lads at his new place in Bray. The group quietly transitions from pub to gaff.", "norm": 0.2312}, {"date": "2022-02-01", "label": "Graucho Sexton", "type": "funny", "side": "L", "detail": "\"Graucho Sexton en route\" \u2014 Chris Scollard. This nickname has no explanation. It doesn't need one.", "norm": 0.2317}, {"date": "2022-04-01", "label": "Scollard's Best Line", "type": "funny", "side": "R", "detail": "\"It's so much less stressful when Vahaamahina or Houas aren't on the pitch to just randomly punch someone in the head.\" \u2014 Chris Scollard, French rugby correspondent", "norm": 0.2381}, {"date": "2022-05-03", "label": "Rob's stag incoming", "type": "funny", "side": "R", "detail": "Gurj asks who's next for a stag. Chris Lee: 'Rob.' Then: 'If we're getting Lorna on the wheel gun we gonna need a week-long stag.' Rob: 'I like that it's a given.'", "norm": 0.197}, {"date": "2022-06-01", "label": "Eoin's Revival", "type": "stat", "side": "L", "detail": "Interesting counter-trend: Eoin Gray hits 1,116 messages in 2022 \u2014 his second-best year ever, up from just 445 in 2019. Life ebbs and flows. Sometimes you're more online. Eoin was more online.", "norm": 0.2058}, {"date": "2022-07-02", "label": "Ireland win first test in NZ", "type": "rugby", "side": "R", "detail": "Ireland beat the All Blacks in New Zealand for the first time ever. The group watches from pubs at 8am. Eoin Gray: 'You can't make it up!' The TVs cut out at the decisive moment. Chris Lee: 'Sky went down.' Then: 'Bundee scored.'", "norm": 0.206}, {"date": "2022-07-16", "label": "Ireland win the series in New Zealand", "type": "milestone", "side": "L", "detail": "Ireland win 2-1 \u2014 the first ever series win in New Zealand. Luke Madden: 'If this isn't classic Ireland the year before a World Cup I don't know what is.' Then: 'According to Reddit we are now no.1 in the world, NZ down to 4th.' Jamie: 'I cannot wait to watch the Squidge Rugby video on this.'", "norm": 0.388}, {"date": "2022-07-16", "label": "Adam at a wedding in Munster", "type": "funny", "side": "R", "detail": "Adam McDermot, at a wedding in Munster at midnight: 'The song that filled the dancefloor was a rock pop remix of the Fields of Athenry.' No further context provided. No further context needed.", "norm": 0.388}, {"date": "2022-09-03", "label": "Marc's last message", "type": "sad", "side": "L", "detail": "Marc Golden sends his final message. A founding member, quietly gone.", "norm": 0.1591}, {"date": "2022-09-08", "label": "Queens dead", "type": "funny", "side": "L", "detail": "Chris Lee, 6:33pm: 'Queens dead.' Eoin Gray: 'Who are we blaming \u2014 Liz Truss or Boris?' Matty Morrow: 'Imagine Truss gave Queen covid on her visit.' Rob McMahon: 'Maybe she held out as one last act of kindness to rid us of BoJo.' 11pm, Scollard: 'She was a blindside flanker back in the day, right?' Rob: 'I respect you not going for the easy hooker joke that was sitting right there in front of you, Scully.'", "norm": 0.159}, {"date": "2023-06-25", "label": "The couch photo", "type": "funny", "side": "R", "detail": "Jamie Grace posts: 'Three things guaranteed in life. Death. Taxes. And Gurj asleep on someone else's couch.' Gurj: 'I wasn't asleep. Just violently hungover.'", "norm": 0.1434}, {"date": "2023-09-03", "label": "Luke gets engaged", "type": "milestone", "side": "L", "detail": "Chris Lee: 'Wait. I'll say it here.' Luke Madden: 'Cheers pal!' The lads congratulate him.", "norm": 0.2173}, {"date": "2023-09-06", "label": "12-day silence", "type": "sad", "side": "R", "detail": "The group goes completely quiet for 12 consecutive days - the longest silence in the chat's history.", "norm": 0.2178}, {"date": "2023-10-14", "label": "Rugby World Cup France", "type": "milestone", "side": "L", "detail": "Ireland's World Cup campaign in France drove a late surge. The group was not short of analysis, takes, or post-mortems. \"Gordon Darcy: 'It'd be so French to lose to New Zealand in the first game, then win six games and win the cup. Only the French could do that.'\" \u2014 Chris Lee, quoting Second Captains", "norm": 0.2278}, {"date": "2023-10-20", "label": "The Haka Question", "type": "funny", "side": "R", "detail": "\"Lads how long has the main haka guy been able to carry a wooden sword?\" \u2014 Chris Lee, asking the real questions", "norm": 0.2235}, {"date": "2023-12-31", "label": "Owen Clocks Out", "type": "funny", "side": "L", "detail": "Owen Collins sends just 72 messages in 2023 \u2014 his worst year, down from a peak of 469 in 2020. He still shows up when needed, just with exceptional energy efficiency.", "norm": 0.1778}, {"date": "2024-01-01", "label": "Green Shoots", "type": "milestone", "side": "R", "detail": "After two quiet years, activity nudges back up. Matty Morrow has his best year in a while at 2,546 messages. Chris Lee remains relentlessly, stubbornly present at 2,226.", "norm": 0.1781}, {"date": "2024-06-01", "label": "Lorcan Resurfaces", "type": "funny", "side": "L", "detail": "Lorcan Clarke has his busiest year since 2017 \u2014 219 messages. He's coming back. He has opinions about Leinster's Champions Cup form, which he is happy to share. \"The underdog has won this fixture in 4/4 games.\" \u2014 Lorcan, with receipts", "norm": 0.289}, {"date": "2024-07-26", "label": "Paris Olympics", "type": "stat", "side": "L", "detail": "The Paris Olympics drove some side conversation. Matty was tracking medal hopes. Parkrun also gets a mention \u2014 the group is ageing into wellness, apparently.", "norm": 0.235}, {"date": "2024-09-01", "label": "Matty on Aido", "type": "funny", "side": "R", "detail": "\"When I lived with Aido, he once broke his wrist and didn't go to hospital for over 24 hours.\" \u2014 Matty Morrow, contextualising a rugby injury discussion with a devastating aside", "norm": 0.2163}, {"date": "2024-10-17", "label": "Luke and Rachel get married", "type": "milestone", "side": "L", "detail": "Luke shares the wedding photos. Chris Lee: 'You look cheerful enough in them yourself.' Luke: 'Wait til you see Gurj.'", "norm": 0.1789}, {"date": "2024-11-21", "label": "Gurj opens a coffee shop", "type": "funny", "side": "R", "detail": "Off the Rails Coffee is born. Matty: 'FYI when I Google it it brings up a coffee shop in Glasgow.' Gurj: 'If I can rob the name and make a better product, I don't see an issue.'", "norm": 0.2198}, {"date": "2025-02-11", "label": "Gatland quits mid-Six Nations", "type": "funny", "side": "R", "detail": "Warren Gatland resigns as Wales coach mid-tournament. Luke Madden: 'Good of him to do it on a break week.' Matty Morrow: 'Wales are fucked for years to come.' Chris Lee immediately suggests bringing back Dan Biggar.", "norm": 0.311}, {"date": "2025-03-08", "label": "406 messages - 2025 revival", "type": "stat", "side": "L", "detail": "The group's biggest day in years. 2025 shaping up as the best year since 2021.", "norm": 0.3449}, {"date": "2025-04-13", "label": "Rory McIlroy wins the Masters", "type": "milestone", "side": "L", "detail": "Four hours of live commentary. Matty Morrow's resting heart rate above 90 for three consecutive hours. DeChambeau collapses. Colman: 'we've done it. we earned this.' Owen Collins: 'Pints...??' Chris Lee: 'Obviously happy for Rory, but mostly happy we've now tied Wales for Masters wins. Fuck the Welsh.'", "norm": 0.298}, {"date": "2025-05-08", "label": "Lions squad obsession begins", "type": "rugby", "side": "R", "detail": "Lions squad announced at 42 players. Rob: 'Can't believe there hasn't been a Lions selection discussion in detail here given we're 2 days out!' Chris Lee: 'I'd say Sammy P goes in a 42-man squad.' Adam: 'I really hope he doesn't.'", "norm": 0.245}, {"date": "2025-10-01", "label": "Baby Drico Madden arrives", "type": "milestone", "side": "R", "detail": "Luke and Rachel welcome their first child. Rob McMahon: 'Drico Madden goes hard.' Owen Collins: 'Can't wait to meet little baby Drico.'", "norm": 0.1785}, {"date": "2025-10-01", "label": "Scollard in Absentia", "type": "funny", "side": "R", "detail": "Chris Scollard \u2014 who changed the original group icon in 2016 and once sent 3,243 messages in a year \u2014 posts just 299 in 2025. He disappeared for 38 days solid in late summer. No explanation given.", "norm": 0.1785}, {"date": "2025-11-04", "label": "Baby Eva Gray arrives", "type": "milestone", "side": "L", "detail": "Eoin Gray: 'Meet baby Eva.' Chris Lee: 'G'WAN OG. And Anita. And Eva.' Colman: 'Junior OG = JOG.' Nobody laughed.", "norm": 0.2187}, {"date": "2025-12-01", "label": "Jamie Goes Quiet", "type": "sad", "side": "L", "detail": "Jamie Martin Grace \u2014 the man who created the group, who delivered its first line \u2014 posts just 243 messages in 2025. His worst year ever. The founder fades. His last message of the year is in late March.", "norm": 0.2492}, {"date": "2026-04-09", "label": "10 years", "type": "milestone", "side": "R", "detail": "127,892 messages. 15 lads. One group that started with cold beers and is somehow still going.", "norm": 0.3305}];
+
+  const TYPE_COLOR = {
+    milestone: '#00c853',
+    rugby:     '#4488ff',
+    funny:     '#f5c518',
+    social:    '#d4537e',
+    stat:      '#888888',
+    sad:       '#ff4444',
+  };
+
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  function fmtDate(iso) {
+    const [y,m,d] = iso.split('-');
+    return MONTHS[+m-1] + ' ' + +d + ', ' + y;
+  }
+
+  const outer = document.getElementById('tl-outer');
+  const pill  = document.getElementById('tl-year-pill');
+
+  function build() {
+    const W = Math.max(outer.getBoundingClientRect().width || 900, 600);
+
+    const PAD_TOP = 70;
+    const PAD_BOT = 100;
+    const ROW_H   = 220;   // 2x taller than before
+    const CARD_W  = 240;
+    const GAP     = 28;
+    const V_PAD   = 18;
+
+    const X_MIN = W * 0.13;
+    const X_MAX = W * 0.52;
+
+    const startMs = new Date('2016-04-09').getTime();
+    const endMs   = new Date('2026-04-09').getTime();
+    const spanMs  = endMs - startMs;
+
+    const TOTAL_H = PAD_TOP + EVENTS.length * ROW_H + PAD_BOT;
+
+    outer.innerHTML = '';
+
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+    svg.setAttribute('width', '100%');
+    svg.setAttribute('height', TOTAL_H);
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + TOTAL_H);
+    svg.style.display = 'block';
+    svg.style.overflow = 'visible';
+    outer.appendChild(svg);
+    outer.style.height = TOTAL_H + 'px';
+
+    function normToX(n) { return X_MIN + n * (X_MAX - X_MIN); }
+    function dateToY(iso) {
+      const t = (new Date(iso).getTime() - startMs) / spanMs;
+      return PAD_TOP + t * (TOTAL_H - PAD_TOP - PAD_BOT);
+    }
+
+    // Path
+    function buildPath(pts) {
+      if (!pts.length) return '';
+      let d = 'M ' + pts[0].x.toFixed(1) + ' ' + pts[0].y.toFixed(1);
+      for (let i = 1; i < pts.length; i++) {
+        const p = pts[i-1], c = pts[i];
+        const my = (p.y + c.y) / 2;
+        d += ' C ' + p.x.toFixed(1) + ',' + my.toFixed(1) +
+             ' ' + c.x.toFixed(1) + ',' + my.toFixed(1) +
+             ' ' + c.x.toFixed(1) + ',' + c.y.toFixed(1);
+      }
+      return d;
+    }
+    const pts  = PATH_PTS.map(p => ({ x: normToX(p.norm), y: dateToY(p.date) }));
+    const pathD = buildPath(pts);
+
+    // Axis guide lines
+    [X_MIN, X_MAX].forEach((gx, gi) => {
+      const gl = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      gl.setAttribute('x1', gx); gl.setAttribute('x2', gx);
+      gl.setAttribute('y1', PAD_TOP - 16); gl.setAttribute('y2', TOTAL_H - PAD_BOT + 16);
+      gl.setAttribute('stroke', gi === 0 ? '#181818' : '#0c200c');
+      gl.setAttribute('stroke-width', '1'); gl.setAttribute('stroke-dasharray', '3 8');
+      svg.appendChild(gl);
+    });
+
+    // Axis labels at top
+    [['← QUIET', X_MIN, '#2a2a2a'], ['ACTIVE →', X_MAX, '#00c853']].forEach(([txt, ax, col]) => {
+      const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      t.setAttribute('x', ax); t.setAttribute('y', PAD_TOP - 28);
+      t.setAttribute('fill', col); t.setAttribute('fill-opacity', '0.6');
+      t.setAttribute('font-family', 'Courier New, monospace');
+      t.setAttribute('font-size', '9'); t.setAttribute('letter-spacing', '2');
+      t.setAttribute('text-anchor', 'middle');
+      t.textContent = txt;
+      svg.appendChild(t);
+    });
+
+    // Year grid lines + labels in SVG
+    for (let yr = 2016; yr <= 2026; yr++) {
+      const gy = dateToY(yr + '-01-01');
+      if (gy < PAD_TOP - 10 || gy > TOTAL_H - PAD_BOT + 10) continue;
+      const gl = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      gl.setAttribute('x1', 0); gl.setAttribute('x2', W);
+      gl.setAttribute('y1', gy); gl.setAttribute('y2', gy);
+      gl.setAttribute('stroke', '#181818'); gl.setAttribute('stroke-width', '1');
+      svg.appendChild(gl);
+      const yt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      yt.setAttribute('x', '4'); yt.setAttribute('y', gy - 5);
+      yt.setAttribute('fill', '#2e2e2e');
+      yt.setAttribute('font-family', 'Bebas Neue, sans-serif');
+      yt.setAttribute('font-size', '14'); yt.setAttribute('letter-spacing', '2');
+      yt.textContent = yr;
+      svg.appendChild(yt);
+    }
+
+    // String layers
+    function addPath(stroke, width, opacity, dash) {
+      const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      p.setAttribute('d', pathD); p.setAttribute('fill', 'none');
+      p.setAttribute('stroke', stroke); p.setAttribute('stroke-width', width);
+      p.setAttribute('stroke-opacity', opacity); p.setAttribute('stroke-linecap', 'round');
+      if (dash) p.setAttribute('stroke-dasharray', dash);
+      svg.appendChild(p);
+    }
+    addPath('#00c853', '18', '0.03');
+    addPath('#00c853', '7',  '0.08');
+    addPath('#050505', '4',  '1');
+    addPath('#1a4a2a', '2.5','0.9');
+    addPath('#00c853', '1',  '0.5');
+
+    // ── Collision-resolved card placement ────────────────────────────────
+    const pins = EVENTS.map(ev => ({
+      evX:   normToX(ev.norm),
+      evY:   dateToY(ev.date),
+      color: TYPE_COLOR[ev.type] || '#888',
+      right: ev.side === 'R',
+      ev
+    }));
+
+    const cardYs = pins.map(p => p.evY - 60);
+
+    ['L','R'].forEach(side => {
+      const idx = pins.map((_,i) => i).filter(i => (pins[i].right ? 'R':'L') === side);
+      idx.sort((a,b) => pins[a].evY - pins[b].evY);
+      for (let iter = 0; iter < 120; iter++) {
+        let moved = false;
+        for (let k = 0; k < idx.length - 1; k++) {
+          const a = idx[k], b = idx[k+1];
+          const overlap = (cardYs[a] + 120 + V_PAD) - cardYs[b];
+          if (overlap > 0) {
+            cardYs[a] -= overlap / 2;
+            cardYs[b] += overlap / 2;
+            moved = true;
+          }
+        }
+        if (!moved) break;
+      }
+      idx.forEach(i => { if (cardYs[i] < 8) cardYs[i] = 8; });
+    });
+
+    // Expand SVG if needed
+    const maxBottom = Math.max(...cardYs.map((y,i) => y + 120)) + PAD_BOT;
+    const finalH = Math.max(TOTAL_H, maxBottom);
+    svg.setAttribute('height', finalH);
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + finalH);
+    outer.style.height = finalH + 'px';
+
+    // Draw connectors
+    pins.forEach((p, i) => {
+      const cardMidY = cardYs[i] + 60;
+      let cardLeft   = p.right ? p.evX + GAP : p.evX - GAP - CARD_W;
+      cardLeft = Math.max(4, Math.min(W - CARD_W - 4, cardLeft));
+      const cardEdgeX = p.right ? cardLeft : cardLeft + CARD_W;
+      const elbowX    = p.right ? p.evX + GAP * 0.45 : p.evX - GAP * 0.45;
+
+      p._cardLeft = cardLeft;
+
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d',
+        `M ${p.evX.toFixed(1)},${p.evY.toFixed(1)} ` +
+        `L ${elbowX.toFixed(1)},${p.evY.toFixed(1)} ` +
+        `L ${cardEdgeX.toFixed(1)},${cardMidY.toFixed(1)}`
+      );
+      path.setAttribute('fill','none');
+      path.setAttribute('stroke', p.color);
+      path.setAttribute('stroke-width','1');
+      path.setAttribute('stroke-opacity','0.3');
+      path.setAttribute('stroke-dasharray','3 3');
+      path.setAttribute('stroke-linejoin','round');
+      svg.appendChild(path);
+    });
+
+    // Draw pins
+    pins.forEach(p => {
+      const ring = document.createElementNS('http://www.w3.org/2000/svg','circle');
+      ring.setAttribute('cx', p.evX.toFixed(1)); ring.setAttribute('cy', p.evY.toFixed(1));
+      ring.setAttribute('r','8'); ring.setAttribute('fill', p.color);
+      ring.setAttribute('fill-opacity','0.12'); ring.setAttribute('stroke', p.color);
+      ring.setAttribute('stroke-width','1.5'); ring.setAttribute('stroke-opacity','0.5');
+      svg.appendChild(ring);
+      const dot = document.createElementNS('http://www.w3.org/2000/svg','circle');
+      dot.setAttribute('cx', p.evX.toFixed(1)); dot.setAttribute('cy', p.evY.toFixed(1));
+      dot.setAttribute('r','4'); dot.setAttribute('fill', p.color);
+      dot.setAttribute('fill-opacity','1');
+      svg.appendChild(dot);
+    });
+
+    // Place cards
+    pins.forEach((p, i) => {
+      const el = document.createElement('div');
+      el.className = 'tl-card' + (p.right ? '' : ' left-card');
+      el.style.color    = p.color;
+      el.style.width    = CARD_W + 'px';
+      el.style.left     = p._cardLeft + 'px';
+      el.style.top      = cardYs[i] + 'px';
+      el.innerHTML =
+        '<div class="tl-card-date">' + fmtDate(p.ev.date) + '</div>' +
+        '<div class="tl-card-label">' + p.ev.label + '</div>' +
+        '<div class="tl-card-detail">' + p.ev.detail + '</div>';
+      outer.appendChild(el);
+    });
+
+    // ── Floating year pill ────────────────────────────────────────────────
+    // Store year breakpoints for scroll handler
+    window._tlYearBreaks = [];
+    for (let yr = 2016; yr <= 2026; yr++) {
+      window._tlYearBreaks.push({ yr, y: dateToY(yr + '-01-01') });
+    }
+    window._tlOuterEl = outer;
+    window._tlPill    = pill;
+  }
+
+  // Year pill scroll handler
+  function updatePill() {
+    const el = window._tlOuterEl;
+    const p  = window._tlPill;
+    if (!el || !p || !window._tlYearBreaks) return;
+
+    const rect = el.getBoundingClientRect();
+    // How far have we scrolled into the timeline from its top?
+    const scrolledIn = -rect.top;
+
+    if (scrolledIn < -60 || scrolledIn > rect.height + 60) {
+      p.style.opacity = '0';
+      return;
+    }
+
+    // Which year are we currently at?
+    const breaks = window._tlYearBreaks;
+    let currentYr = breaks[0].yr;
+    for (let i = 0; i < breaks.length; i++) {
+      if (scrolledIn + 80 >= breaks[i].y) currentYr = breaks[i].yr;
+    }
+    p.textContent = currentYr;
+    p.style.opacity = (scrolledIn > -40 && scrolledIn < rect.height + 40) ? '1' : '0';
+  }
+
+  window.addEventListener('scroll', updatePill, { passive: true });
+
+  // Trigger build on intersection
+  let built = false;
+  const io = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting && !built) { built = true; build(); }
+  }, { threshold: 0.02 });
+  io.observe(document.getElementById('timeline-section'));
+
+  let rTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(rTimer);
+    rTimer = setTimeout(() => { built = false; build(); }, 250);
+  });
+})();
+</script>
+
 
 <!-- RECORDS -->
 <section>
@@ -1849,7 +1921,7 @@
 
         <div class="fadeout-item">
           <div>
-            <div class="fadeout-name">Mark O'Caglahan</div>
+            <div class="fadeout-name">Marc Golden</div>
             <div class="fadeout-last">Last message: 3 September 2022</div>
           </div>
           <div class="fadeout-desc">A founding member. 178 messages in 2016. Held on through 2019 (29 messages), 2020 (42), 2021 (15). Then five in 2022 and gone. <strong>His most used word in later years was "lads"</strong> — always reaching out, less and less often.</div>
@@ -1872,7 +1944,7 @@
 <div class="divider"></div>
 
 <!-- PROFILES -->
-<section>
+<section style="margin-top: 40px;">
   <div class="reveal">
     <div class="section-label">Character Studies</div>
     <div class="section-title">The Starting<br>Fifteen</div>
@@ -2402,5 +2474,117 @@ lbRows.forEach((row, i) => {
   raceRender(0);
 })();
 </script>
+
+<!-- Timeline tap modal (mobile) + front-lift (desktop) -->
+<div id="tl-modal" style="
+  display:none; position:fixed; inset:0; z-index:500;
+  background:rgba(0,0,0,0.85); padding:24px 20px;
+  overflow-y:auto; -webkit-overflow-scrolling:touch;
+">
+  <div id="tl-modal-inner" style="
+    background:var(--card); border-radius:4px; padding:24px;
+    max-width:480px; margin:40px auto; position:relative;
+  ">
+    <button onclick="closeTlModal()" style="
+      position:absolute; top:14px; right:14px;
+      background:none; border:none; color:var(--muted);
+      font-size:20px; cursor:pointer; line-height:1; padding:4px 8px;
+    ">✕</button>
+    <div id="tl-modal-date" style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;margin-bottom:8px;"></div>
+    <div id="tl-modal-label" style="font-size:16px;font-weight:500;color:var(--text);margin-bottom:12px;line-height:1.3;"></div>
+    <div id="tl-modal-detail" style="font-size:13.5px;color:var(--muted);line-height:1.7;font-family:'DM Serif Display',serif;font-style:italic;"></div>
+  </div>
+</div>
+
+<style>
+/* Desktop: active card lifts to front */
+.tl-card-active {
+  z-index: 50 !important;
+  box-shadow: 0 0 0 2px currentColor, 0 8px 32px rgba(0,0,0,0.6) !important;
+  transform: translateY(-3px);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+</style>
+
+<script>
+// ── Timeline card interactivity ──────────────────────────────────────────────
+(function() {
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  function fmtDate(iso) {
+    const [y,m,d] = iso.split('-');
+    return MONTHS[+m-1] + ' ' + +d + ', ' + y;
+  }
+
+  const modal       = document.getElementById('tl-modal');
+  const modalDate   = document.getElementById('tl-modal-date');
+  const modalLabel  = document.getElementById('tl-modal-label');
+  const modalDetail = document.getElementById('tl-modal-detail');
+  const modalInner  = document.getElementById('tl-modal-inner');
+
+  window.closeTlModal = function() {
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+  };
+
+  // Close on backdrop tap (not inner tap)
+  modal.addEventListener('click', e => {
+    if (e.target === modal) closeTlModal();
+  });
+
+  // Close on Escape
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeTlModal();
+  });
+
+  let activeCard = null;
+
+  // Called by the timeline builder — attaches interactivity to each card
+  window.attachTlCardInteraction = function(el, ev, color) {
+    const isMobile = () => window.innerWidth <= 640;
+
+    el.style.cursor = 'pointer';
+
+    el.addEventListener('click', e => {
+      e.stopPropagation();
+
+      if (isMobile()) {
+        // Mobile: open modal
+        modalDate.textContent   = fmtDate(ev.date);
+        modalLabel.textContent  = ev.label;
+        modalDetail.textContent = ev.detail;
+        modalInner.style.borderTop = '3px solid ' + color;
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+        modal.scrollTop = 0;
+      } else {
+        // Desktop: bring card to front / toggle
+        if (activeCard && activeCard !== el) {
+          activeCard.classList.remove('tl-card-active');
+          activeCard.style.zIndex = '';
+        }
+        if (activeCard === el) {
+          el.classList.remove('tl-card-active');
+          el.style.zIndex = '';
+          activeCard = null;
+        } else {
+          el.classList.add('tl-card-active');
+          el.style.zIndex = '50';
+          activeCard = el;
+        }
+      }
+    });
+
+    // Dismiss active card when clicking elsewhere on desktop
+    document.addEventListener('click', () => {
+      if (activeCard) {
+        activeCard.classList.remove('tl-card-active');
+        activeCard.style.zIndex = '';
+        activeCard = null;
+      }
+    }, { capture: false });
+  };
+})();
+</script>
+
 </body>
 </html>
