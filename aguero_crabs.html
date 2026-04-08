@@ -24,7 +24,7 @@
 
   * { margin:0; padding:0; box-sizing:border-box; }
 
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: auto; }
 
   body {
     background: var(--darker);
@@ -1360,6 +1360,8 @@
 
   // ── Mobile layout: simple stacked cards ──────────────────────────────────
   function buildMobile(pins) {
+    // Pin the outer height before clearing to prevent scroll jump during rebuild
+    if (outer.offsetHeight > 0) outer.style.minHeight = outer.offsetHeight + 'px';
     outer.innerHTML = '';
     outer.style.height = 'auto';
     outer.style.minHeight = 'unset';
@@ -1600,7 +1602,10 @@
     const finalH = Math.max(TOTAL_H, maxBottom);
     svg.setAttribute('height', finalH);
     svg.setAttribute('viewBox', '0 0 ' + W + ' ' + finalH);
-    if (!isMob) outer.style.height = finalH + 'px';
+    if (!isMob) {
+      outer.style.height    = finalH + 'px';
+      outer.style.minHeight = '';   // release the rebuild pin
+    }
 
     // Draw connectors
     pins.forEach((p, i) => {
@@ -1841,19 +1846,44 @@
     }
   }
 
-  window.addEventListener('scroll', updatePill, { passive: true });
+  let _pillRaf = false;
+  window.addEventListener('scroll', () => {
+    if (_pillRaf) return;
+    _pillRaf = true;
+    requestAnimationFrame(() => { updatePill(); _pillRaf = false; });
+  }, { passive: true });
 
   // Trigger build on intersection
   let built = false;
   const io = new IntersectionObserver(entries => {
-    if (entries[0].isIntersecting && !built) { built = true; build(); }
+    if (entries[0].isIntersecting && !built) {
+      built = true;
+      build();
+      lastBuiltW = outer.getBoundingClientRect().width || window.innerWidth;
+    }
   }, { threshold: 0.02 });
   io.observe(document.getElementById('timeline-section'));
 
   let rTimer;
+  let lastBuiltW = 0;
   window.addEventListener('resize', () => {
+    // Only rebuild if WIDTH changed — ignore iOS keyboard / scrollbar resize
+    const newW = outer.getBoundingClientRect().width || window.innerWidth;
+    if (Math.abs(newW - lastBuiltW) < 10) return;
     clearTimeout(rTimer);
-    rTimer = setTimeout(() => { built = false; build(); }, 250);
+    rTimer = setTimeout(() => {
+      // Anchor scroll: record position relative to timeline top before rebuild
+      const outerTop   = outer.getBoundingClientRect().top;
+      const scrollFrac = outerTop < 0 ? (-outerTop) / outer.offsetHeight : 0;
+      built = false;
+      build();
+      lastBuiltW = newW;
+      // Restore relative scroll position after rebuild
+      if (scrollFrac > 0) {
+        const newOffset = outer.getBoundingClientRect().top + window.scrollY + scrollFrac * outer.offsetHeight;
+        window.scrollTo({ top: newOffset - (window.innerHeight * scrollFrac), behavior: 'instant' });
+      }
+    }, 300);
   });
 })();
 </script>
