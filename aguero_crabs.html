@@ -731,13 +731,11 @@
   /* ─── SCROLL REVEAL ─── */
   .reveal {
     opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
+    transition: opacity 0.6s ease;
   }
 
   .reveal.visible {
     opacity: 1;
-    transform: translateY(0);
   }
 
   .reveal-delay-1 { transition-delay: 0.1s; }
@@ -1878,11 +1876,7 @@
       built = false;
       build();
       lastBuiltW = newW;
-      // Restore relative scroll position after rebuild
-      if (scrollFrac > 0) {
-        const newOffset = outer.getBoundingClientRect().top + window.scrollY + scrollFrac * outer.offsetHeight;
-        window.scrollTo({ top: newOffset - (window.innerHeight * scrollFrac), behavior: 'instant' });
-      }
+      // Scroll position is stable — height pinned during rebuild prevents jump
     }, 300);
   });
 })();
@@ -2522,7 +2516,6 @@ const lbObserver = new IntersectionObserver((entries) => {
     if (entry.isIntersecting) {
       setTimeout(() => {
         entry.target.style.opacity = '1';
-        entry.target.style.transform = 'translateX(0)';
       }, i * 50);
       lbObserver.unobserve(entry.target);
     }
@@ -2531,8 +2524,7 @@ const lbObserver = new IntersectionObserver((entries) => {
 
 lbRows.forEach((row, i) => {
   row.style.opacity = '0';
-  row.style.transform = 'translateX(-20px)';
-  row.style.transition = `opacity 0.4s ease ${i * 0.04}s, transform 0.4s ease ${i * 0.04}s`;
+  row.style.transition = `opacity 0.4s ease ${i * 0.04}s`;
   lbObserver.observe(row);
 });
 </script>
